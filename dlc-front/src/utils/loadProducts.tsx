@@ -15,7 +15,6 @@ const Upload = () => {
     measurementId: "G-7J2BMCMDKZ",
   });
 
-  const auth = firebaseApp.auth();
   const db = firebaseApp.firestore();
 
   // Ruta de la colección en Firestore

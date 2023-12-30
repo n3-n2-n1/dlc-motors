@@ -3,11 +3,11 @@ import { Route, Routes } from "react-router-dom";
 import { paths } from "./paths";
 import Layout from "../components/Layout/Layout";
 
-const Home = lazy(() => import("../pages/Home/Home"));
+const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
-const Users = lazy(() => import("../pages/Users/Users"));
+const Users = lazy(() => import("../pages/users/Users"));
 
-const Login = lazy(() => import("../pages/Login/Login"));
+const Login = lazy(() => import("../pages/login/login"));
 const Register = lazy(() => import("../pages/Register/Register"));
 
 const Products = lazy(() => import("../pages/Products/Products"));
