@@ -5,9 +5,7 @@ import ProductsIcon from "../icon/ProductsIcon/ProductsIcon";
 import MovementsIcon from "../icon/MovementsIcon/MovementsIcon";
 import SearchIcon from "../icon/SearchIcon/SearchIcon";
 import CategoriesIcon from "../icon/CategoriesIcon/CategoriesIcon";
-import CostsIcon from "../icon/CostsIcon/CostsIcon";
 import ErrorsIcon from "../icon/ErrorsIcon/ErrorsIcon";
-import NotificationsIcon from "../icon/NotificationsIcon/NotificationsIcon";
 import UsersIcon from "../icon/UsersIcon/UsersIcon";
 
 function Sidebar() {

@@ -6,7 +6,7 @@ import { SearchProvider } from "./contexts/SearchContext";
 
 const App = () => {
   return (
-    <SearchProvider>
+    <SearchProvider >
       <Suspense fallback={<Loader />}>
         <AppRoutes />
       </Suspense>
