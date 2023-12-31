@@ -4,7 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 // Define la interfaz para los props del componente
-interface InventoryFormProps {
+interface ErrorFormProps {
   observationsList: string[];
   isOutcome: boolean;
   products: any[]; // Reemplaza 'any' con el tipo de tus productos
@@ -24,7 +24,7 @@ const validationSchema = Yup.object().shape({
 });
 
 // Componente funcional del formulario de inventario
-const InventoryForm: React.FC<InventoryFormProps> = ({
+const ErrorForm: React.FC<ErrorFormProps> = ({
   observationsList,
   isOutcome,
   products,
@@ -54,7 +54,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
         <Form className="bg-white dark:bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
           {/* Campo de Observaciones */}
           <div className="mb-4 w-full">
-            <p className='block text-xl font-medium text-gray-600 dark:text-gray-300 mb-4'>Cargando inventario</p>
+            <p className='block text-xl font-medium text-gray-600 dark:text-gray-300 mb-4'>Cargando error</p>
 
             <label htmlFor="observaciones" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
               Observaciones:
@@ -149,6 +149,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
           >
             Agregar
+
           </button>
         </Form>
       )}
@@ -156,4 +157,4 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   );
 };
 
-export default InventoryForm;
+export default ErrorForm;

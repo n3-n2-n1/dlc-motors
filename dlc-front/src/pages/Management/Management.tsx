@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import IncomeOutcomeForm from "./IncomeOutcomeForm";
 
 import { useSearchContext } from "../../contexts/SearchContext.tsx";
+import InventoryForm from "./InventoryForm.tsx";
 
 const IncomeObservations = [
   "Cancelación",
@@ -151,7 +152,9 @@ const Management = () => {
 
         {/* Formulario para Inventario */}
         {tipoMovimiento === "inventario" && (
-          <div className="mb-4">inventario</div>
+          <div className="mb-4">
+            <InventoryForm isOutcome={isOutcome} observationsList={OutcomeObservations} products={products} />
+          </div>
         )}
       </div>
     </div>

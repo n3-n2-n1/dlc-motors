@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html{
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+html::-webkit-scrollbar {
+    
+    visibility: hidden;
+  }
+  
+  body::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: #888;
+  }
+  

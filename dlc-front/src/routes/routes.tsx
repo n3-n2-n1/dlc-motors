@@ -17,7 +17,6 @@ const Costs = lazy(() => import("../pages/Costs/Costs"));
 const Errors = lazy(() => import("../pages/Errors/Errors"));
 const Returns = lazy(() => import("../pages/Returns/Returns"));
 const Management = lazy(() => import("../pages/Management/Management"))
-
 const Ranking = lazy(() => import("../pages/Ranking/Ranking"));
 
 const Upload = lazy(() => import("../utils/loadProducts"));
