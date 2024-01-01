@@ -10,15 +10,15 @@
 
 function ErrorCard() {
   return (
-    <div className="w-full bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm">
+    <div className="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 text-sm pb-8">
       <div className="max-w-7xl mx-auto lg:px-8">
         <div className="flex flex-col">
-          <div className="mb-4">
+          <div className=" ">
             <h1 className="text-3xl font-bolder leading-tight text-gray-900">
               Pages
             </h1>
           </div>
-          <div className="-mb-2 py-4 flex flex-wrap flex-grow justify-between">
+          <div className="mb-2 py-4 flex flex-wrap flex-grow justify-between">
             <div className="flex items-center py-2">
               <input
                 className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"

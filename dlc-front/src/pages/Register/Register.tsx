@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
+import {createUser} from "../../utils/Handlers/Handlers";
 
 // Interfaz para los valores del formulario
-interface FormValues {
+export interface FormValues {
   Nombre: string;
   Email: string;
   Password: string;
@@ -31,12 +32,16 @@ const RegisterView = () => {
     try {
       console.log("Form Values:", values);
       setFormData({ Nombre: "", Email: "", Password: "", selectedRole: "" });
+  
+      // Corrected createUser function call
+      await createUser(values);
     } catch (error) {
       console.error("Error en el registro:", error);
     } finally {
       setSubmitting(false);
     }
   };
+  
 
   const handleButtonClick = () => {
     handleSubmit({ ...formData }, { setSubmitting: () => {} });

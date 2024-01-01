@@ -9,8 +9,8 @@ const products = [] || undefined
 const Errors = () => {
   return (
     <div>
-      <ErrorInform isOutcome={isOutcome} observationsList={OutcomeObservations} products={products} />
       <ErrorCard />
+      <ErrorInform isOutcome={isOutcome} observationsList={OutcomeObservations} products={products} />
 
     </div>
     

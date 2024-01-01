@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express")
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+
+
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Ruta al archivo de la base de datos SQLite
 const dbPath = './productos.db';
@@ -17,7 +20,44 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-// Rutas para CRUD
+const makeUser = () => {
+
+  app.post('/usuarios', (req, res) => {
+
+    const db = './productos.db';
+
+
+    const Nombre = "Julio Cesar"
+    const Email = "test1@gmail.com"
+    const Password = "test1"
+    const selectedRole = "VENDEDOR"
+
+    // Insertar nuevo usuario en la base de datos
+    db.run('INSERT INTO usuarios (Nombre, Email, Password, selectedRole) VALUES (?, ?, ?, ?)',
+      [Nombre, Email, Password, selectedRole],
+      console.log('llegue'),
+      function () {
+        db.close();
+      });
+  });
+}
+
+
+app.get('/usuarios', (req, res) => {
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
+  db.all('SELECT * FROM usuarios', (err, rows) => {
+    db.close(); // Cierra la conexión después de realizar la consulta
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(rows);
+  });
+});
+
+
+
+
 app.get('/productos', (req, res) => {
   const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
   db.all('SELECT * FROM productos', (err, rows) => {
@@ -30,61 +70,9 @@ app.get('/productos', (req, res) => {
   });
 });
 
-app.post('/productos', (req, res) => {
-  const { Codigo, Producto, Rubro, CodBarras, Precio, Stock } = req.body;
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-  const insertQuery = `
-    INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
-  db.run(insertQuery, [Codigo, Producto, Rubro, CodBarras, Precio, Stock], function (err) {
-    db.close(); // Cierra la conexión después de realizar la inserción
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json({ id: this.lastID });
-  });
-});
 
 
-export default function createUser(){
-  app.post('/usuarios', (req, res) => {
-
-    const { Nombre, Email, Password, selectedRole } = req.body
-    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-
-
-    const insertQuery = `INSERTO INTO usuarios (Nombre, Email, Password)
-  VALUES (?, ?, ?)`;
-
-    db.run(insertQuery, [Nombre, Email, Password], function (err) {
-      db.close(); // Cierra la conexión después de realizar la inserción
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json({ id: this.lastID });
-    });
-  });
-}
-
-
-export default function getUsers(){
-
-  app.get('/usuarios', (req, res) => {
-    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-    db.all('SELECT * FROM usuarios', (err, rows) => {
-      db.close(); // Cierra la conexión después de realizar la consulta
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json(rows);
-    });
-  });
-}
-
+makeUser();
 
 // Iniciar el servidor
 app.listen(PORT, () => {

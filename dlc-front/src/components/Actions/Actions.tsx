@@ -58,7 +58,7 @@ const Actions = () => {
   };
 
   return (
-      <div className="w-full flex justify-between p-4 mb-3">
+      <div className="w-full flex justify-between p-2 mb-3">
       {/* AL LADO DE FILTER */}
       <div className="flex items-center gap-3">
         {/* Botón para edición masiva */}

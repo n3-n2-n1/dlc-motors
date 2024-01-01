@@ -2,8 +2,19 @@ import { useState } from "react";
 
 function ProfileActions() {
   const [flyerTwo, setFlyerTwo] = useState(false);
-
+  const [isDarkMode, setIsDarkMode] = useState([])
   const [flyer, setFlyer] = useState(false);
+
+  //Necesitamos este switch falopita, es del dark mode
+  // const darkToogle = () => {
+
+  //   return(
+  //     <section className={`${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} absolute h-full w-full flex items-center justify-center`}>
+  //     <DarkModeToggle onToggle={setIsDarkMode} />
+  //   </section>
+  //   )
+  // }
+
 
   return (
     <div className="block">
@@ -69,8 +80,7 @@ function ProfileActions() {
               From: "opacity-100 translate-y-0"
               To: "opacity-0 translate-y-1"
           */}{" "}
-      <div
-        onMouseLeave={() => setFlyerTwo(false)}
+      <div onMouseLeave={() => setFlyerTwo(false)}
         className={
           flyerTwo
             ? " opacity-100 translate-y-0 transition ease-out duration-200 absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"

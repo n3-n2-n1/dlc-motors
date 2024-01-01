@@ -51,7 +51,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     >
       {({ values }) => (
         // Componente Form para envolver los campos del formulario
-        <Form className="bg-white dark:bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
+        <Form className="bg-white dark:bg-gray-800 text-black dark:text-white p-4 shadow-md">
           {/* Campo de Observaciones */}
           <div className="mb-4 w-full">
             <p className='block text-xl font-medium text-gray-600 dark:text-gray-300 mb-4'>Cargando error</p>
