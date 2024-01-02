@@ -1,6 +1,6 @@
-import { FormValues } from "../../pages/Register/Register";
-import express from 'express';
-import sqlite3 from 'sqlite3';
+// import { FormValues } from "../../pages/Register/Register";
+// import express from 'express';
+// import sqlite3 from 'sqlite3';
 
 
 interface User {

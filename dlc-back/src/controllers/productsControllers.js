@@ -37,6 +37,28 @@ const getProducts = (req, res) => {
   });
 };
 
+const getProductsBySearchTerm = (req, res) => {
+  const searchTerm = req.query.searchTerm;
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Error al abrir la base de datos.' });
+      return;
+    }
+
+    db.all('SELECT * FROM productos WHERE name LIKE ?', [`%${searchTerm}%`], (queryErr, rows) => {
+      db.close();
+
+      if (queryErr) {
+        console.error(queryErr.message);
+        res.status(500).json({ error: 'Error en la consulta a la base de datos.' });
+        return;
+      }
+
+      res.json(rows);
+    });
+  });
+};
 
 
 //Eliminar el productito
@@ -68,5 +90,6 @@ const deleteProducts = (req, res) => {
 module.exports = {
   createProducts,
   getProducts,
+  getProductsBySearchTerm,
   deleteProducts
 };

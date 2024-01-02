@@ -9,28 +9,29 @@ function TableList() {
   const { searchResults, currentPage, itemsPerPage, products } = useSearchContext();
 
   const [openIndex, setOpenIndex] = useState(-1);
-  const [backendData, setBackendData] = useState([]); 
+  // const [backendData, setBackendData] = useState([]); 
 
   useEffect(() => {
     setOpenIndex(-1); // reset openIndex when currentPage changes
   }, [currentPage]);
   
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/productos");
-        const data = await response.json();
-        setBackendData(data);
-      } catch (error) {
-        console.error("Error fetching data from backend:", error);
-        // Agrega lógica para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:3000/productos");
+  //       const data = await response.json();
+  //       setBackendData(data);
+  //     } catch (error) {
+  //       console.error("Error fetching data from backend:", error);
+  //       // Agrega lógica para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+  //     }
+  //   };
   
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  const itemsToDisplay = searchResults || backendData;
+  // const itemsToDisplay = searchResults || backendData;
+  const itemsToDisplay = searchResults || products;
 
   return (
     <> 
