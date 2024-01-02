@@ -43,8 +43,10 @@ const Actions = () => {
   const handleSearch = async () => {
     try {
       // Realiza la solicitud a la API para obtener la lista de productos
-      const response = await fetch(`/productos?search=${searchTerm}`);
-      const {data} = await response.json();
+      const response = await fetch(`http://localhost:3000/productos?query=${searchTerm}`);
+      console.log(searchTerm)
+      const data = await response.json();
+      console.log(data)
 
       setSearchResults(data); // Establece los resultados de búsqueda en el contexto
       setCurrentPage(1);
@@ -71,7 +73,7 @@ const Actions = () => {
         {/* Botón para descarga */}
         <button
           onClick={handleDownload}
-          className="bg-slate-800 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 border-gray-800 border border-gray-200 leading-none py-0"
+          className="bg-slate-800 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 border border-gray-200 leading-none py-0"
         >
           Descargar
         </button>
