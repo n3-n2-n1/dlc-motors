@@ -23,7 +23,7 @@ const Pagination: React.FC = ({}) => {
 
   return (
     <div className="flex w-full items-center mb-7">
-      <div className="flex w-full mt-5 space-x-2 justify-end">
+      <div className="flex w-full mt-5 space-x-2 justify-start">
       {totalPages > 10 && (
         <button onClick={handleLeftClick}>
           <svg
@@ -45,7 +45,7 @@ const Pagination: React.FC = ({}) => {
             <button
               key={pageNumber}
               className={`inline-flex items-center h-8 w-8 justify-center rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none ${
-                currentPage === pageNumber ? "text-blue-500" : "text-gray-500"
+                currentPage === pageNumber ? "text-[#A9DFD8]" : "text-gray-500"
               }`}
               onClick={() => setCurrentPage(pageNumber)}
             >

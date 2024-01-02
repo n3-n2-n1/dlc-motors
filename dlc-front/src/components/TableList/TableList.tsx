@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { useSearchContext } from '../../contexts/SearchContext.tsx';
-
 import Pagination from "../Pagination/Pagination";
-
 import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
 import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
 
@@ -11,32 +9,36 @@ function TableList() {
   const { searchResults, currentPage, itemsPerPage, products } = useSearchContext();
 
   const [openIndex, setOpenIndex] = useState(-1);
+  const [backendData, setBackendData] = useState([]); 
 
   useEffect(() => {
     setOpenIndex(-1); // reset openIndex when currentPage changes
   }, [currentPage]);
   
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     try {
-  //       const response = await fetch("/path/to/mocks.json"); // Reemplaza con la ruta correcta
-  //       const data = await response.json();
-  //       setProducts(data.products);
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
-    
-  //   fetchProducts();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/productos");
+        const data = await response.json();
+        setBackendData(data);
+      } catch (error) {
+        console.error("Error fetching data from backend:", error);
+        // Agrega lógica para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+      }
+    };
   
-  const itemsToDisplay = searchResults || products;
+    fetchData();
+  }, []);
+
+  const itemsToDisplay = searchResults || backendData;
 
   return (
-    <>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-gray-400">
+    <> 
+
+    <div className="overflow-y-auto max-h-[calc(100vh-3rem)]">
+       <table className="w-full text-left">
+        <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
+          <tr className="text-gray-100">
             {/* Las columnas deberían ser clickeables para setear un orden */}
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
               Acciones
@@ -66,19 +68,19 @@ function TableList() {
               Origen
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Marcas Compatibles
+              MarcasCompat.
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Cantidad Stock
+              Stock(cant.)
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Hay Stock
+              ¿Stock?
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
               Devoluciones
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Es Kit
+              Kit
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
               Etiqueta
@@ -86,7 +88,7 @@ function TableList() {
           </tr>
         </thead>
 
-        <tbody className="text-gray-600 dark:text-gray-100">
+        <tbody className="text-gray-100">
           {/* {products.map((product, index) => ( */}
           
           {itemsToDisplay
@@ -161,6 +163,10 @@ function TableList() {
                   {/* cantidadStock */}
                   {product.Stock}
                 </td>
+                <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
+                  {/* cantidadStock */}
+                  {product.CodBarras}
+                </td> 
                 {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
               {product.stock ? "Sí" : "No"}
             </td> */}
@@ -180,6 +186,7 @@ function TableList() {
             ))}
         </tbody>
       </table>
+    </div>
       <Pagination
       />
     </>

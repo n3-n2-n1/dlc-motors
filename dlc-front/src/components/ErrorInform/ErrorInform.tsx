@@ -4,7 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 // Define la interfaz para los props del componente
-interface InventoryFormProps {
+interface ErrorFormProps {
   observationsList: string[];
   isOutcome: boolean;
   products: any[]; // Reemplaza 'any' con el tipo de tus productos
@@ -24,7 +24,7 @@ const validationSchema = Yup.object().shape({
 });
 
 // Componente funcional del formulario de inventario
-const InventoryForm: React.FC<InventoryFormProps> = ({
+const ErrorForm: React.FC<ErrorFormProps> = ({
   observationsList,
   isOutcome,
   products,
@@ -51,19 +51,19 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     >
       {({ values }) => (
         // Componente Form para envolver los campos del formulario
-        <Form className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
+        <Form className="bg-gray-900 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-[57vh] overflow-y-auto lg:block hidden p-5">
           {/* Campo de Observaciones */}
-          <div className="mb-4 w-full">
-            <p className='block text-xl font-medium text-gray-500 mb-4'>Cargando inventario</p>
+          <div className="w-full">
+            <p className='block text-xl font-medium text-gray-100 dark:text-gray-300 mb-4'>Reporte de Errores</p>
 
-            <label htmlFor="observaciones" className="block text-sm font-medium text-gray-300">
+            <label htmlFor="observaciones" className="block text-sm font-medium text-gray-2 00 dark:text-gray-300">
               Observaciones:
             </label>
             <Field
               as="select"
               id="observaciones"
               name="observaciones"
-              className="mt-1 block w-full p-2 border  border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value="">Seleccione...</option>
               {observationsList.map((observation, index) => (
@@ -78,7 +78,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
           {/* Campo de Número de Importación (se mostrará si las observaciones son "Importación") */}
           {values.observaciones === 'Importación' && (
             <div className="mb-4">
-              <label htmlFor="importacion" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+              <label htmlFor="importacion" className="block text-sm font-medium text-gray-200 dark:text-gray-300">
                 Número de importación:
               </label>
               <Field
@@ -93,7 +93,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           {/* Campo de Detalle */}
           <div className="mb-4">
-            <label htmlFor="detalle" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label htmlFor="detalle" className="block text-sm font-medium text-gray-200 dark:text-gray-300">
               Detalle:
             </label>
             <Field
@@ -107,7 +107,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           {/* Campo de Cantidad */}
           <div className="mb-4">
-            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-200 dark:text-gray-300">
               Cantidad:
             </label>
             <Field
@@ -121,7 +121,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
 
           {/* Campo de OEM Producto */}
           <div className="mb-4">
-            <label htmlFor="oemProducto" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label htmlFor="oemProducto" className="block text-sm font-medium text-gray-200 dark:text-gray-300">
               OEM Producto:
             </label>
             <Field
@@ -149,6 +149,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
           >
             Agregar
+
           </button>
         </Form>
       )}
@@ -156,4 +157,4 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
   );
 };
 
-export default InventoryForm;
+export default ErrorForm;

@@ -45,7 +45,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
       }}
     >
       {({ values }) => (
-        <Form className="bg-white dark:bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
+        <Form className="bg-gray-800 text-black text-white p-4 rounded-md shadow-md">
         <div className="mb-4 w-full">
           <label htmlFor="observaciones" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
             Observaciones:

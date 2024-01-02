@@ -14,5 +14,4 @@ export const paths = {
   notifications: "/notificaciones", // Acá figurarían las notificaciones de stock bajo, stock crítico, reposición de stock, etc.
   ranking: "/ranking", // Listado de los productos más vendidos en un periodo de tiempo, y cuantos se devolvieron por roto/fallado
   upload:"/upload",
-  
 };

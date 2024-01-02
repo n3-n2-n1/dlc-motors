@@ -1,4 +1,31 @@
 import { Chart } from "react-google-charts";
+import React, { useEffect } from 'react';
+import 'apexcharts';
+
+
+interface ChartData {
+  x: string;
+  y: number;
+}
+
+interface ChartSeries {
+  name: string;
+  color: string;
+  data: ChartData[];
+}
+
+interface ChartOptions {
+  colors: string[];
+  series: ChartSeries[];
+  chart: {
+    type: string;
+    height: string;
+    // ... (resto de las propiedades)
+  };
+  // ... (resto de las propiedades)
+}
+
+
 
 const ChartDash: React.FC = () => {
 
@@ -33,5 +60,10 @@ const ChartDash: React.FC = () => {
     />
   );
 };
+
+
+
+
+
 
 export default ChartDash;
