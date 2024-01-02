@@ -6,7 +6,7 @@ import ProfileActions from "../../components/ProfileActions/ProfileActions"
 
 function Home() {
   return (
-    <main className=" dark:bg-gray-900 sm:p-6 space-y-6 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden">
+    <main className=" bg-gray-900 sm:p-6 space-y-6 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 border-gray-800 h-screen overflow-y-auto lg:block hidden">
     <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
       <div className="mr-6">
         <h1 className="text-4xl mb-2 text-white font-weight-300">DLC MOTORS</h1>

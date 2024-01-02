@@ -13,7 +13,7 @@ const Filter = () => {
 
         <button
           onClick={toggleDropdown}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 mx-auto"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 mx-auto"
         >
           Filtrar
           <svg

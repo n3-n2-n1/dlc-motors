@@ -3,8 +3,30 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 
 
+interface User {
+    id: number;
+    name: string;
+    // Otros campos según la estructura de tus datos de usuario
+  }
+
+const fetchUser = async (): Promise<User[]> => {
+    try {
+      const response = await fetch('http://localhost:3000/usuarios');
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const userData: User[] = await response.json();
+      return userData;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      throw error;
+    }
+}
 
 
+export {fetchUser}
 
 // const app = express();
 // const dbPath = './productos.db';

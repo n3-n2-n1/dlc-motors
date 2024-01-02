@@ -4,7 +4,7 @@ function Moves() {
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-900 py-10">
 	
 	<h1 className="text-lg text-gray-400 font-medium">2020 IPL Season - Table</h1>
-	<div className="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm">
+	<div className="bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm">
 		<div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
 			<div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 				<div className="shadow overflow-hidden sm:rounded-lg">

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function ProfileActions() {
   const [flyerTwo, setFlyerTwo] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState([])
+  const [isDarkMode, setIsDarkMode] = useState([]);
   const [flyer, setFlyer] = useState(false);
 
   //Necesitamos este switch falopita, es del dark mode
@@ -15,22 +15,20 @@ function ProfileActions() {
   //   )
   // }
 
-
   return (
-    <div className="block">
-      {/* Item active: "text-gray-900", Item inactive: "text-gray-500" */}
-      <div
-        className="group bg-slate-900 rounded-md text-gray-500 inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        onClick={() => (setFlyerTwo(!flyerTwo), setFlyer(false))}
-      >
-        <span>
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+    <div className="relative inline-block text-left">
+    <div
+      className="group bg-slate-900 rounded-md text-gray-500 inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      onClick={() => setFlyerTwo(!flyerTwo)}
+    >
+      <span>
+        <svg
+          className="ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-500 transition ease-out duration-200"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 10 30 10"
+          fill="currentColor"
+          aria-hidden="true"
+        >
             <mask
               id="mask0_4_4471"
               maskUnits="userSpaceOnUse"
@@ -70,21 +68,11 @@ function ProfileActions() {
           />
         </svg>
       </div>
-      {/*
-            'More' flyout menu, show/hide based on flyout menu state.
-
-            Entering: "transition ease-out duration-200"
-              From: "opacity-0 translate-y-1"
-              To: "opacity-100 translate-y-0"
-            Leaving: "transition ease-in duration-150"
-              From: "opacity-100 translate-y-0"
-              To: "opacity-0 translate-y-1"
-          */}{" "}
-      <div onMouseLeave={() => setFlyerTwo(false)}
+      <div
         className={
           flyerTwo
-            ? " opacity-100 translate-y-0 transition ease-out duration-200 absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
-            : " opacity-0 translate-y-1 absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
+            ? "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+            : "hidden"
         }
       >
         <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-400">
@@ -110,47 +98,10 @@ function ProfileActions() {
                 />
               </svg>
               <div className="ml-4">
-                <p className="text-base font-medium text-gray-900">Soporte</p>
+                <p className="text-base font-medium text-gray-900">Salir</p>
               </div>
             </a>
-            <a
-              href="#"
-              className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
-            >
-              {/* Heroicon name: outline/bookmark-alt */}
-              <svg
-                className="flex-shrink-0 h-6 w-6 text-indigo-600"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <div className="ml-4">
-                <p className="text-base font-medium text-gray-900">Guides</p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Learn how to maximize our platform to get the most out of it.
-                </p>
-              </div>
-            </a>
-          </div>
-          <div className="px-5 py-5 bg-gray-50 sm:px-8 sm:py-8">
-            <div className="mt-5 text-m">
-              <a
-                href="#"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                {" "}
-                Cerrar sesión <span aria-hidden="true">→</span>
-              </a>
-            </div>
+
           </div>
         </div>
       </div>

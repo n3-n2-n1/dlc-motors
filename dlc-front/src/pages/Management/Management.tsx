@@ -55,7 +55,7 @@ const Management = () => {
   }, [tipoMovimiento]);
 
   return (
-    <div className="flex flex-col w-full mx-auto bg-white p-8 shadow-md bg-gray-100 dark:bg-gray-900 text-gray-600 h-screen flex overflow-hidden text-sm">
+    <div className="flex flex-col w-full mx-auto p-8 shadow-md bg-gray-900 text-gray-600 h-screen flex overflow-hidden text-sm">
       <h2 className="text-2xl font-semibold mb-4">Registro de Movimientos</h2>
 
       <div className="pt-2 w-full">
@@ -63,12 +63,12 @@ const Management = () => {
         <div className="mb-4 relative w-full">
           <label
             htmlFor="select"
-            className="block text-sm font-medium text-gray-600"
+            className="block text-sm font-medium "
           >
             Seleccione el movimiento a registrar:
           </label>
           <div className="relative">
-            <div className="h-10 bg-white flex border border-gray-300 rounded items-center">
+            <div className="h-10  flex border border-gray-300 rounded items-center">
               <input
                 disabled
                 name="select"

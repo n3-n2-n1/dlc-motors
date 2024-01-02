@@ -10,7 +10,7 @@ import UsersIcon from "../icon/UsersIcon/UsersIcon";
 
 function Sidebar() {
   return (
-    <div className="bg-white dark:bg-gray-900 dark:border-gray-800 w-20 flex-shrink-0 border-r border-gray-200 flex-col sm:flex pt-3">
+    <div className="bg-gray-900 border-gray-800 w-20 flex-shrink-0 border-r border-gray-200 flex-col sm:flex">
       <div className="h-16 text-[#A9DFD8] flex items-center justify-center">
         <img src="/logo.png" alt="DLC logo" className="w-16" />
       </div>

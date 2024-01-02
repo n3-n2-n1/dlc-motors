@@ -51,19 +51,19 @@ const InventoryForm: React.FC<InventoryFormProps> = ({
     >
       {({ values }) => (
         // Componente Form para envolver los campos del formulario
-        <Form className="bg-white dark:bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
+        <Form className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md">
           {/* Campo de Observaciones */}
           <div className="mb-4 w-full">
-            <p className='block text-xl font-medium text-gray-600 dark:text-gray-300 mb-4'>Cargando inventario</p>
+            <p className='block text-xl font-medium text-gray-500 mb-4'>Cargando inventario</p>
 
-            <label htmlFor="observaciones" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label htmlFor="observaciones" className="block text-sm font-medium text-gray-300">
               Observaciones:
             </label>
             <Field
               as="select"
               id="observaciones"
               name="observaciones"
-              className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="mt-1 block w-full p-2 border  border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value="">Seleccione...</option>
               {observationsList.map((observation, index) => (

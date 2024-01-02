@@ -33,10 +33,12 @@ function TableList() {
   const itemsToDisplay = searchResults || backendData;
 
   return (
-    <>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-gray-400">
+    <> 
+
+    <div className="overflow-y-auto max-h-[calc(100vh-3rem)]">
+       <table className="w-full text-left">
+        <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
+          <tr className="text-gray-100">
             {/* Las columnas deberían ser clickeables para setear un orden */}
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
               Acciones
@@ -86,7 +88,7 @@ function TableList() {
           </tr>
         </thead>
 
-        <tbody className="text-gray-600 dark:text-gray-100">
+        <tbody className="text-gray-100">
           {/* {products.map((product, index) => ( */}
           
           {itemsToDisplay
@@ -184,6 +186,7 @@ function TableList() {
             ))}
         </tbody>
       </table>
+    </div>
       <Pagination
       />
     </>

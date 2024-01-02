@@ -64,14 +64,14 @@ const Actions = () => {
         {/* Botón para edición masiva */}
         <button
           onClick={handleEditMassive}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0"
         >
           Editar varios
         </button>
         {/* Botón para descarga */}
         <button
           onClick={handleDownload}
-          className="bg-slate-800 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0"
+          className="bg-slate-800 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 border-gray-800 border border-gray-200 leading-none py-0"
         >
           Descargar
         </button>
@@ -82,7 +82,7 @@ const Actions = () => {
         {/* Botón para agregar uno solo */}
         <button
           onClick={handleAddOne}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_4_3946"  maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
@@ -98,7 +98,7 @@ const Actions = () => {
         {/* Botón para agregar masiva */}
         <button
           onClick={handleAddMassive}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="mask0_4_3967" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">

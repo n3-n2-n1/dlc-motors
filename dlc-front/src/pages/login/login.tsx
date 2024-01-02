@@ -6,25 +6,42 @@ const validationSchema = Yup.object({
   password: Yup.string().required("Requerido"),
 });
 
+
 function Login() {
+
+  const url = "http://localhost:3000/login"
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: values => {
+      // Realiza la solicitud fetch con los valores del formulario
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Respuesta del servidor:', data);
+        })
+        .catch(error => {
+          console.error('Error en la solicitud:', error);
+        });
     },
   });
 
   return (
-    <div className="font-sans text-gray-700 dark:bg-gray-800 dark:text-white flex justify-center items-center h-screen">
+    <div className="font-sans text-gray-700 bg-gray-800 text-white flex justify-center items-center h-screen">
       <div className="container mx-auto p-8">
         <div className="max-w-md w-full mx-auto">
           <h1 className="text-4xl text-center mb-12 font-bold">DLC Motors</h1>
 
-          <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-2xl">
+          <div className="bg-gray-900 rounded-lg overflow-hidden shadow-2xl">
             <div className="p-8">
               <form onSubmit={formik.handleSubmit}>
                 <div className="relative mb-8">
@@ -34,7 +51,7 @@ function Login() {
                   <input
                     type="text"
                     name="email"
-                    className="block w-full p-3 rounded bg-gray-200 dark:bg-gray-700 border border-transparent focus:outline-none"
+                    className="block w-full p-3 rounded bg-gray-700 border border-transparent focus:outline-none"
                     onChange={formik.handleChange}
                     value={formik.values.email}
                   ></input>
@@ -52,7 +69,7 @@ function Login() {
                   <input
                     type="password"
                     name="password"
-                    className="block w-full p-3 rounded bg-gray-200 dark:bg-gray-700 border border-transparent focus:outline-none"
+                    className="block w-full p-3 rounded bg-gray-700 border border-transparent focus:outline-none"
                     onChange={formik.handleChange}
                     value={formik.values.password}
                   ></input>
@@ -65,7 +82,7 @@ function Login() {
 
                 <button
                   type="submit"
-                  className="w-full p-3 mt-4 bg-indigo-600 text-white shadow rounded-full"
+                  className="w-full p-3 mt-4 bg-blue-600 text-white shadow rounded-full"
                 >
                   Ingresar
                 </button>
@@ -75,7 +92,7 @@ function Login() {
             <div className="flex justify-between p-8 text-sm border-t border-gray-300 dark:bg-gray-900 bg-gray-100">
               <a
                 href="#"
-                className="font-medium dark:text-indigo-300 text-indigo-500"
+                className="font-medium dark:text-indigo-300 text-blue-600"
               >
                 ¿Necesitás ayuda?
               </a>
