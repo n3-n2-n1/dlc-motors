@@ -20,16 +20,7 @@ router.get('/productos', (req, res) => {
 
 // Consultar un producto por término de búsqueda
 router.get('/productos/:query', (req, res) => {
-  const searchTerm = req.params.query;
-  console.log(searchTerm)
-  const filteredProducts = productosController.getProductsBySearchTerm(searchTerm);
-
-  console.log(filteredProducts)
-
-  return res.status(200).send({
-    status: 'success',
-    payload: filteredProducts
-  })
+  productosController.getProductsBySearchTerm(req, res);
 });
 
 module.exports = router

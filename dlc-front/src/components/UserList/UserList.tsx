@@ -75,12 +75,8 @@ const UserList: React.FC = () => {
             className="bg-gray-700 p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow"
           >
             {/* ... (existing user information rendering) */}
-            <div className="flex xl:flex-row flex-col items-center font-medium text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
-              <img
-                src={user.profileImage}
-                className="w-7 h-7 mr-2 rounded-full"
-                alt="profile"
-              />
+            <div className="flex xl:flex-row flex-col items-center font-medium text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full bg-blue">
+              <div className="bg-blue-400"> </div>
               {user.name}
 
             </div>

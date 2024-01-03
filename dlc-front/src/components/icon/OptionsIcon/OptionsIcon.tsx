@@ -3,6 +3,7 @@ interface OptionsIconProps {
 }
 
 const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "white" }) => (
+  
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

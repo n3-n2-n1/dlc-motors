@@ -43,7 +43,7 @@ const Actions = () => {
   const handleSearch = async () => {
     try {
       // Realiza la solicitud a la API para obtener la lista de productos
-      const response = await fetch(`http://localhost:3000/productos?query=${searchTerm}`);
+      const response = await fetch(`http://localhost:3000/productos/${searchTerm}`);
       console.log(searchTerm)
       const data = await response.json();
       console.log(data)

@@ -37,8 +37,8 @@ const getProducts = (req, res) => {
   });
 };
 
-const getProductsBySearchTerm = (req, res) => {
-  const searchTerm = req.query.searchTerm;
+const getProductsBySearchTerm = async (req, res) => {
+  const searchTerm = await req.params.query;
   const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
       console.error(err.message);
@@ -46,7 +46,7 @@ const getProductsBySearchTerm = (req, res) => {
       return;
     }
 
-    db.all('SELECT * FROM productos WHERE name LIKE ?', [`%${searchTerm}%`], (queryErr, rows) => {
+    db.all('SELECT * FROM productos WHERE Producto LIKE ?', [`%${searchTerm}%`], (queryErr, rows) => {
       db.close();
 
       if (queryErr) {

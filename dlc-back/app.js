@@ -3,6 +3,9 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const usuariosRoutes = require('./src/routes/userRoutes');
 const productosRoutes = require('./src/routes/productsRoutes');
+const errorProductsRoutes = require('./src/routes/errorProductsRoutes');
+
+const initializePassport = require('./src/auth/passport')
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +22,8 @@ app.use(express.json());
 // Usa los routers exportados
 app.use(usuariosRoutes);
 app.use(productosRoutes);
+app.use(errorProductsRoutes);
+initializePassport()
 
 // Iniciar el servidor
 app.listen(PORT, () => {

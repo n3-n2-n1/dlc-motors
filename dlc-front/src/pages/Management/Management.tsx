@@ -39,13 +39,19 @@ const Management = () => {
   
   const [tipoMovimiento, setTipoMovimiento] = useState("");
   const [isOutcome, setIsOutcome] = useState(false);
-
-
+  const [isOpen, setIsOpen] = useState(true);
 
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleTipoMovimientoChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
+  };
+
+  const handleOptionSelection = (option: string) => {
+    setSelectedOption(option);
+
+    // Cierra el componente
+    setIsOpen(false);
   };
 
   
@@ -55,7 +61,7 @@ const Management = () => {
   }, [tipoMovimiento]);
 
   return (
-    <div className="flex flex-col w-full mx-auto p-8 shadow-md bg-gray-900 text-gray-600 h-screen flex overflow-hidden text-sm">
+    <div className={`flex flex-col w-full mx-auto p-8 shadow-md bg-gray-900 text-gray-600 h-screen flex overflow-hidden text-sm ${isOpen ? '' : 'hidden'}`}>
       <h2 className="text-2xl font-semibold mb-4">Registro de Movimientos</h2>
 
       <div className="pt-2 w-full">
@@ -68,8 +74,8 @@ const Management = () => {
             Seleccione el movimiento a registrar:
           </label>
           <div className="relative">
-            <div className="h-10  flex border border-gray-300 rounded items-center">
-              <input
+            <div className="h-10 flex border border-gray-300 rounded items-center">
+            <input
                 disabled
                 name="select"
                 id="select"
@@ -117,29 +123,29 @@ const Management = () => {
           />
           <div className="absolute rounded shadow bg-white overflow-hidden hidden peer-checked:flex flex-col w-full mt-1 border border-gray-300">
             <div className="cursor-pointer group">
-            <a
+              <a
                 className={`block p-2 border-transparent border-l-4 group-hover:border-blue-600 ${
-                  selectedOption === "egreso" ? "group-hover:bg-gray-100" : ""
+                  selectedOption === "ingreso" ? "group-hover:bg-gray-100" : ""
                 }`}
-                onClick={() => setSelectedOption("egreso")}
+                onClick={() => setSelectedOption("ingreso")}
               >
                 Ingreso
               </a>
             </div>
             <div className="cursor-pointer group border-t">
-            <a
+              <a
                 className={`block p-2 border-transparent border-l-4 group-hover:border-blue-600 ${
                   selectedOption === "egreso" ? "group-hover:bg-gray-100" : ""
                 }`}
-                onClick={() => setSelectedOption("ingreso")}
+                onClick={() => setSelectedOption("egreso")}
               >
                 Egreso
               </a>
             </div>
             <div className="cursor-pointer group border-t">
-            <a
+              <a
                 className={`block p-2 border-transparent border-l-4 group-hover:border-blue-600 ${
-                  selectedOption === "egreso" ? "group-hover:bg-gray-100" : ""
+                  selectedOption === "inventario" ? "group-hover:bg-gray-100" : ""
                 }`}
                 onClick={() => setSelectedOption("inventario")}
               >
@@ -181,6 +187,9 @@ const Management = () => {
             />
           </div>
         )}
+
+
+        
       </div>
     </div>
   );
