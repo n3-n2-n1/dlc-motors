@@ -1,95 +1,100 @@
 // productosController.js
-const db = require('../models/db');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const dbPath = path.join(__dirname, '../../productos.db');
-
-
-//Crear productitos
-const createProducts = (nombre, precio) => {
-  // Realizar la lógica para insertar un nuevo producto en la base de datos
-  db.run('INSERT INTO productos (Nombre, Precio) VALUES (?, ?)', [nombre, precio], function () {
-    // Falta error handling aca
-  });
-};
-
+const db = require("../database/db");
 
 //Obtener los productitos
 const getProducts = (req, res) => {
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).json({ error: 'Error al abrir la base de datos.' });
+  db.query("SELECT * FROM productos", (error, results, fields) => {
+    if (error) {
+      console.error("An error occurred while executing the query", error);
+      res.status(500).json({ error: "Error al abrir la base de datos." });
       return;
     }
 
-    db.all('SELECT * FROM productos', (queryErr, rows) => {
-      db.close();
-
-      if (queryErr) {
-        console.error(queryErr.message);
-        res.status(500).json({ error: 'Error en la consulta a la base de datos.' });
-        return;
-      }
-
-      res.json(rows);
-    });
+    console.log(results);
+    res.json(results);
   });
 };
 
 const getProductsBySearchTerm = async (req, res) => {
-  const searchTerm = await req.params.query;
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).json({ error: 'Error al abrir la base de datos.' });
-      return;
+  const searchTerm = req.params.query;
+  db.query(
+    "SELECT * FROM productos WHERE Producto LIKE ?",
+    [`%${searchTerm}%`],
+    (error, results, fields) => {
+      if (error) {
+        console.error("An error occurred while executing the query", error);
+        res.status(500).json({ error: "Error al abrir la base de datos." });
+        return;
+      }
+      console.log(results);
+      res.json(results);
     }
+  );
+};
 
-    db.all('SELECT * FROM productos WHERE Producto LIKE ?', [`%${searchTerm}%`], (queryErr, rows) => {
-      db.close();
+//Crear productitos
+const createProduct = (req, res) => {
+  const { Codigo, Producto, Rubro, CodBarras, Precio, Stock } = req.body;
 
-      if (queryErr) {
-        console.error(queryErr.message);
-        res.status(500).json({ error: 'Error en la consulta a la base de datos.' });
+  // Realizar la lógica para insertar un nuevo producto en la base de datos
+  db.query(
+    "INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock) VALUES (?, ?, ?, ?, ?, ?)",
+    [Codigo, Producto, Rubro, CodBarras, Precio, Stock],
+    function (error) {
+      if (error) {
+        console.error("An error occurred while executing the query", error);
+        res.status(500).json({ error: "Error al insertar el producto." });
         return;
       }
 
-      res.json(rows);
-    });
-  });
+      // Get the inserted product
+      db.query(
+        "SELECT * FROM productos WHERE Codigo = ?",
+        [Codigo],
+        function (error, results, fields) {
+          if (error) {
+            console.error("An error occurred while executing the query", error);
+            res.status(500).json({ error: "Error al obtener el producto insertado." });
+            return;
+          }
+
+          res.status(200).json({ message: "Producto insertado correctamente.", product: results[0] });
+
+          console.log(results)
+        }
+      );
+    }
+  );
 };
 
-
 //Eliminar el productito
-const deleteProducts = (req, res) => {
-  const productId = req.params.id;
+const deleteProduct = (req, res) => {
+  const productId = req.params.pid;  
 
   if (!productId) {
-    res.status(400).json({ error: 'ID del producto no proporcionado.' });
+    res.status(400).json({ error: "ID del producto no proporcionado." });
     return;
   }
 
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-
-
-  //Manejar bien esto
-  // db.run('DELETE FROM productos WHERE id = ?', [productId], (err) => {
-  //   db.close();
-
-  //   if (err) {
-  //     console.error(err.message);
-  //     res.status(500).json({ error: 'Error al eliminar el producto.' });
-  //     return;
-  //   }
-
-  //   res.json({ message: 'Producto eliminado correctamente.' });
-  // });
+  db.query("DELETE FROM productos WHERE Codigo = ?", [productId], (error, results, fields) => {
+    if (error) {
+      console.error("An error occurred while executing the query", error);
+      res.status(500).json({ error: "Error al abrir la base de datos." });
+      return;
+    }
+  
+    if (results.affectedRows === 0) {
+      res.status(404).json({ error: "Producto no encontrado." });
+      return;
+    }
+  
+    res.status(204).json({ message: "Producto eliminado correctamente." });
+  });
 };
 
 module.exports = {
-  createProducts,
+  createProduct,
   getProducts,
   getProductsBySearchTerm,
-  deleteProducts
+  deleteProduct,
 };

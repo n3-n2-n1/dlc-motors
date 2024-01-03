@@ -1,8 +1,9 @@
 // usuariosController.js
-const sqlite3 = require("sqlite3").verbose();
+// const sqlite3 = require("sqlite3").verbose();
+const db = require('../database/db');
 
-const path = require("path");
-const dbPath = path.join(__dirname, "../../productos.db");
+// const path = require("path");
+// const dbPath = path.join(__dirname, "../../productos.db");
 
 const jwt = require("jsonwebtoken");
 const secretKey = "12233"; // Debes cambiar esto y utilizar una clave segura
