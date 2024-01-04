@@ -1,51 +1,72 @@
-/** La funcion de error card es traerse los ultimos errores cargados y todos aquellos que existan en la base de datos
- *
- * --Como gestionan ellos esto no lo se, lo que si voy a hacer es dejar el template piola
- *
- * --Por otro lado tenemos el modelo escrito pero hay que consultar con ellos como quieren la rubrica
- */
+import React, { useState, useEffect } from "react";
+import { fetchErrors } from "../../utils/Handlers/Handlers";
+
+
+interface Errors {
+  CodigoError: string;
+  Observacion: string;
+  Detalle: string;
+  Cantidad: number;
+  Precio: number;
+  Producto: string;
+  Codigo: string;
+  CodBarras: number;
+  Origen: string;
+  Imagen: string;
+  Fecha: string;
+}
 
 function ErrorCard() {
+  const [errorData, setErrorData] = useState<Errors[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchErrors();
+        setErrorData(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % errorData.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + errorData.length) % errorData.length);
+  };
+
   return (
-    <div className="">
-
-    <div className="w-full p-4 bg-gray-900">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-gray-200 text-gray-700 text-lg px-6 py-4">
-          Fecha: 26/05/11 - 12:34:21
-        </div>
-
-        <div className="flex justify-between items-center px-6 py-4">
-          <div className="bg-orange-600 text-xs uppercase px-2 py-1 rounded-full border border-gray-200 text-gray-200 font-bold">
-            Ingreso
+    <div className="w-full flex overflow-x-auto">
+    {errorData.map((error, index) => (
+      <div key={error.CodBarras} className="flex-shrink-0 p-4">
+        <div className="rounded-lg overflow-hidden bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
+          <div className="bg-yellow-500 p-4">
+            
+            <span className="inline-flex items-center justify-center px-3 bg-white rounded-md shadow-lg">
+            <h3 className="text-slate-900 dark:text-white text-lg font-medium tracking-tight">{error.Producto}</h3>
+              
+              <svg className="h-6 w-3 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"></svg>
+            </span>
           </div>
-          <div className="text-sm">Importacion</div>
-        </div>
-
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="border rounded-lg p-4 bg-gray-200">El producto fue devuelto por fallas tecnicas en el proceso de armado inicial.</div>
-        </div>
-
-        <div className="bg-gray-200 px-6 py-4">
-          <div className="uppercase text-xs text-gray-600 font-bold">
-            Detalles
-          </div>
-
-          <div className="flex items-center pt-3">
-            <div className="bg-blue-700 w-12 h-12 flex justify-center items-center rounded-full uppercase font-bold text-white"></div>
-            <div className="ml-4">
-              <p className="font-bold">Codigo: AC1012</p>
-              <p className="text-sm text-gray-700 mt-1">Rubro: Motores</p>
-              <p className="text-sm text-gray-700 mt-1">Origen Fábrica</p>
-              <p className="text-sm text-gray-700 mt-1">Producto: Tensor Valvular</p>
-              <p className="text-sm text-gray-700 mt-1">Descripcion: Tensor valvular hidraulico 15mm</p>
-            </div>
+          <div className="p-6">
+            <h3 className="text-slate-900 dark:text-white text-lg font-medium tracking-tight">{error.Fecha}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">{error.Observacion}</p>
+            <h3 className="text-slate-900 dark:text-white mt-1 text-m font-medium tracking-tight">Error: {error.CodigoError}</h3>
+            <h3 className="text-slate-900 dark:text-white mt-1 text-m font-medium tracking-tight">Origen: {error.Origen}</h3>
+            <h3 className="text-slate-900 dark:text-white mt-1 text-m font-medium tracking-tight">CodBarras: {error.CodBarras}</h3>
+            <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">{error.Detalle}</p>
           </div>
         </div>
       </div>
-      
-    </div>
-    </div>
+    ))}
+  </div>
 
   );
 }

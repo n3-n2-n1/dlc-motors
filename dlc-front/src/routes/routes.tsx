@@ -19,7 +19,6 @@ const Returns = lazy(() => import("../pages/Returns/Returns"));
 const Management = lazy(() => import("../pages/Management/Management"))
 const Ranking = lazy(() => import("../pages/Ranking/Ranking"));
 
-const Upload = lazy(() => import("../utils/loadProducts"));
 
 const AppRoutes: React.FC = () => {
   return (
@@ -43,7 +42,6 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.moves} element = {<Moves/>} />
 
         <Route path={paths.ranking} element={<Ranking />} />
-        <Route path={paths.upload} element={<Upload />} />
       </Route>
     </Routes>
   );

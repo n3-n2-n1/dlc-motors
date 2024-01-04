@@ -9,6 +9,21 @@ interface User {
     // Otros campos según la estructura de tus datos de usuario
   }
 
+
+  interface Errors {
+    CodigoError: string;
+    Observacion: string;
+    Detalle: string;
+    Cantidad: number;
+    Precio: number;
+    Producto: string;
+    Codigo: string;
+    CodBarras: number;
+    Origen: string;
+    Imagen: string;
+    Fecha: string;
+  }
+  
 const fetchUser = async (): Promise<User[]> => {
     try {
       const response = await fetch('http://localhost:3000/usuarios');
@@ -26,7 +41,26 @@ const fetchUser = async (): Promise<User[]> => {
 }
 
 
-export {fetchUser}
+
+const fetchErrors = async (): Promise<Errors[]> => {
+
+  try{
+    const response = await fetch('http://localhost:3000/getErrorProduct');
+
+    if (!response.ok){
+      throw new Error('Error status')
+    }
+
+    const errorData: Errors[] = await response.json();
+    return errorData;
+  } catch(error){
+    console.error('error', error);
+    throw error;
+  }
+}
+
+
+export {fetchUser, fetchErrors}
 
 // const app = express();
 // const dbPath = './productos.db';

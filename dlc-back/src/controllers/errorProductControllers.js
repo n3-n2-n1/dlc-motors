@@ -1,30 +1,64 @@
 // productosController.js
 const db = require('../database/db');
-// const sqlite3 = require('sqlite3').verbose();
-// const path = require('path');
-// const dbPath = '';
 
 
 const getErrorProducts = (req, res) => {
-    try {
-      db.connect((err) => {
-        if (err) throw err;
-  
-        db.query('SELECT * FROM errores', (queryErr, rows) => {
-          db.end();
-  
-          if (queryErr) throw queryErr;
-  
-          res.json(rows);
-        });
-      });
-    } catch (error) {
-      console.error(error.message);
+  db.query('SELECT * FROM errores', (queryErr, rows) => {
+    if (queryErr) {
+      console.error(queryErr.message);
       res.status(500).json({ error: 'Error en la consulta a la base de datos.' });
+      return;
     }
-  };
+
+    res.json(rows);
+  });
+};
+
+const createError = (req, res) => {
+    const { CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen } = req.body;
+
+    // Realizar la lógica para insertar un nuevo producto en la base de datos
+    db.query("INSERT INTO errores (CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen],
+      function (error) {
+        if (error) {
+          console.error("An error occurred while executing the query", error);
+          res.status(500).json({ error: "Error al insertar el error." });
+          return;
+        }
+      }
+    );
+    }
+
+
+const DeleteError = (req, res) => {
+
+    const errorId = req.params.pid;  
+
+    if (!errorId) {
+      res.status(400).json({ error: "ID del producto no proporcionado." });
+      return;
+    }
+  
+    db.query("DELETE FROM errores WHERE Codigo = ?", [errorId], (error, results, fields) => {
+      if (error) {
+        console.error("An error occurred while executing the query", error);
+        res.status(500).json({ error: "Error al abrir la base de datos." });
+        return;
+      }
+    
+      if (results.affectedRows === 0) {
+        res.status(404).json({ error: "Error no encontrado." });
+        return;
+      }
+    
+      res.status(204).json({ message: "Error eliminado correctamente." });
+    });
+
+}
 
   module.exports = {
     getErrorProducts,
-
+    createError,
+    DeleteError
   }

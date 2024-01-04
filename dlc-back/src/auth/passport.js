@@ -25,7 +25,7 @@ const initializePassport = () => {
       },
       async (req, username, password, done) => {
         try {
-          const { first_name, last_name } = req.body;
+          const { nombre } = req.body;
           let { role } = req.body;
 
           // const userExists = await userService.checkExistingUser(username);
@@ -38,8 +38,7 @@ const initializePassport = () => {
           console.log(createHash(password))
 
           const newUser = {
-            first_name,
-            last_name,
+            nombre,
             email: username,
             password: createHash(password),
             role: role || "user",
@@ -49,6 +48,8 @@ const initializePassport = () => {
 
           // Acá va la función del service para registrar el user
           const result = await makeUser(newUser);
+
+          console.log(result)
 
           return done(null, result);
         } catch (error) {

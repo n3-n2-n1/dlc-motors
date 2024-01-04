@@ -1,27 +1,12 @@
-// usuariosController.js
-// const sqlite3 = require("sqlite3").verbose();
-const db = require('../database/db');
 
-// const path = require("path");
-// const dbPath = path.join(__dirname, "../../productos.db");
+const db = require('../database/db');
 
 const jwt = require("jsonwebtoken");
 const secretKey = "12233"; // Debes cambiar esto y utilizar una clave segura
 
 const { isValidPassword } = require("../utils/bcrypt");
 
-// Función para comparar contraseñas
-// async function comparePasswords(inputPassword, hashedPassword) {
-//   try {
-//     // Compara la contraseña proporcionada con la contraseña almacenada en forma de hash
-//     const match = await bcrypt.compare(inputPassword, hashedPassword);
-//     return match;
-//   } catch (error) {
-//     // Maneja cualquier error que pueda ocurrir durante la comparación
-//     console.error("Error al comparar contraseñas:", error);
-//     throw new Error("Error al comparar contraseñas");
-//   }
-// }
+
 
 // Función para comparar contraseñas
 async function passwordValidate (user, password) {
@@ -34,82 +19,69 @@ function generateSessionToken(userId) {
   return token;
 }
 
-// Crear usuario
-function makeUser(req, res) {
-  const { email, password } = req.body;
 
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
+const makeUser = (newUser, res) => {
+  const { nombre, email, password, role } = newUser;
 
-  db.run(
-    "INSERT INTO usuarios (Email, Password) VALUES (?, ?)",
-    [email, password],
-    (err) => {
+  console.log(newUser);
+
+  db.query(
+    "INSERT INTO usuarios (Nombre, Email, Password, Role) VALUES (?, ?, ?, ?)",
+    [nombre, email, password, role],
+    (err, results) => {
       if (err) {
         console.error(err.message);
         res.status(500).json({ error: "Error al crear el usuario" });
-        db.close(); // Asegúrate de cerrar la base de datos en caso de error
-      } else {
-        db.close(); // Cierra la base de datos después de enviar la respuesta
-        return; // Agrega un return aquí
+        return;
       }
+      console.log(results);
+      res.json(results);
     }
   );
-}
+};
 
-//Obterner usuariosss
 const getUsers = (req, res) => {
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-
-  db.all("SELECT * FROM usuarios", (err, rows) => {
-    db.close();
-
+  db.query("SELECT * FROM usuarios", (err, results) => {
     if (err) {
       console.error(err.message);
-      res
-        .status(500)
-        .json({ error: "Error en la consulta a la base de datos." });
+      res.status(500).json({ error: "Error al obtener los usuarios" });
+      return;
+    }
+    console.log(results);
+    res.json(results);
+  });
+};
+
+const getUserByEmail = async (req, res) => {
+  const email = req.params.email;
+
+  db.query("SELECT * FROM usuarios WHERE Email = ?", [email], (err, results) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: `Error al obtener el usuario ${email}.` });
       return;
     }
 
-    res.json(rows);
+    if (results.length === 0) {
+      res.status(404).json({ error: `No se encontró el usuario ${email}.` });
+      return;
+    }
+
+    res.json(results[0]);
   });
 };
 
-// Encontrar un user a través de su email.
-const getUserByEmail = async (req, res) => {
-  const email = await req.params.email;
-
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-
+const getUserByEmailAlt = (email) => {
   return new Promise((resolve, reject) => {
-    db.get("SELECT * FROM usuarios WHERE Email = ?", [email], (err, row) => {
-      db.close();
-
-      if (!row) {
-        res.status(404).json({ error: `No se encontró el usuario ${email}.` });
-        return;
-      } else {
-        res.json(row);
-      }
-    });
-  });
-};
-
-const getUserByEmailAlt = async (email) => {
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-  
-  return new Promise((resolve, reject) => {
-    db.get("SELECT * FROM usuarios WHERE Email = ?", [email], (err, row) => {
-      db.close();
-
+    db.query("SELECT * FROM usuarios WHERE Email = ?", [email], (err, results) => {
       if (err) {
         console.error(`Error al obtener el usuario ${email}: ${err}`);
         reject(err);
-      } else if (!row) {
+      } else if (results.length === 0) {
         console.error(`No se encontró el usuario ${email}.`);
         resolve(null);
       } else {
-        resolve(row);
+        resolve(results[0]);
       }
     });
   });
