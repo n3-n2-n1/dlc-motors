@@ -61,66 +61,34 @@ const Management = () => {
   }, [tipoMovimiento]);
 
   return (
-    <div className={`flex flex-col w-full mx-auto p-8 shadow-md bg-gray-900 text-gray-600 h-screen flex overflow-hidden text-sm ${isOpen ? '' : 'hidden'}`}>
-      <h2 className="text-2xl font-semibold mb-4">Registro de Movimientos</h2>
-
+    <div className={`flex flex-col w-full mx-auto shadow-md bg-gray-900 text-white h-screen flex overflow-hidden text-sm p-6 ${isOpen ? '' : 'hidden'}`}>
+            <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
+        <div className="mr-6">
+          <h1 className="text-4xl mb-2 text-white font-weight-300">Movimientos</h1>
+          <h2 className="text-gray-500">Edita, crea y elimina ingresos, egresos e inventario.</h2>
+        </div>
+        <div className="justify-center">
+          <div className="mt-6"></div>
+        </div>
+      </div>
       <div className="pt-2 w-full">
         {/* Selector */}
-        <div className="mb-4 relative w-full">
+        <div className="mb-4 relative w-full pt-2">
           <label
             htmlFor="select"
-            className="block text-sm font-medium "
+            className="block text-sm font-medium mb-6 "
           >
             Seleccione el movimiento a registrar:
-          </label>
-          <div className="relative">
-            <div className="h-10 flex border border-gray-300 rounded items-center">
-            <input
-                disabled
-                name="select"
-                id="select"
-                className="px-4 appearance-none outline-none text-gray-800 w-full"
-                readOnly
-              />
-              <button className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-gray-600">
-                <svg
-                  className="w-4 h-4 mx-2 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-              <label
-                htmlFor="show_more"
-                className="cursor-pointer outline-none focus:outline-none border-l border-gray-300 transition-all text-gray-300 hover:text-gray-600"
-              >
-                <svg
-                  className="w-4 h-4 mx-2 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="18 15 12 9 6 15"></polyline>
-                </svg>
-              </label>
-            </div>
-          </div>
-          <input
-            type="checkbox"
-            name="show_more"
-            id="show_more"
-            className="peer hidden"
+          </label> 
+          <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state"
             value={selectedOption}
-          />
+            onChange={(e) => setSelectedOption(e.target.value)}
+          >
+          <option value="ingreso">Ingreso</option>
+          <option value="egreso">Egreso</option>
+          <option value="inventario">Inventario</option>
+
+          </select>
           <div className="absolute rounded shadow bg-white overflow-hidden hidden peer-checked:flex flex-col w-full mt-1 border border-gray-300">
             <div className="cursor-pointer group">
               <a

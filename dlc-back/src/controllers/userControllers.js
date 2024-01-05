@@ -131,9 +131,17 @@ const loginUser = async (req, res) => {
   }
 }
 
+
+const errorFatal = async (req, res) =>{
+  return res
+  .status(401)
+  .send({ status: 'error', error: 'Contraseña incorrecta.' })
+}
+
 module.exports = {
   makeUser,
   getUsers,
   getUserByEmail,
   loginUser,
+  errorFatal
 };

@@ -35,4 +35,10 @@ router.post("/usuarios/login", (req, res) => {
   usuariosController.loginUser(req, res);
 });
 
+
+
+router.post("/404", (req, res) => {
+  usuariosController.errorFatal(req,res);
+})
+
 module.exports = router;

@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
   oemProducto: Yup.string().required('Campo requerido').uppercase(),
   importacion: Yup.string().when("observaciones", ([observaciones], schema) => {
     return observaciones === "Importación"
-      ? schema.required("Required")
+      ? schema.required("*Campo obligatorio")
       : schema;
   }),
 });

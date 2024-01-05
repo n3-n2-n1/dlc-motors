@@ -32,31 +32,31 @@ const Filter = () => {
       </div>
 
       {isOpen && (
-        <div className="absolute mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-700 z-50">
+        <div className="absolute mt-2 w-56 rounded-md shadow-lg bg-gray-700 ring-1  ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-700 z-50">
           <div className="py-1">
             {/* Contenido del menú desplegable */}
             <button
               onClick={() => console.log('30 días')}
-              className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+              className="w-full text-left block px-4 py-2 text-sm text-gray-100 dark:text-gray-300"
             >
               Rubro
             </button>
             <button
               onClick={() => console.log('Artículos: 20')}
-              className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+              className="w-full text-left block px-4 py-2 text-sm text-gray-100 dark:text-gray-300"
             >
               Origen
             </button>
 
             <button
               onClick={() => console.log('Artículos: 20')}
-              className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+              className="w-full text-left block px-4 py-2 text-sm text-gray-100 dark:text-gray-300"
             >
               Fecha
             </button>
             <button
               onClick={() => console.log('Artículos: 20')}
-              className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+              className="w-full text-left block px-4 py-2 text-sm text-gray-100 dark:text-gray-300"
             >
               Origen
             </button>

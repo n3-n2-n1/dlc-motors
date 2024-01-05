@@ -4,10 +4,12 @@
 
 
 interface User {
-    id: number;
-    name: string;
-    // Otros campos según la estructura de tus datos de usuario
-  }
+  Nombre: string;
+  Role: string;
+  Email: string;
+  id: string;
+  // Add other user properties as needed
+}
 
 
   interface Errors {

@@ -36,7 +36,7 @@ function TableList() {
   return (
     <> 
 
-    <div className="overflow-y-auto max-h-[calc(100vh-3rem)]">
+    <div className="overflow-y-auto max-h-[calc(88vh-3rem)]">
        <table className="w-full text-left">
         <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
           <tr className="text-gray-100">
@@ -51,7 +51,7 @@ function TableList() {
               Código
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Codigo OEM
+              Cod.OEM
             </th>
             <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
               Descripción
@@ -136,6 +136,7 @@ function TableList() {
                   </div>
                 </td>
                 <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
+                  
                   {product.Codigo}
                 </td>
                 <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">

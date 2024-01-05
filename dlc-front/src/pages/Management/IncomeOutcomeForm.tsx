@@ -2,13 +2,13 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  observaciones: Yup.string().required("Required"),
+  observaciones: Yup.string().required("* Campo requerido"),
   detalle: Yup.string(),
-  cantidad: Yup.number().required("Required"),
-  oemProducto: Yup.string().required("Required").uppercase(),
+  cantidad: Yup.number().required("* Campo requerido"),
+  oemProducto: Yup.string().required("* Campo requerido").uppercase(),
   importacion: Yup.string().when("observaciones", ([observaciones], schema) => {
     return observaciones === "Importación"
-      ? schema.required("Required")
+      ? schema.required("* Campo requerido")
       : schema;
   }),
 });
@@ -45,16 +45,16 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
       }}
     >
       {({ values }) => (
-        <Form className="bg-gray-800 text-black text-white p-4 rounded-md shadow-md">
+        <Form className="bg-gray-800 text-white p-4 rounded-md shadow-md">
         <div className="mb-4 w-full">
-          <label htmlFor="observaciones" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+          <label htmlFor="observaciones" className="block text-sm font-medium text-gray-800">
             Observaciones:
           </label>
           <Field
             as="select"
             id="observaciones"
             name="observaciones"
-            className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+            className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 text-gray-800"
           >
             <option value="">Seleccione...</option>
             {observationsList.map((observation, index) => (
@@ -68,7 +68,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
 
         {values.observaciones === "Importación" && (
           <div className="mb-4">
-            <label htmlFor="importacion" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label htmlFor="importacion" className="block text-sm font-medium text-white-600 dark:text-white-300">
               Número de importación:
             </label>
             <Field
@@ -82,7 +82,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
         )}
 
         <div className="mb-4">
-          <label htmlFor="detalle" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+          <label htmlFor="detalle" className="block text-sm font-medium text-white-600 dark:text-white-300">
             Detalle:
           </label>
           <Field
@@ -95,7 +95,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
         </div>
 
         <div className="mb-4">
-          <label htmlFor="cantidad" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+          <label htmlFor="cantidad" className="block text-sm font-medium text-white-600 dark:text-white-300">
             Cantidad:
           </label>
           <Field
@@ -108,7 +108,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
         </div>
 
         <div className="mb-4">
-          <label htmlFor="oemProducto" className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+          <label htmlFor="oemProducto" className="block text-sm font-medium text-white-600 dark:text-white-300">
             OEM Producto:
           </label>
           <Field

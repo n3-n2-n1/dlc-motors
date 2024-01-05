@@ -51,12 +51,10 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     >
       {({ values }) => (
         // Componente Form para envolver los campos del formulario
-        <Form className="bg-gray-900 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-[57vh] overflow-y-auto lg:block hidden p-5">
+        <Form className="">
           {/* Campo de Observaciones */}
-          <div className="w-full">
-            <p className='block text-xl font-medium text-gray-100 dark:text-gray-300 mb-4'>Reporte de Errores</p>
-
-            <label htmlFor="observaciones" className="block text-sm font-medium text-gray-2 00 dark:text-gray-300">
+          <div className="w-full pt-4">
+            <label htmlFor="observaciones" className="block text-sm font-medium text-white 00 dark:text-gray-300">
               Observaciones:
             </label>
             <Field
