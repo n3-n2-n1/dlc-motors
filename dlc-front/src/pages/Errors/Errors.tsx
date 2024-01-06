@@ -1,7 +1,6 @@
 import ErrorCard from "../../components/ErrorCard/ErrorCard"
 import ErrorInform from "../../components/ErrorInform/ErrorInform"
 
-const isOutcome = true;
 const OutcomeObservations = [] || undefined
 
 const products = [] || undefined
@@ -18,16 +17,16 @@ const Errors = () => {
           <div className="mt-6"></div>
         </div>
       </div>
-      <div className="w-full h-full bg-gray-900">
-      <ErrorInform isOutcome={isOutcome} observationsList={OutcomeObservations} products={products} />
+      <div className="">
+      <ErrorInform observationsList={OutcomeObservations} products={products} />
 
       </div>
     
 
-      <div className="w-full flex p-10 bg-gray-900">
+      <div className="">
+      <ErrorCard />
   
       {/* Esto ahora debería estar junto a ErrorInform */}
-      <ErrorCard />
   
 
       </div>

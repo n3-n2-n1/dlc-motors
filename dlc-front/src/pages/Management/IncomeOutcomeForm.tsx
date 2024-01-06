@@ -16,20 +16,18 @@ const validationSchema = Yup.object().shape({
 import { IProduct } from "../../components/Actions/Actions";
 
 interface IncomeOutcomeFormProps {
-  isOutcome: boolean;
   observationsList: string[];
   products: IProduct[];	
 }
 
 const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
   observationsList,
-  isOutcome,
   products
 }) => {
   const initialValues = {
     observaciones: "",
     detalle: "",
-    cantidad: isOutcome ? 1 : "",
+    cantidad:  1,
     oemProducto: "",
     importacion: "",
   };
@@ -37,7 +35,6 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
   console.log(products)
   return (
     <Formik
-      key={isOutcome ? 'outcome' : 'income'}
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
@@ -47,6 +44,7 @@ const IncomeOutcomeForm: React.FC<IncomeOutcomeFormProps> = ({
       {({ values }) => (
         <Form className="bg-gray-800 text-white p-4 rounded-md shadow-md">
         <div className="mb-4 w-full">
+          <a>ENTRADA REGISTRO</a>
           <label htmlFor="observaciones" className="block text-sm font-medium text-gray-800">
             Observaciones:
           </label>

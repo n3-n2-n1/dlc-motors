@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 // Define la interfaz para los props del componente
 interface ErrorFormProps {
   observationsList: string[];
-  isOutcome: boolean;
   products: any[]; // Reemplaza 'any' con el tipo de tus productos
 }
 
@@ -26,14 +25,13 @@ const validationSchema = Yup.object().shape({
 // Componente funcional del formulario de inventario
 const ErrorForm: React.FC<ErrorFormProps> = ({
   observationsList,
-  isOutcome,
   products,
 }) => {
   // Valores iniciales del formulario
   const initialValues = {
     observaciones: '',
     detalle: '',
-    cantidad: isOutcome ? 1 : '',
+    cantidad: 1,
     oemProducto: '',
     importacion: '',
   };
