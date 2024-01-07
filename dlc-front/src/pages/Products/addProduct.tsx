@@ -4,6 +4,8 @@ import { NewIProduct } from "../../Interfaces/Products";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { createProduct } from "../../utils/Handlers/Handlers";
+
 const validationSchema = Yup.object({
   pieceCode: Yup.string().required("Requerido"),
   OEMCode: Yup.string().required("Requerido"),
@@ -17,7 +19,7 @@ const validationSchema = Yup.object({
   .required("Requerido"),
   stock: Yup.number().required("Requerido"),
   hasStock: Yup.boolean().required("Requerido"),
-  picture: Yup.string().required("Requerido"),
+  picture: Yup.string(), // poner required
   brokenOrReturned: Yup.number(),
   kit: Yup.boolean(),
   tag: Yup.string().required("Requerido"),
@@ -42,7 +44,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
       newCompatibleBrand: brands[0] || "",
       stock: null,
       hasStock: false,
-      picture: "",
+      picture: "picture",
       brokenOrReturned: 0,
       kit: false,
       tag: "",
@@ -51,6 +53,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
+      createProduct(values);
     },
   });
 

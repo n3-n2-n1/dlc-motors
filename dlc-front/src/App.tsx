@@ -11,16 +11,21 @@ const App = () => {
 
   const [authenticated, setAuthenticated] = useState(false);
 
+
   useEffect(() => {
     // Aquí puedes realizar la lógica para verificar si el usuario está autenticado.
-    // Puedes hacer una llamada a la API para verificar la sesión del usuario.
-    // Si estás utilizando tokens JWT, puedes verificar la validez del token almacenado en localStorage.
-    // Por ahora, estoy simulando la autenticación después de 2 segundos.
-    setTimeout(() => {
-      setAuthenticated(true);
-    }, 2000);
-  }, []);
+    // Por ejemplo, puedes verificar la existencia de un token JWT en localStorage.
+    const token = localStorage.getItem('miTokenJWT');
 
+    if (token) {
+      // Aquí puedes realizar la validación del token con tu servidor si es necesario.
+      // Por ahora, simplemente estableceré la autenticación como verdadera.
+      setAuthenticated(true);
+    } else {
+      // Si no hay token, puedes dejar la autenticación como falsa o redirigir a la página de inicio de sesión.
+      setAuthenticated(false);
+    }
+  }, []);
   const props = {}
 
 

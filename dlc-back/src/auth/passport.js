@@ -35,7 +35,7 @@ const initializePassport = () => {
           //   return done(null, false);
           // }
 
-          console.log(createHash(password))
+          // console.log(createHash(password))
 
           const newUser = {
             nombre,
@@ -44,7 +44,7 @@ const initializePassport = () => {
             role: role || "user",
           };
 
-          console.log(newUser)
+          // console.log(newUser)
 
           // Acá va la función del service para registrar el user
           const result = await makeUser(newUser);

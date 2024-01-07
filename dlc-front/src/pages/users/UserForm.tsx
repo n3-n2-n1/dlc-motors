@@ -6,7 +6,7 @@ import { User } from "../../Interfaces/User";
 import { createUser } from "../../utils/Handlers/Handlers";
 
 const validationSchema = Yup.object().shape({
-  fullName: Yup.string().required("Campo requerido"),
+  name: Yup.string().required("Campo requerido"),
   password: Yup.string().required("Campo requerido"),
   role: Yup.string().required("Campo requerido"),
   email: Yup.string().email("Debe ingresar un email válido").required("Campo requerido"),
@@ -32,7 +32,7 @@ interface UserFormProps {
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
   // Valores iniciales del formulario
   const initialValues = {
-    fullName: "",
+    name: "",
     password: "",
     role: "",
     email: "",
@@ -42,7 +42,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // createProduct(values);
+      createUser(values as any)
+      
       console.log(values);
     },
   });
@@ -65,23 +66,23 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           >
             <div className="mb-4">
               <label
-                htmlFor="fullName"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Nombre completo:
               </label>
               <input
                 type="text"
-                id="fullName"
-                name="fullName"
+                id="name"
+                name="name"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.fullName}
+                value={formik.values.name}
               />
-              {formik.touched.fullName && formik.errors.fullName ? (
+              {formik.touched.name && formik.errors.name ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.fullName}
+                  {formik.errors.name}
                 </div>
               ) : null}
             </div>

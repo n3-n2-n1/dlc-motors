@@ -20,14 +20,14 @@ function generateSessionToken(userId) {
 }
 
 
-const makeUser = (newUser, res) => {
-  const { nombre, email, password, role } = newUser;
+const makeUser = async (newUser, res) => {
+  const { name, email, password, role } = newUser;
 
-  console.log(newUser);
+  // console.log(newUser);
 
   db.query(
     "INSERT INTO usuarios (name, email, password, role) VALUES (?, ?, ?, ?)",
-    [nombre, email, password, role],
+    [name, email, password, role],
     (err, results) => {
       if (err) {
         console.error(err.message);
@@ -35,7 +35,7 @@ const makeUser = (newUser, res) => {
         return;
       }
       console.log(results);
-      res.json(results);
+      console.log('usuario creado')
     }
   );
 };
@@ -123,8 +123,6 @@ const loginUser = async (req, res) => {
     if (!res.headersSent) {
       res.json({ token });
     }
-
-    res.json({ token });
   } catch (error) {
     console.error("Error al intentar iniciar sesión:", error);
     res.status(500).json({ error: "Error interno del servidor" });

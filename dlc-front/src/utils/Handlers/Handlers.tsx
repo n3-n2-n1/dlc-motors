@@ -1,5 +1,7 @@
 import { User } from "../../Interfaces/User";
 import { Errors } from "../../Interfaces/Errors";
+import { Link } from "react-router-dom";
+import { paths } from "../../routes/paths";
 
 const fetchUser = async (): Promise<User[]> => {
   try {
@@ -18,8 +20,9 @@ const fetchUser = async (): Promise<User[]> => {
 };
 
 const createUser = async (userData: any) => {
+
   try {
-    const response = await fetch("http://localhost:3000/productos", {
+    const response = await fetch("http://localhost:3000/usuarios/registro", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,12 +31,13 @@ const createUser = async (userData: any) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
+      const userData = await response.json();
+      throw new Error(userData.error);
     }
 
     const responseData = await response.json();
     console.log("Product created successfully:", responseData);
+    <Link to={paths.products}/>
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -61,11 +65,12 @@ const createProduct = async (productData: any) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
+      const productData = await response.json();
+      throw new Error(productData.error);
     }
 
     const responseData = await response.json();
+    console.log(responseData);
     console.log("Product created successfully:", responseData);
   } catch (error) {
     console.error("Error creating product:");
@@ -110,6 +115,27 @@ const createError = async (errorData: any) => {
   }
 };
 
+
+
+const LoginUser = async (values: any) => {
+  const url = "http://localhost:3000/usuarios/login";
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    return response; // Devuelve la respuesta para que pueda ser manejada en el código que llama a LoginUser
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    throw error; // Re-lanza el error para que pueda ser manejado en el código que llama a LoginUser
+  }
+
+};
 export {
   fetchUser,
   fetchErrors,
@@ -117,4 +143,5 @@ export {
   fetchProducts,
   createProduct,
   createUser,
+  LoginUser
 };
