@@ -21,12 +21,14 @@ const App = () => {
     }, 2000);
   }, []);
 
+  const props = {}
+
 
   return (
 
 
     (
-      <SearchProvider>
+      <SearchProvider {...(props as any)}>
       <Suspense fallback={<Loader />}>
         {authenticated ? (
           <AppRoutes />
