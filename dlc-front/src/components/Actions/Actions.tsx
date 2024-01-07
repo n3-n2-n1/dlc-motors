@@ -2,6 +2,9 @@ import { useState } from "react";
 
 import { useSearchContext } from "../../contexts/SearchContext.tsx";
 import SearchIcon from "../icon/SearchIcon/SearchIcon.tsx";
+import { exportToExcel } from "../../utils/downloadProducts.tsx";
+import { Link } from "react-router-dom";
+import { paths } from "../../routes/paths.ts";
 
 // Habría que dejar esta interface en un lugar general
 export interface IProduct {
@@ -26,14 +29,9 @@ const Actions = () => {
   };
 
   const handleDownload = () => {
-    // Lógica para la descarga
-    console.log("Descargar");
+    exportToExcel()
   };
 
-  const handleAddOne = () => {
-    // Lógica para agregar uno solo
-    console.log("Agregar uno solo");
-  };
 
   const handleAddMassive = () => {
     // Lógica para agregar masivamente
@@ -66,14 +64,14 @@ const Actions = () => {
         {/* Botón para edición masiva */}
         <button
           onClick={handleEditMassive}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 hover:text-gray-500"
         >
           Editar varios
         </button>
         {/* Botón para descarga */}
         <button
           onClick={handleDownload}
-          className="bg-slate-800 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 border border-gray-200 leading-none py-0"
+          className="bg-blue-800 inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none py-0 py-0 hover:text-gray-200"
         >
           Descargar
         </button>
@@ -82,10 +80,10 @@ const Actions = () => {
       {/* DEL OTRO COSTADO */}
       <div className="flex items-center gap-3">
         {/* Botón para agregar uno solo */}
+        <Link to={paths.addProduct}>
         <button
-          onClick={handleAddOne}
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
-        >
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3 hover:text-gray-100"
+          >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_4_3946"  maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
             <rect width="16" height="16" fill="#fefefe"/>
@@ -97,6 +95,7 @@ const Actions = () => {
 
           Agregar producto
         </button>
+          </Link>
         {/* Botón para agregar masiva */}
         <button
           onClick={handleAddMassive}

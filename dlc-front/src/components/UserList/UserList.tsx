@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import UserActions from "./UserActions";
 import { fetchUser } from "../../utils/Handlers/Handlers";
-interface User {
-  Nombre: string;
-  Role: string;
-  Email: string;
-  id: string;
-  // Add other user properties as needed
-}
+import UserForm from "../../pages/users/UserForm";
+import { User } from "../../Interfaces/User";
 
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -33,12 +28,11 @@ const UserList: React.FC = () => {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.Nombre &&
-      user.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      user.role 
   );
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
+    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
       <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
         <div className="mr-6 flex-row">
           <h1 className="text-4xl mb-2 text-white font-weight-300">Usuarios</h1>
@@ -48,14 +42,13 @@ const UserList: React.FC = () => {
           <div className="mt-6"></div>
         </div>
       </div>
-      <div className="space-y-4 mt-3 text-gray-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-3 text-gray-300">
         {filteredUsers.map((user) => (
-          <button
+          <div
             key={user.id}
-            className="bg-gray-700 p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow"
+            className="bg-gray-700 p-3 flex flex-col rounded-md dark:bg-gray-800 shadow"
           >
-            {/* ... (existing user information rendering) */}
-            <div className="flex xl:flex-row flex-col items-center font-medium text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full bg-blue">
+            <div className="flex flex-row items-center font-medium text-white pb-2 mb-2 border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full bg-blue">
               <div className="mr-2">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <mask id="mask0_4_5896"  maskUnits="userSpaceOnUse" x="0" y="0" width="20" height="20">
@@ -67,13 +60,17 @@ const UserList: React.FC = () => {
               </svg>
 
               </div>
-              {user.Nombre}
+              {user.name}
             </div>
-            Rol: {user.Role}
-            <div>Email: {user.Email}</div>
-          </button>
+            Rol: {user.role}
+            <div>Email: {user.email}</div>
+          </div>
         ))}
       </div>
+
+        <div className="w-auto">
+          <UserForm user={users} />
+        </div>
     </div>
   );
 };

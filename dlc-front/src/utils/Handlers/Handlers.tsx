@@ -1,28 +1,5 @@
-// import { FormValues } from "../../pages/Register/Register";
-// import express from 'express';
-// import sqlite3 from 'sqlite3';
-
-interface User {
-  Nombre: string;
-  Role: string;
-  Email: string;
-  id: string;
-  // Add other user properties as needed
-}
-
-interface Errors {
-  CodigoError: string;
-  Observacion: string;
-  Detalle: string;
-  Cantidad: number;
-  Precio: number;
-  Producto: string;
-  Codigo: string;
-  CodBarras: number;
-  Origen: string;
-  Imagen: string;
-  Fecha: string;
-}
+import { User } from "../../Interfaces/User";
+import { Errors } from "../../Interfaces/Errors";
 
 const fetchUser = async (): Promise<User[]> => {
   try {
@@ -37,6 +14,61 @@ const fetchUser = async (): Promise<User[]> => {
   } catch (error) {
     console.error("Error fetching user data:", error);
     throw error;
+  }
+};
+
+const createUser = async (userData: any) => {
+  try {
+    const response = await fetch("http://localhost:3000/productos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Product created successfully:", responseData);
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+};
+
+const fetchProducts = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/productos"); // Reemplaza con la ruta correcta
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error; // Puedes manejar el error aquí o dejar que el componente principal lo maneje
+  }
+};
+
+const createProduct = async (productData: any) => {
+  try {
+    const response = await fetch("http://localhost:3000/productos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Product created successfully:", responseData);
+  } catch (error) {
+    console.error("Error creating product:");
   }
 };
 
@@ -56,84 +88,33 @@ const fetchErrors = async (): Promise<Errors[]> => {
   }
 };
 
-export { fetchUser, fetchErrors };
+const createError = async (errorData: any) => {
+  try {
+    const response = await fetch("http://localhost:3000/productos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(errorData),
+    });
 
-// const app = express();
-// const dbPath = './productos.db';
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
 
-// //Esto es una falopa para que funcione no deberia estar acá xd
-// interface Request {
-//   res: any,
-//   req: any
-// }
+    const responseData = await response.json();
+    console.log("Product created successfully:", responseData);
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+};
 
-// //Esto tambien es falopa jajajaja
-// interface Values {
-//   values: any
-// }
-
-// //A esto le falta fijate si funciona bien
-
-// // hay dramas acá con el tema chuncks como q quiero acceder per otira q hay drama con el process ni idea
-// const createProduct = () => {
-
-//   app.post('/productos', (req, res) => {
-
-//     const { Codigo, Producto, Rubro, CodBarras, Precio, Stock } = req.body;
-//     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-//     const insertQuery = `INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock) VALUES (?, ?, ?, ?, ?, ?)`;
-
-//     db.run(insertQuery, [Codigo, Producto, Rubro, CodBarras, Precio, Stock], function (err) {
-//       db.close(); // Cierra la conexión después de realizar la inserción
-//       if (err) {
-//         res.status(500).json({ error: err.message });
-//         return;
-//       }
-//       res.json({ id: this.lastID });
-//     });
-//   });
-
-// }
-
-// //A esto le esta faltando inyectarle los valores que capturamos en FormData
-// export const createUser = async (userData: FormValues) => {
-//   try {
-//     const response = await fetch('/usuarios', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(userData),
-//     });
-
-//     if (!response.ok) {
-//       const errorData = await response.json();
-//       throw new Error(errorData.error);
-//     }
-
-//     const responseData = await response.json();
-//     console.log('User created successfully:', responseData);
-//   } catch (error: any) {
-//     console.error('Error creating user:', error.message);
-//   }
-// };
-
-// export const getUsers = () => {
-
-// app.get('/usuarios', (req, res) => {
-//   const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE);
-//   db.all('SELECT * FROM usuarios', (err, rows) => {
-//     db.close(); // Cierra la conexión después de realizar la consulta
-//     if (err) {
-//       res.status(500).json({ error: err.message });
-//       return;
-//     }
-//     res.json(rows);
-//   });
-// });
-
-// }
-
-// export default {
-//   createProduct,
-// }
+export {
+  fetchUser,
+  fetchErrors,
+  createError,
+  fetchProducts,
+  createProduct,
+  createUser,
+};

@@ -14,18 +14,15 @@ function Sidebar() {
     <div className="bg-gray-900 border-gray-800 w-20 flex-shrink-0 border-r border-gray-200 flex-col sm:flex ">
         <Link to={paths.home}>
 
-      <div className="h-16 text-[#A9DFD8] flex items-center justify-center">
-        <img src="/logo.png" alt="DLC logo" className="w-16" />
+      <div className="h-16 text-[#A9DFD8] flex items-center justify-center mt-2">
+        <img src="/logo.svg" alt="DLC logo" className="w-16" />
       </div>
       </Link>
 
       {/* //Botones */}
-      <div className="flex mx-auto flex-grow mt-4 flex-col text-gray-400 space-y-4">
+      <div className="flex mx-auto flex-grow mt-2 flex-col text-gray-400 space-y-4">
         <SidebarButton to={paths.products}>
           <ProductsIcon />
-        </SidebarButton>
-        <SidebarButton to={paths.management}>
-          <MovementsIcon />
         </SidebarButton>
         <SidebarButton to={paths.errors}>
           <ErrorsIcon />
@@ -36,8 +33,17 @@ function Sidebar() {
         <SidebarButton to={paths.users}>
           <UsersIcon />
         </SidebarButton>
-        <SidebarButton to={paths.users}>
+        <SidebarButton to={paths.outcomes}>
           <SearchIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.inventory}>
+          <SearchIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.upload}>
+          <SearchIcon color="red" />
+        </SidebarButton>
+        <SidebarButton to={paths.returns}>
+          <SearchIcon color="red" />
         </SidebarButton>
         {/* <SidebarButton to={paths.notifications}>
           <NotificationsIcon />

@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-
+import { fetchProducts } from "../utils/Handlers/Handlers";
 interface SearchContextProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -32,24 +32,19 @@ export const SearchProvider: React.FC = ({
   const itemsPerPage = 20;
   // useEffect para obtener productos desde el backend
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/productos"); // Reemplaza con la ruta correcta
-        const data = await response.json();
+        const data = await fetchProducts();
         setProducts(data);
         setSearchResults(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
       } catch (error) {
-        
-        console.error("Error fetching products:", error);
-        // Agrega lógica para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+        alert('Error al buscar el producto')
       }
-      
     };
 
-    fetchProducts();
+    fetchData();
   }, []); // El array vacío significa que se ejecutará una vez al montar el componente
-
 
   return (
     <SearchContext.Provider

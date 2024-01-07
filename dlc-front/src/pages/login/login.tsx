@@ -13,7 +13,7 @@ function Login() {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
+      password: "", 
     },
     validationSchema,
     onSubmit: values => {

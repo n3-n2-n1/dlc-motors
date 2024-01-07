@@ -26,7 +26,7 @@ const makeUser = (newUser, res) => {
   console.log(newUser);
 
   db.query(
-    "INSERT INTO usuarios (Nombre, Email, Password, Role) VALUES (?, ?, ?, ?)",
+    "INSERT INTO usuarios (name, email, password, role) VALUES (?, ?, ?, ?)",
     [nombre, email, password, role],
     (err, results) => {
       if (err) {

@@ -5,6 +5,7 @@ export const paths = {
 
   home: "/",
   products: "/productos",
+  addProduct: "/productos/agregar",
   categories: "/rubros",
 
   costs: "/costos",
