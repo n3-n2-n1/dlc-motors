@@ -1,92 +1,64 @@
 import { useState, useEffect } from "react";
 
 import { useSearchContext } from '../../contexts/SearchContext.tsx';
-
 import Pagination from "../Pagination/Pagination";
-
 import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
 import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
+import { Link } from "react-router-dom";
+import { paths } from "../../routes/paths.ts";
 
 function TableList() {
+
+
+
   const { searchResults, currentPage, itemsPerPage, products } = useSearchContext();
 
   const [openIndex, setOpenIndex] = useState(-1);
 
   useEffect(() => {
-    setOpenIndex(-1); // reset openIndex when currentPage changes
+    setOpenIndex(-1);
   }, [currentPage]);
-  
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     try {
-  //       const response = await fetch("/path/to/mocks.json"); // Reemplaza con la ruta correcta
-  //       const data = await response.json();
-  //       setProducts(data.products);
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
-    
-  //   fetchProducts();
-  // }, []);
   
   const itemsToDisplay = searchResults || products;
 
-  return (
-    <>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="text-gray-400">
-            {/* Las columnas deberían ser clickeables para setear un orden */}
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Acciones
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Imagen
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Código
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Codigo OEM
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Descripción
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Rubro
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden md:table-cell">
-              Precio
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Stock
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-              Origen
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Marcas Compatibles
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Cantidad Stock
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Hay Stock
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Devoluciones
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Es Kit
-            </th>
-            <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">
-              Etiqueta
-            </th>
-          </tr>
-        </thead>
+  const columns = [
+    'Acciones',
+    'Imagen',
+    'Codigo',
+    'CodigoOEM',
+    'Descripción',
+    'Rubro',
+    'Precio',
+    'Stock',
+    'Origen',
+    'MarcasCompat',
+    '¿Stock?',
+    'Devoluciones',
+    'Kit',
+    'Etiqueta'
+  ]
 
-        <tbody className="text-gray-600 dark:text-gray-100">
+  return (
+    <> 
+
+    <div className="overflow-y-auto max-h-[calc(88vh-3rem)]">
+       <table className="w-full text-left">
+       <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
+        <tr className="text-gray-100">
+          {columns.map((column, index) => (
+            <th
+              key={index}
+              className={`font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 ${
+                index === 6 ? 'hidden md:table-cell' : '' // Hide column at index 6 on medium screens
+              }`}
+            >
+              {column}
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+        <tbody className="text-gray-100">
           {/* {products.map((product, index) => ( */}
           
           {itemsToDisplay
@@ -105,21 +77,36 @@ function TableList() {
                     <>
                       <ArrowIcon className="rotate-180 text-gray-400 absolute right-4 top-3.5" />
                       <div className="absolute top-0 left-12 mt-2 w-48 bg-gray-800 border border-gray-600 divide-y divide-gray-600 rounded-md shadow-lg text-white z-50">
+                        
+                        <Link to="">
                         <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
                           Editar
                         </p>
+                        </Link>
+
+                        <Link to="">
                         <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
                           Eliminar
                         </p>
+                        </Link>
+
+                        <Link to={paths.upload}>
                         <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
                           Cargar ingreso
                         </p>
+                        </Link>
+                        <Link to={paths.outcomes}>
                         <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
                           Cargar Egreso
                         </p>
+                        </Link>
+
+                        <Link to="">
                         <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
                           Cargar Devolución
                         </p>
+                        </Link>
+
                       </div>
                     </>
                   )}
@@ -133,6 +120,7 @@ function TableList() {
                   </div>
                 </td>
                 <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
+                  
                   {product.Codigo}
                 </td>
                 <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
@@ -161,6 +149,10 @@ function TableList() {
                   {/* cantidadStock */}
                   {product.Stock}
                 </td>
+                <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
+                  {/* cantidadStock */}
+                  {product.CodBarras}
+                </td> 
                 {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
               {product.stock ? "Sí" : "No"}
             </td> */}
@@ -180,8 +172,8 @@ function TableList() {
             ))}
         </tbody>
       </table>
-      <Pagination
-      />
+    </div>
+      <Pagination/>
     </>
   );
 }

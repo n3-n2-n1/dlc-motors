@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { PRODUCTS } from "../mocks/products";
-
+import { fetchProducts } from "../utils/Handlers/Handlers";
 interface SearchContextProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -28,19 +27,24 @@ export const SearchProvider: React.FC = ({
   const [searchResults, setSearchResults] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [products, setProducts] = useState(PRODUCTS);
+  const [products, setProducts] = useState<any[]>([]);
 
   const itemsPerPage = 20;
-
-  // useEffect(() => {
-  //   console.log(totalPages);
-  // }, [totalPages]);
-
-  // Fetch products
+  // useEffect para obtener productos desde el backend
   useEffect(() => {
-    setSearchResults(PRODUCTS);
-    setTotalPages(Math.ceil(PRODUCTS.length / itemsPerPage));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+        setSearchResults(data);
+        setTotalPages(Math.ceil(data.length / itemsPerPage));
+      } catch (error) {
+        alert('Error al buscar el producto')
+      }
+    };
+
+    fetchData();
+  }, []); // El array vacío significa que se ejecutará una vez al montar el componente
 
   return (
     <SearchContext.Provider
