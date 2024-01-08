@@ -4,6 +4,7 @@ import { MyClass } from "../../components/Chart/Chart2";
 import ProfileActions from "../../components/ProfileActions/ProfileActions";
 import PieChart from "../../components/Chart/Chart3";
 import ProfitChart from "../../components/Chart/Chart4";
+import Dashcards from "../../components/Dashcards/Dashcards";
 
 function Home() {
   return (
@@ -23,7 +24,7 @@ function Home() {
       </div>
 
       <section className="w-full">
-        <div className="pt-6">
+        <div className="">
           <div className="w-full grid grid-cols-2 xl:grid-cols-1 2xl:grid-cols-1 gap-4">
             <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8">
               <div className="flex items-center justify-between mb-4">
@@ -57,14 +58,17 @@ function Home() {
         </div>
       </section>
 
+      <div>
       {/* Masonry-style grid for MyClass */}
-      <section className="grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-        <MyClass />
-        <MyClass />
-        <MyClass />
+      <section className="grid grid-cols-2 gap-6">
+        <Dashcards/>
         <MyClass />
         {/* Add more MyClass components as needed */}
       </section>
+      <section className="grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+        {/* Add more MyClass components as needed */}
+      </section>
+      </div>
 
       <section className="grid md:grid-cols-3 xl:grid-cols-3 gap-6">
       <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">

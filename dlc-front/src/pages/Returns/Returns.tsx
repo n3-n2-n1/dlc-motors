@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IProduct } from "../../Interfaces/Products";
-import { User } from "../../Interfaces/User";
-import { createUser } from "../../utils/Handlers/Handlers";
+import { createReturns } from "../../utils/Handlers/Handlers";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Campo requerido"),
@@ -30,9 +29,9 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // createProduct(values);
-      console.log(values);
+    onSubmit: (values: any) => {
+      console.log(values)
+
     },
   });
   return (
@@ -95,7 +94,6 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
               />
               {formik.touched.productCode && formik.errors.productCode ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.productCode}
                 </div>
               ) : null}
             </div>
@@ -159,7 +157,6 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
               />
               {formik.touched.description && formik.errors.description ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.description}
                 </div>
               ) : null}
             </div>
@@ -183,7 +180,6 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
               />
               {formik.touched.fixedStock && formik.errors.fixedStock ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.fixedStock}
                 </div>
               ) : null}
             </div>
@@ -207,18 +203,17 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
               />
               {formik.touched.appliedFix && formik.errors.appliedFix ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.appliedFix}
                 </div>
               ) : null}
             </div>
             <div>
-              {/* Botón de Agregar */}
-              <button
+            {/* Botón de Agregar */}
+            <button
                 type="submit"
                 className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
               >
-                Aceptar
-              </button>
+              Aceptar
+            </button>
             </div>
           </form>
         </div>

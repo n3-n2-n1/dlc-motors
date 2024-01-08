@@ -28,7 +28,7 @@ const Errors = () => {
       <div className="mt-14">
       <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
         <div className="mr-6">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">Historial</h1>
+          <h1 className="text-4xl mb-2 text-white font-weight-300">Historial de errores</h1>
           <h2 className="text-gray-500">últimos errores reportados</h2>
         </div>
         <div className="justify-center">

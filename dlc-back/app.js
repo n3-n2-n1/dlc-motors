@@ -3,6 +3,10 @@ const cors = require('cors');
 const usuariosRoutes = require('./src/routes/userRoutes');
 const productosRoutes = require('./src/routes/productsRoutes');
 const errorProductsRoutes = require('./src/routes/errorProductsRoutes');
+const returnProductRoutes = require('./src/routes/returnRoutes');
+const historialRoutes = require('./src/routes/historialRoutes');
+const movesRoutes = require('./src/routes/movesRoutes');
+const massiveAddRoutes = require('./src/routes/massiveAddRoutes');
 const initializePassport = require('./src/auth/passport');
 // const mysql = require('mysql');
 
@@ -23,6 +27,10 @@ app.use(express.json());
 app.use(usuariosRoutes);
 app.use(productosRoutes);
 app.use(errorProductsRoutes);
+app.use(returnProductRoutes);
+app.use(historialRoutes);
+app.use(movesRoutes);
+app.use(massiveAddRoutes);
 initializePassport();
 
 // Iniciar el servidor

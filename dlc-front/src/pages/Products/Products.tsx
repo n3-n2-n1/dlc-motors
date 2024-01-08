@@ -25,7 +25,6 @@ function Products() {
               <Actions />
             </div>
             <TableList />
-            {/* <Pagination /> */}
           </div>
         </div>
       </div>

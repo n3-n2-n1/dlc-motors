@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { createOutcome } from "../../utils/Handlers/Handlers";
 
 // Define la interfaz para los props del componente
 interface InventoryFormProps {
@@ -37,7 +38,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // createProduct(values);
+      createOutcome(values)
+      alert('Creado');
       console.log(values);
     },
   });

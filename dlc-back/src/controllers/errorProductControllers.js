@@ -18,7 +18,7 @@ const createError = (req, res) => {
     const { CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen } = req.body;
 
     // Realizar la lógica para insertar un nuevo producto en la base de datos
-    db.query("INSERT INTO errores (CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    db.query("INSERT INTO errores (CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [CodigoError, Observacion, Detalle, Cantidad, Producto, Codigo, CodBarras, Descripcion, Precio, Stock, Origen, Imagen],
       function (error) {
         if (error) {

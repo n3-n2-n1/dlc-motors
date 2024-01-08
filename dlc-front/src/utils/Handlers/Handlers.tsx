@@ -2,6 +2,7 @@ import { User } from "../../Interfaces/User";
 import { Errors } from "../../Interfaces/Errors";
 import { Link } from "react-router-dom";
 import { paths } from "../../routes/paths";
+import * as xlsx from 'xlsx'
 
 const fetchUser = async (): Promise<User[]> => {
   try {
@@ -20,7 +21,6 @@ const fetchUser = async (): Promise<User[]> => {
 };
 
 const createUser = async (userData: any) => {
-
   try {
     const response = await fetch("http://localhost:3000/usuarios/registro", {
       method: "POST",
@@ -37,7 +37,7 @@ const createUser = async (userData: any) => {
 
     const responseData = await response.json();
     console.log("Product created successfully:", responseData);
-    <Link to={paths.products}/>
+    <Link to={paths.products} />;
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -95,7 +95,7 @@ const fetchErrors = async (): Promise<Errors[]> => {
 
 const createError = async (errorData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/productos", {
+    const response = await fetch("http://localhost:3000/errorProductCreate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,37 +111,161 @@ const createError = async (errorData: any) => {
     const responseData = await response.json();
     console.log("Product created successfully:", responseData);
   } catch (error) {
-    console.error("Error creating product:");
+    console.error("Error creating product:", error);
   }
 };
 
+const deleteProducts = async (productData: any) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/productos/${productData}`,
+      {
+        method: "DELETE",
+      }
+    );
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Product deleted successfully:", responseData);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
+
+const createReturns = async (returnData: any) => {
+  try {
+    const response = await fetch("http://localhost:3000/devoluciones", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(returnData),
+    });
+
+    if (!response.ok) {
+      const returnData = await response.json();
+      throw new Error(returnData.error);
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
+    console.log("Devolucion created successfully:", responseData);
+  } catch (error) {
+    console.log(error);
+    throw new Error();
+  }
+};
 
 const LoginUser = async (values: any) => {
   const url = "http://localhost:3000/usuarios/login";
 
   try {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
     });
 
     return response; // Devuelve la respuesta para que pueda ser manejada en el código que llama a LoginUser
   } catch (error) {
-    console.error('Error en la solicitud:', error);
+    console.error("Error en la solicitud:", error);
     throw error; // Re-lanza el error para que pueda ser manejado en el código que llama a LoginUser
   }
-
 };
+
+const fetchHistorial = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/historial");
+    if (!response.ok) {
+      throw new Error("Error al obtener el historial de acciones");
+    }
+    return await response.json();  // Retorna los datos
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;  // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
+  }
+};
+
+const fetchMoves = async () => {
+  try{
+    const response = await fetch("http://localhost:3000/moves")
+    if (!response.ok) {
+      throw new Error("Error al obtener el historial de acciones");
+    }
+    return await response.json();  // Retorna los datos
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;  // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
+  }
+}
+
+const createOutcome = async (outcomeData: any) => {
+  try {
+    const response = await fetch("http://localhost:3000/moves", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(outcomeData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Egreso created successfully:", responseData);
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+}
+
+
+
+const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0]; // Verifica si target y files están definidos
+  if (!file) {
+    console.error("No se seleccionó ningún archivo.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const data = e.target?.result; // Verifica si target está definido
+    if (!data) {
+      console.error("No se pudo leer el archivo.");
+      return;
+    }
+
+    const workbook = xlsx.read(data, { type: 'binary' });
+
+    // Procesa los datos del archivo Excel aquí
+    // Puedes enviarlos al servidor mediante una solicitud HTTP
+  };
+
+  reader.readAsBinaryString(file);
+};
+
 export {
   fetchUser,
   fetchErrors,
   createError,
   fetchProducts,
   createProduct,
+  deleteProducts,
   createUser,
-  LoginUser
+  LoginUser,
+  createReturns,
+  fetchMoves,
+  fetchHistorial,
+  handleAddMassive,
+  createOutcome
 };

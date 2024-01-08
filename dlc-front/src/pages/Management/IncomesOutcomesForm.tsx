@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { createOutcome } from "../../utils/Handlers/Handlers";
 
 // Define la interfaz para los props del componente
 interface IncomesOutcomesFormProps {
@@ -55,7 +56,8 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // createProduct(values);
+      createOutcome(values)
+      alert('creadooooooo');
       console.log(values);
     },
   });
