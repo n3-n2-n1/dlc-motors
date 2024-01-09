@@ -16,11 +16,6 @@ const validationSchema = Yup.object().shape({
   detalle: Yup.string(),
   cantidad: Yup.number().required('Campo requerido'),
   oemProducto: Yup.string().required('Campo requerido').uppercase(),
-  importacion: Yup.string().when("observaciones", ([observaciones], schema) => {
-    return observaciones === "Importación"
-      ? schema.required("Required")
-      : schema;
-  }),
 });
 
 // Componente funcional del formulario de inventario
@@ -34,7 +29,6 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     detalle: '',
     cantidad: 1,
     oemProducto: '',
-    importacion: '',
   };
 
   return (
@@ -45,13 +39,14 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         // Asegúrate de que values tenga el tipo correcto
-        const { observaciones, detalle, cantidad, oemProducto, importacion } = values;
+        const { observaciones, detalle, cantidad, oemProducto } = values;
     
         // Resto de la lógica
-        createError({ observaciones, detalle, cantidad, oemProducto, importacion });
+        createError({ observaciones, detalle, cantidad, oemProducto });
         
         // Restablece el estado de submit
         setSubmitting(false);
+        location.reload()
         console.log(values as any)
       }}
     >

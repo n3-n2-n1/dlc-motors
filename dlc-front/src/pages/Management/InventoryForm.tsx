@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createOutcome } from "../../utils/Handlers/Handlers";
+import { createMovement } from "../../utils/Handlers/Handlers";
 
 // Define la interfaz para los props del componente
 interface InventoryFormProps {
@@ -22,6 +22,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   // Valores iniciales del formulario
   const initialValues = {
     date: "",
+    movementType: "",
     productCode: "",
     description: "",
     fixedStock: null,
@@ -38,7 +39,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      createOutcome(values)
+      createMovement(values)
       alert('Creado');
       console.log(values);
     },
@@ -50,6 +51,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
   useEffect(() => {
     formik.setFieldValue("date", new Date().toLocaleString());
+    formik.setFieldValue('movementType', 'Inventario');
   }, [selectedProduct]);
 
   return (

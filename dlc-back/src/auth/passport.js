@@ -25,28 +25,16 @@ const initializePassport = () => {
       },
       async (req, username, password, done) => {
         try {
-          const { nombre } = req.body;
+          const { name } = req.body;
           let { role } = req.body;
-
-          // const userExists = await userService.checkExistingUser(username);
-
-          // if (userExists) {
-          //   console.log("User already exists");
-          //   return done(null, false);
-          // }
-
-          // console.log(createHash(password))
-
+          
           const newUser = {
-            nombre,
+            name,
             email: username,
             password: createHash(password),
             role: role || "user",
           };
 
-          // console.log(newUser)
-
-          // Acá va la función del service para registrar el user
           const result = await makeUser(newUser);
 
           console.log(result)
@@ -59,16 +47,6 @@ const initializePassport = () => {
     )
   );
 
-  // passport.use(
-  //   "jwt",
-  //   new JwtStrategy(jwtOptions, async (jwt_payload, done) => {
-  //     try {
-  //       return done(null, jwt_payload);
-  //     } catch (error) {
-  //       return done(error);
-  //     }
-  //   })
-  // );
 };
 
 module.exports = initializePassport;

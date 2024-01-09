@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { LoginUser } from "../../utils/Handlers/Handlers";
@@ -13,6 +15,8 @@ const validationSchema = Yup.object({
 
 function Login() {
   const navigate = useNavigate();
+  const [token, setToken] = useState<string | null>(null);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -26,9 +30,10 @@ function Login() {
 
         // Verifica si el servidor devuelve un token
         if (data.token) {
-          // Almacena el token en localStorage
-          localStorage.setItem('miTokenJWT', data.token);
+          // Almacena el token en sessionStorage
+          sessionStorage.setItem('miTokenJWT', data.token);
           console.log('logueado exitosamente')
+          location.reload() // ! No te mereces ser programador flaco
           // Asegúrate de cambiar 'miTokenJWT' según el nombre de tu token
         }
           

@@ -1,78 +1,137 @@
 const db = require("../database/db");
 
-
 const getMoves = (req, res) => {
-    db.query("SELECT * FROM movimientos", (error, results, fields) => {
-        if (error) {
-            console.error("An error occurred while executing the query", error);
-            res.status(500).json({ error: "Error al abrir la base de datos." });
-            return;
-        }
+  db.query("SELECT * FROM movimientos", (error, results, fields) => {
+    if (error) {
+      console.error("An error occurred while executing the query", error);
+      res.status(500).json({ error: "Error al abrir la base de datos." });
+      return;
+    }
 
-        console.log(results);
-        res.json(results);
-    });
+    console.log(results);
+    res.json(results);
+  });
 };
 
-
-
 const createMoves = (req, res) => {
+  const {
+    date,
+    productCode,
+    description,
+    movementType,
+    quantity,
+    observations,
+    updatedStock,
+    fixedStock,
+    appliedFix,
+  } = req.body;
 
+  console.log(
+    date,
+    productCode,
+    description,
+    movementType,
 
-    const {
+    quantity, // Not inventory
+    observations, // Not inventory
+    updatedStock, // Not inventory
+
+    fixedStock, // inventory
+    appliedFix // inventory
+  );
+
+  if (movementType === "Inventario") {
+    // Query Inventario
+    console.log("QUERY INVENTARIO")
+    db.query(
+      "INSERT INTO movimientos (date, productCode, description, movementType, fixedStock, appliedFix) VALUES (?,?,?,?,?,?)",
+      [date, productCode, description, movementType, fixedStock, appliedFix],
+      function (error) {
+        if (error) {
+          console.error("An error occurred while executing the query", error);
+          res
+            .status(500)
+            .json({ error: "Error al insertar el movimiento de inventario." });
+          return;
+        }
+
+        // Get the inserted product
+        db.query(
+          "SELECT * FROM movimientos WHERE date = ?",
+          [date],
+          function (error, results) {
+            if (error) {
+              console.error(
+                "An error occurred while executing the query",
+                error
+              );
+              res.status(500).json({
+                error:
+                  "Error al obtener el movimiento de inventario insertado.",
+              });
+              return;
+            }
+
+            res.status(200).json({
+              message: "Movimiento de inventario insertado correctamente.",
+              product: results[0],
+            });
+
+            console.log(results);
+          }
+        );
+      }
+    );
+  } else {
+    console.log("QUERY INGRESO/EGRESO")
+    db.query(
+      "INSERT INTO movimientos (date, productCode, description, movementType, quantity, observations, updatedStock) VALUES (?,?,?,?,?,?,?)",
+      [
         date,
         productCode,
-        detail,
+        description,
+        movementType,
         quantity,
         observations,
         updatedStock,
-        fixedStock,
-        appliedFix,
+      ],
+      function (error) {
+        if (error) {
+          console.error("An error occurred while executing the query", error);
+          res.status(500).json({ error: "Error al insertar el producto." });
+          return;
+        }
 
-    } = req.body
-
-    db.query(
-        "INSERT INTO movimientos (date, productCode, detail, quantity, observations, updatedStock, fixedStock, appliedFix) VALUES (?,?,?,?,?,?,?,?)",
-        [
-            date, productCode, detail, quantity, observations, updatedStock, fixedStock, appliedFix
-
-        ],
-        function (error) {
+        // Get the inserted product
+        db.query(
+          "SELECT * FROM movimientos WHERE date = ?",
+          [date],
+          function (error, results, fields) {
             if (error) {
-                console.error("An error occurred while executing the query", error);
-                res.status(500).json({ error: "Error al insertar el producto." });
-                return;
+              console.error(
+                "An error occurred while executing the query",
+                error
+              );
+              res
+                .status(500)
+                .json({ error: "Error al obtener el producto insertado." });
+              return;
             }
 
-            // Get the inserted product
-            db.query(
-                "SELECT * FROM movimientos WHERE date = ?",
-                [date],
-                function (error, results, fields) {
-                    if (error) {
-                        console.error("An error occurred while executing the query", error);
-                        res
-                            .status(500)
-                            .json({ error: "Error al obtener el producto insertado." });
-                        return;
-                    }
+            res.status(200).json({
+              message: "Producto insertado correctamente.",
+              product: results[0],
+            });
 
-                    res
-                        .status(200)
-                        .json({
-                            message: "Producto insertado correctamente.",
-                            product: results[0],
-                        });
-
-                    console.log(results);
-                }
-            );
-        }
+            console.log(results);
+          }
+        );
+      }
     );
-
-}
+  }
+};
 
 module.exports = {
-    getMoves,
-    createMoves
-}
+  getMoves,
+  createMoves,
+};

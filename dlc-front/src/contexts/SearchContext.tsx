@@ -39,12 +39,21 @@ export const SearchProvider: React.FC = ({
         setSearchResults(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
       } catch (error) {
-        alert('Error al buscar el producto')
+        alert("Error al buscar el producto");
       }
     };
 
     fetchData();
-  }, []); // El array vacío significa que se ejecutará una vez al montar el componente
+  }, []);
+
+  // Resetea paginación cuando se cambia el término de búsqueda
+  useEffect(() => {
+    if (searchResults) {
+      setTotalPages(Math.ceil(searchResults.length / itemsPerPage));
+    } else {
+      setTotalPages(Math.ceil(products.length / itemsPerPage));
+    }
+  }, [searchResults]);
 
   return (
     <SearchContext.Provider

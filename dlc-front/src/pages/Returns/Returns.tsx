@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IProduct } from "../../Interfaces/Products";
 import { createReturns } from "../../utils/Handlers/Handlers";
 
 const validationSchema = Yup.object().shape({
-  fullName: Yup.string().required("Campo requerido"),
-  password: Yup.string().required("Campo requerido"),
-  role: Yup.string().required("Campo requerido"),
-  email: Yup.string().email("Debe ingresar un email válido").required("Campo requerido"),
+  productCode: Yup.string().required("Campo requerido"),
+  description: Yup.string().required("Campo requerido"),
+  fixedStock: Yup.number().required("Campo requerido"),
+  appliedFix: Yup.number().required("Campo requerido"),
 });
 
 interface ReturnFormProps {
@@ -20,8 +20,11 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   const initialValues = {
+    date: null,
     productCode: "",
+    productName: "",
     description: "",
+    previousStock: null,
     fixedStock: null,
     appliedFix: null,
   };
@@ -29,11 +32,19 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
+      console.log("uwu")
       console.log(values)
-
+      createReturns(values)
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue("date", new Date().toLocaleString());
+    formik.setFieldValue("productName", selectedProduct?.Producto || "");
+    formik.setFieldValue("previousStock", selectedProduct?.Stock || 0);
+  }, [selectedProduct, formik.values?.previousStock]);
+
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
@@ -44,10 +55,10 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
           <h2 className="text-gray-500 mb-4">
             Informá sobre devoluciones de inventario <br />
             <span className="text-xs underline">
-              Lo usamos para...
+              Lo usamos para informar 
             </span>
           </h2>
-          <form
+          <form onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
           >
             <div className="mb-4">
@@ -99,15 +110,15 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="producto"
+                htmlFor="productName"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Producto
               </label>
               <input
                 type="text"
-                id="producto"
-                name="producto"
+                id="productName"
+                name="productName"
                 value={selectedProduct?.Producto || "Producto no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
@@ -115,29 +126,21 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="stockAnterior"
+                htmlFor="previousStock"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Stock Actual:
               </label>
               <input
                 type="text"
-                id="stockAnterior"
-                name="stockAnterior"
+                id="previousStock"
+                name="previousStock"
                 value={selectedProduct?.Stock || 0}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
             </div>
-
-            {/* // INFORME FECHA (INPUT DISABLED)
-          // PRIMERO CARGA EL CÓDIGO DE PRODUCTO
-          // LUEGO SE HABILITAN LOS CAMPOS:
-          // - STOCK ANTERIOR (STOCK ACTUAL) (PRECARGADO DISABLED)
-          // - DESCRIPCIÓN
-          // - STOCK ARREGLADO
-          // - ARREGLO QUE SE HIZO (NUMERICO) */}
-
+            
             {/* Campo de Detalle */}
             <div className="mb-4">
               <label

@@ -16,7 +16,7 @@ export const UserProvider: React.FC = ({ children }: { children?: React.ReactNod
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('miTokenJWT');
+        const token = sessionStorage.getItem('miTokenJWT');
 
         if (token) {
           // Si hay un token, podrías enviarlo al servidor para validar la autenticación.

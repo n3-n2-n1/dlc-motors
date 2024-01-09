@@ -136,10 +136,18 @@ const errorFatal = async (req, res) =>{
   .send({ status: 'error', error: 'Contraseña incorrecta.' })
 }
 
+
+const logoutUser = async (req, res) => {
+  return sessionStorage.removeItem('miTokenJWT').then(
+    location.reload()
+  )
+}
+
 module.exports = {
   makeUser,
   getUsers,
   getUserByEmail,
   loginUser,
-  errorFatal
+  errorFatal,
+  logoutUser
 };

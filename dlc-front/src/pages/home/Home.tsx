@@ -60,17 +60,25 @@ function Home() {
 
       <div>
       {/* Masonry-style grid for MyClass */}
-      <section className="grid grid-cols-2 gap-6">
+      <section className="grid grid-row-2 gap-6">
         <Dashcards/>
+        {/* Add more MyClass components as needed */}
+      </section>
+      <section className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
         <MyClass />
         {/* Add more MyClass components as needed */}
-      </section>
-      <section className="grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-        {/* Add more MyClass components as needed */}
+        <Dashcards/>
       </section>
       </div>
+      <div>
+      {/* Masonry-style grid for MyClass */}
+      <section className="grid grid-cols-2 gap-6">
+        {/* Add more MyClass components as needed */}
+      </section>
 
-      <section className="grid md:grid-cols-3 xl:grid-cols-3 gap-6">
+      </div>
+
+      <section className="grid md:grid-cols-2 xl:grid-cols-2 gap-6">
       <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
         <h3 className="text-xl leading-none font-bold text-gray-900 mb-10">
           Acquisition Overview
@@ -96,6 +104,7 @@ function Home() {
                 <td className="border-t-0 px-4 align-middle text-xs font-medium text-gray-900 whitespace-nowrap p-4">
                   5,649
                 </td>
+                
                 <td className="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
                   <div className="flex items-center">
                     <span className="mr-2 text-xs font-medium">30%</span>
@@ -143,6 +152,7 @@ function Home() {
                   </div>
                 </td>
               </tr>
+              
               <tr className="text-gray-500">
                 <th className="border-t-0 px-4 align-middle text-sm font-normal whitespace-nowrap p-4 text-left">
                   Social
@@ -200,6 +210,7 @@ function Home() {
             </tbody>
           </table>
         </div>
+        
       </div>
 
       <PieChart />

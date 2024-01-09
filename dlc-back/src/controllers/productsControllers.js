@@ -10,7 +10,7 @@ const getProducts = (req, res) => {
       return;
     }
 
-    console.log(results);
+    // console.log(results);
     res.json(results);
   });
 };

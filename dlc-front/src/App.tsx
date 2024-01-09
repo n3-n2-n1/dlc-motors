@@ -13,13 +13,9 @@ const App = () => {
 
 
   useEffect(() => {
-    // Aquí puedes realizar la lógica para verificar si el usuario está autenticado.
-    // Por ejemplo, puedes verificar la existencia de un token JWT en localStorage.
-    const token = localStorage.getItem('miTokenJWT');
+    const token = sessionStorage.getItem('miTokenJWT');
 
     if (token) {
-      // Aquí puedes realizar la validación del token con tu servidor si es necesario.
-      // Por ahora, simplemente estableceré la autenticación como verdadera.
       setAuthenticated(true);
     } else {
       // Si no hay token, puedes dejar la autenticación como falsa o redirigir a la página de inicio de sesión.
@@ -40,8 +36,6 @@ const App = () => {
         {authenticated ? (
           <AppRoutes />
         ) : (
-          // Puedes redirigir a la página de inicio de sesión o mostrar un componente de inicio de sesión aquí.
-          // En este ejemplo, simplemente muestro un mensaje.
           <Login />
         )}
       </Suspense>

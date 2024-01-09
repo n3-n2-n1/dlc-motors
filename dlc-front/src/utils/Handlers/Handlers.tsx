@@ -1,7 +1,5 @@
 import { User } from "../../Interfaces/User";
 import { Errors } from "../../Interfaces/Errors";
-import { Link } from "react-router-dom";
-import { paths } from "../../routes/paths";
 import * as xlsx from 'xlsx'
 
 const fetchUser = async (): Promise<User[]> => {
@@ -36,10 +34,11 @@ const createUser = async (userData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product created successfully:", responseData);
-    <Link to={paths.products} />;
+    console.log("User created successfully:", responseData);
+    alert('creado');
+    location.reload();
   } catch (error) {
-    console.error("Error creating product:");
+    console.error("Error creating product:", error);
   }
 };
 
@@ -55,6 +54,7 @@ const fetchProducts = async () => {
 };
 
 const createProduct = async (productData: any) => {
+
   try {
     const response = await fetch("http://localhost:3000/productos", {
       method: "POST",
@@ -205,14 +205,14 @@ const fetchMoves = async () => {
   }
 }
 
-const createOutcome = async (outcomeData: any) => {
+const createMovement = async (movementData: any) => {
   try {
     const response = await fetch("http://localhost:3000/moves", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(outcomeData),
+      body: JSON.stringify(movementData),
     });
 
     if (!response.ok) {
@@ -221,12 +221,11 @@ const createOutcome = async (outcomeData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Egreso created successfully:", responseData);
+    console.log("Movimiento created successfully:", responseData);
   } catch (error) {
     console.error("Error creating product:");
   }
 }
-
 
 
 const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,6 +253,19 @@ const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
   reader.readAsBinaryString(file);
 };
 
+
+const logoutUser = async() => {
+  try {
+    const response = await fetch("http://localhost:3000/logout", {
+      method: "POST",
+      
+    });
+  } catch (error) {
+    console.error("Error creating loogout");
+    
+  }
+}
+
 export {
   fetchUser,
   fetchErrors,
@@ -267,5 +279,6 @@ export {
   fetchMoves,
   fetchHistorial,
   handleAddMassive,
-  createOutcome
+  createMovement,
+  logoutUser
 };

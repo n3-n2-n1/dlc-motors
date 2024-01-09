@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createOutcome } from "../../utils/Handlers/Handlers";
+import { createMovement } from "../../utils/Handlers/Handlers";
 
 // Define la interfaz para los props del componente
 interface IncomesOutcomesFormProps {
@@ -12,7 +12,6 @@ interface IncomesOutcomesFormProps {
 }
 
 // !! Hay que hacer que, en caso de que no encuentre un producto, tire un error en el yup para que no permita continuar con el formulario.
-// TODO Actualizar campos del formik para Date y udpatedStock
 
 // Fecha y hora del ingreso	(Campo fijo)
 //* Observaciones (menú desplegable)
@@ -25,7 +24,7 @@ interface IncomesOutcomesFormProps {
 // Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observations: Yup.string().required("Campo requerido"),
-  detail: Yup.string().required("Campo requerido"),
+  description: Yup.string().required("Campo requerido"),
   quantity: Yup.number().required("Campo requerido"),
   productCode: Yup.string().required("Campo requerido"),
 });
@@ -39,8 +38,9 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   // Valores iniciales del formulario
   const initialValues = {
     date: "",
+    movementType: "",
     productCode: "",
-    detail: "",
+    description: "",
     quantity: null,
     observations: "",
     updatedStock: 0,
@@ -56,8 +56,8 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      createOutcome(values)
-      alert('creadooooooo');
+      createMovement(values);
+      alert("creadooooooo");
       console.log(values);
     },
   });
@@ -67,9 +67,15 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
 
   // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
   useEffect(() => {
-    formik.setFieldValue('date', new Date().toLocaleString());
+    formik.setFieldValue("date", new Date().toLocaleString());
+    formik.setFieldValue("movementType", formName);
 
-    formik.setFieldValue('updatedStock', (selectedProduct?.Stock ?? 0) + (formik.values.quantity ?? 0));
+    formik.setFieldValue(
+      "updatedStock",
+      formName === "Ingreso"
+        ? (selectedProduct?.Stock ?? 0) + (formik.values?.quantity ?? 0)
+        : (selectedProduct?.Stock ?? 0) - (formik.values?.quantity ?? 0)
+    );
   }, [selectedProduct, formik.values.quantity]);
 
   return (
@@ -200,23 +206,23 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
             {/* Campo para ingresar el detalle del movimiento */}
             <div className="mb-4">
               <label
-                htmlFor="detail"
+                htmlFor="description"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Detalle
               </label>
               <input
                 type="text"
-                id="detail"
-                name="detail"
+                id="description"
+                name="description"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.detail}
+                value={formik.values.description}
               />
-              {formik.touched.detail && formik.errors.detail ? (
+              {formik.touched.description && formik.errors.description ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.detail}
+                  {formik.errors.description}
                 </div>
               ) : null}
             </div>
@@ -258,8 +264,11 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 id="updatedStock"
                 name="updatedStock"
                 value={
-                  (selectedProduct?.Stock ?? 0) +
-                    (formik.values.quantity ?? 0) || ""
+                  formName === "Ingreso"
+                    ? (selectedProduct?.Stock ?? 0) +
+                      (formik.values.quantity ?? 0)
+                    : (selectedProduct?.Stock ?? 0) -
+                      (formik.values.quantity ?? 0)
                 }
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled

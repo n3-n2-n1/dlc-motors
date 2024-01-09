@@ -2,7 +2,7 @@
 
 
     const getHistorial = (req, res) => {
-        db.query("SELECT * FROM historial", (error, results, fields) => {
+        db.query("SELECT * FROM devoluciones, errores, movimientos LIMIT 10", (error, results, fields) => {
             if (error) {
                 console.error("An error occurred while executing the query", error);
                 res.status(500).json({ error: "Error al abrir la base de datos." });

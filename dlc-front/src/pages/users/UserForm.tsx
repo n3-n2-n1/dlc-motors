@@ -9,7 +9,9 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("Campo requerido"),
   password: Yup.string().required("Campo requerido"),
   role: Yup.string().required("Campo requerido"),
-  email: Yup.string().email("Debe ingresar un email válido").required("Campo requerido"),
+  email: Yup.string()
+    .email("Debe ingresar un email válido")
+    .required("Campo requerido"),
 });
 
 /** Administrador
@@ -42,8 +44,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      createUser(values as any)
-      
+      createUser(values as any);
+      location.reload();
       console.log(values);
     },
   });
@@ -55,7 +57,9 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden mt-16">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">Agregar usuarios</h1>
+          <h1 className="text-4xl mb-2 text-white font-weight-300">
+            Agregar usuarios
+          </h1>
           <h2 className="text-gray-500 mb-4">
             Formulario para creación de nuevos Usuarios (Sólo administradores){" "}
             <br />
@@ -147,7 +151,9 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 onChange={formik.handleChange}
                 value={formik.values.role || ""}
               >
-                <option value="" disabled>Seleccione un rol para el usuario</option>
+                <option value="" disabled>
+                  Seleccione un rol para el usuario
+                </option>
                 <option value="Administrador">Administrador</option>
                 <option value="Vendedor">Vendedor</option>
                 <option value="Operador de depósito">

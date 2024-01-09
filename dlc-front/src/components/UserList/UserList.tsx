@@ -45,7 +45,7 @@ const UserList: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-3 text-gray-300">
         {filteredUsers.map((user) => (
           <div
-            key={user.id}
+            key={user.name}
             className="bg-gray-700 p-3 flex flex-col rounded-md dark:bg-gray-800 shadow"
           >
             <div className="flex flex-row items-center font-medium text-white pb-2 mb-2 border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full bg-blue">

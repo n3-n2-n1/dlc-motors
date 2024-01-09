@@ -10,7 +10,7 @@ const Moves: React.FC = () => {
     const fetchData = async () => {
       try {
         const historialData = await fetchHistorial();
-        setHistorial(historialData as any);
+        setHistorial(historialData);
       } catch (error) {
         // Handle the error here if needed
       }
@@ -20,7 +20,7 @@ const Moves: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col bg-gray-900 py-10 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm p-6">
+    <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6">
               <div className="flex-row">
           <h1 className="text-4xl mb-2 text-white font-weight-300">
             Historial de Movimientos
@@ -41,13 +41,13 @@ const Moves: React.FC = () => {
                 <thead>
                   <tr>
                     <th className="px-8 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Acción
+                      Fecha
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Descripción
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Fecha
+                      Accion
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"></th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
@@ -60,19 +60,19 @@ const Moves: React.FC = () => {
                         <div className="flex">
                           <div className="ml-3">
                             <p className="text-gray-900 whitespace-no-wrap">
-                              {move.accion}
+                              {move.date}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {move.descripcion}
+                          {move.observaciones}
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {move.fecha}
+                        {move.movementType ? move.observaciones : move.descripcion}
                         </p>
                       </td>
                       <td className=" border-b border-gray-200 bg-white text-sm"></td>

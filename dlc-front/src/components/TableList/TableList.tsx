@@ -27,6 +27,7 @@ function TableList() {
     "Imagen",
     "Codigo",
     "CodigoOEM",
+    "Código Tango",
     "Descripción",
     "Rubro",
     "Precio",
@@ -36,7 +37,7 @@ function TableList() {
     "¿Stock?",
     "Devoluciones",
     "Kit",
-    "Etiqueta",
+    "Código de Barras",
   ];
 
   const handleDeleteConfirmation = (index: any) => {
@@ -133,21 +134,20 @@ function TableList() {
                     </div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                  {product.Codigo .length > 5
-                          ? `${product.Codigo .slice(0, 5)}...` // Trunca la cadena si tiene más de 20 caracteres
-                          : product.Codigo }
+                    {product.Codigo.length > 5
+                      ? `${product.Codigo.slice(0, 5)}...` // Trunca la cadena si tiene más de 20 caracteres
+                      : product.Codigo}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {/* {product.CodBarras.length > 6
+                      ? `${product.CodBarras.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
+                      : product.CodBarras} */}
 
-                        {product.CodBarras.length > 6
-                          ? `${product.CodBarras.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                          : product.CodBarras}
-
-                    {/* {product.codigoOEM} */}
+                    {product.CodOEM}
                   </td>
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-              {product.codigoTango}
-            </td> */}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.CodTango}
+                  </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     <div className="">
                       {product.Producto.length > 16
@@ -156,12 +156,12 @@ function TableList() {
                     </div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 md:table-cell hidden">
-                  {product.Rubro.length > 6
-                          ? `${product.Rubro.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                          : product.Rubro}
+                    {product.Rubro.length > 6
+                      ? `${product.Rubro.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
+                      : product.Rubro}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 text-red-500">
-                    {product.Precio}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 text-green-500">
+                    ${product.Precio}
                   </td>
 
                   {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
@@ -171,29 +171,31 @@ function TableList() {
                     {/* cantidadStock */}
                     {product.Stock}
                   </td>
+                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.CodBarras.length > 4
+                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
+                      : product.CodBarras}
+                  </td> */}
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                  {product.CodBarras.length > 4
-                          ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
-                          : product.CodBarras}
+                    {product.Origen}
                   </td>
-
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.marcasCompatibles}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.stock ? "Sí" : "No"}
+                    {product.hasStock ? "Sí" : "No"}
                   </td>
 
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-              {`Correctas ${product.devoluciones.correctas}`}
-              <br />
-              {`Rotas ${product.devoluciones.rotas}`}
-            </td> */}
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.kits ? "Sí" : "No"}
+                    {product.Devoluciones}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.tag}
+                    {product.Kit ? "Sí" : "No"}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.CodBarras.length > 4
+                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
+                      : product.CodBarras}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800"></td>
                 </tr>
