@@ -5,6 +5,7 @@ import SearchIcon from "../icon/SearchIcon/SearchIcon.tsx";
 import { exportToExcel } from "../../utils/downloadProducts.tsx";
 import { Link } from "react-router-dom";
 import { paths } from "../../routes/paths.ts";
+import { handleAddMassive } from "../../utils/Handlers/Handlers.tsx";
 
 // Habría que dejar esta interface en un lugar general
 export interface IProduct {
@@ -33,9 +34,8 @@ const Actions = () => {
   };
 
 
-  const handleAddMassive = () => {
-    // Lógica para agregar masivamente
-    console.log("Agregar masivamente");
+  const handleAddMassiveData = (event: React.MouseEvent<HTMLButtonElement>) => {
+    handleAddMassive(event as any);
   };
 
   const handleSearch = async () => {
@@ -98,7 +98,7 @@ const Actions = () => {
           </Link>
         {/* Botón para agregar masiva */}
         <button
-          onClick={handleAddMassive}
+          onClick={handleAddMassiveData}
           className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -35,10 +35,14 @@ router.post("/usuarios/login", (req, res) => {
   usuariosController.loginUser(req, res);
 });
 
-
+router.post("/logout", (req, res) => {
+  // Aquí puedes utilizar la función definida en el controlador
+  usuariosController.logoutUser(req, res);
+});
 
 router.post("/404", (req, res) => {
   usuariosController.errorFatal(req,res);
 })
+
 
 module.exports = router;

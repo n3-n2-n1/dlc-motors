@@ -8,7 +8,8 @@
     "mysql": "^2.18.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "xlsx": "^0.18.5"
   },
   "name": "dlc-back",
   "version": "1.0.0",

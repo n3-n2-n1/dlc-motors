@@ -2,6 +2,7 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { createError } from '../../utils/Handlers/Handlers';
 
 // Define la interfaz para los props del componente
 interface ErrorFormProps {
@@ -15,11 +16,6 @@ const validationSchema = Yup.object().shape({
   detalle: Yup.string(),
   cantidad: Yup.number().required('Campo requerido'),
   oemProducto: Yup.string().required('Campo requerido').uppercase(),
-  importacion: Yup.string().when("observaciones", ([observaciones], schema) => {
-    return observaciones === "Importación"
-      ? schema.required("Required")
-      : schema;
-  }),
 });
 
 // Componente funcional del formulario de inventario
@@ -29,11 +25,10 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
 }) => {
   // Valores iniciales del formulario
   const initialValues = {
-    observaciones: '',
+    observaciones:'',
     detalle: '',
     cantidad: 1,
     oemProducto: '',
-    importacion: '',
   };
 
   return (
@@ -42,9 +37,17 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        // Lógica para manejar la presentación de los datos, por ejemplo, enviar a una API
-        console.log(values);
+      onSubmit={(values, { setSubmitting }) => {
+        // Asegúrate de que values tenga el tipo correcto
+        const { observaciones, detalle, cantidad, oemProducto } = values;
+    
+        // Resto de la lógica
+        createError({ observaciones, detalle, cantidad, oemProducto });
+        
+        // Restablece el estado de submit
+        setSubmitting(false);
+        location.reload()
+        console.log(values as any)
       }}
     >
       {({ values }) => (
@@ -61,32 +64,13 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
               name="observaciones"
               className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
-              <option value="">Seleccione...</option>
-              {observationsList.map((observation, index) => (
-                <option key={index} value={observation}>
-                  {observation}
-                </option>
-              ))}
+              <option value="" disabled>Seleccione...</option>
+                <option value="Rotura">Se rompió</option>
+                <option value="Cambio">Solicita cambio</option>
+                <option value="EntregaIncorrecta">Entrega incorrecta</option>
             </Field>
             <ErrorMessage name="observaciones" component="div" className="text-red-500 text-sm mt-1" />
           </div>
-
-          {/* Campo de Número de Importación (se mostrará si las observaciones son "Importación") */}
-          {values.observaciones === 'Importación' && (
-            <div className="mb-4">
-              <label htmlFor="importacion" className="block text-sm font-medium text-gray-200 dark:text-gray-300">
-                Número de importación:
-              </label>
-              <Field
-                type="text"
-                id="importacion"
-                name="importacion"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-              />
-              <ErrorMessage name="importacion" component="div" className="text-red-500 text-sm mt-1" />
-            </div>
-          )}
-
           {/* Campo de Detalle */}
           <div className="mb-4">
             <label htmlFor="detalle" className="block text-sm font-medium text-gray-200 dark:text-gray-300">

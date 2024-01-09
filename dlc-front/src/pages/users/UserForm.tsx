@@ -6,10 +6,12 @@ import { User } from "../../Interfaces/User";
 import { createUser } from "../../utils/Handlers/Handlers";
 
 const validationSchema = Yup.object().shape({
-  fullName: Yup.string().required("Campo requerido"),
+  name: Yup.string().required("Campo requerido"),
   password: Yup.string().required("Campo requerido"),
   role: Yup.string().required("Campo requerido"),
-  email: Yup.string().email("Debe ingresar un email válido").required("Campo requerido"),
+  email: Yup.string()
+    .email("Debe ingresar un email válido")
+    .required("Campo requerido"),
 });
 
 /** Administrador
@@ -32,7 +34,7 @@ interface UserFormProps {
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
   // Valores iniciales del formulario
   const initialValues = {
-    fullName: "",
+    name: "",
     password: "",
     role: "",
     email: "",
@@ -42,7 +44,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // createProduct(values);
+      createUser(values as any);
+      location.reload();
       console.log(values);
     },
   });
@@ -54,7 +57,9 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden mt-16">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">Agregar usuarios</h1>
+          <h1 className="text-4xl mb-2 text-white font-weight-300">
+            Agregar usuarios
+          </h1>
           <h2 className="text-gray-500 mb-4">
             Formulario para creación de nuevos Usuarios (Sólo administradores){" "}
             <br />
@@ -65,23 +70,23 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           >
             <div className="mb-4">
               <label
-                htmlFor="fullName"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Nombre completo:
               </label>
               <input
                 type="text"
-                id="fullName"
-                name="fullName"
+                id="name"
+                name="name"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.fullName}
+                value={formik.values.name}
               />
-              {formik.touched.fullName && formik.errors.fullName ? (
+              {formik.touched.name && formik.errors.name ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.fullName}
+                  {formik.errors.name}
                 </div>
               ) : null}
             </div>
@@ -146,7 +151,9 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 onChange={formik.handleChange}
                 value={formik.values.role || ""}
               >
-                <option value="" disabled>Seleccione un rol para el usuario</option>
+                <option value="" disabled>
+                  Seleccione un rol para el usuario
+                </option>
                 <option value="Administrador">Administrador</option>
                 <option value="Vendedor">Vendedor</option>
                 <option value="Operador de depósito">

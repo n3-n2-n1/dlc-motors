@@ -11,28 +11,31 @@ const App = () => {
 
   const [authenticated, setAuthenticated] = useState(false);
 
+
   useEffect(() => {
-    // Aquí puedes realizar la lógica para verificar si el usuario está autenticado.
-    // Puedes hacer una llamada a la API para verificar la sesión del usuario.
-    // Si estás utilizando tokens JWT, puedes verificar la validez del token almacenado en localStorage.
-    // Por ahora, estoy simulando la autenticación después de 2 segundos.
-    setTimeout(() => {
+    const token = sessionStorage.getItem('miTokenJWT');
+
+    if (token) {
       setAuthenticated(true);
-    }, 2000);
+    } else {
+      // Si no hay token, puedes dejar la autenticación como falsa o redirigir a la página de inicio de sesión.
+      setAuthenticated(false);
+    }
   }, []);
+
+  
+  const props = {}
 
 
   return (
 
 
     (
-      <SearchProvider>
+      <SearchProvider {...(props as any)}>
       <Suspense fallback={<Loader />}>
         {authenticated ? (
           <AppRoutes />
         ) : (
-          // Puedes redirigir a la página de inicio de sesión o mostrar un componente de inicio de sesión aquí.
-          // En este ejemplo, simplemente muestro un mensaje.
           <Login />
         )}
       </Suspense>

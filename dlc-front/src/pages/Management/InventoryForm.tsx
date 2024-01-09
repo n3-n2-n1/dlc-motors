@@ -1,7 +1,8 @@
 // Importa las librerías necesarias
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { createMovement } from "../../utils/Handlers/Handlers";
 
 // Define la interfaz para los props del componente
 interface InventoryFormProps {
@@ -20,6 +21,8 @@ const validationSchema = Yup.object().shape({
 const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   // Valores iniciales del formulario
   const initialValues = {
+    date: "",
+    movementType: "",
     productCode: "",
     description: "",
     fixedStock: null,
@@ -36,13 +39,20 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // createProduct(values);
+      createMovement(values)
+      alert('Creado');
       console.log(values);
     },
   });
 
   // Estado para manejar el producto seleccionado
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+  // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
+  useEffect(() => {
+    formik.setFieldValue("date", new Date().toLocaleString());
+    formik.setFieldValue('movementType', 'Inventario');
+  }, [selectedProduct]);
 
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
@@ -53,7 +63,10 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
           </h1>
           <h2 className="text-gray-500 mb-4">
             Informá sobre movimientos de inventario <br />
-            <span className="text-xs underline">Lo usamos para arreglar el stock de las cosas que contamos y nos dan mal</span>
+            <span className="text-xs underline">
+              Lo usamos para arreglar el stock de las cosas que contamos y nos
+              dan mal
+            </span>
           </h2>
           <form
             onSubmit={formik.handleSubmit}
@@ -205,8 +218,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
                 onChange={formik.handleChange}
                 value={formik.values.appliedFix || ""}
               />
-              {formik.touched.appliedFix &&
-              formik.errors.appliedFix ? (
+              {formik.touched.appliedFix && formik.errors.appliedFix ? (
                 <div className="text-red-500 text-sm mt-1">
                   {formik.errors.appliedFix}
                 </div>

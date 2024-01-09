@@ -18,7 +18,7 @@ export interface NewIProduct {
   newCompatibleBrand: string;
   stock: number | null;
   hasStock: boolean;
-  picture: string; // ! Robar de Libertapp?
+  picture: string; // ! Robar de Libertapp? Anular temporalmente
   brokenOrReturned: number;
   kit: boolean;
   tag: string;

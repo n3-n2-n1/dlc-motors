@@ -8,6 +8,11 @@ import CategoriesIcon from "../icon/CategoriesIcon/CategoriesIcon";
 import ErrorsIcon from "../icon/ErrorsIcon/ErrorsIcon";
 import UsersIcon from "../icon/UsersIcon/UsersIcon";
 import { Link } from "react-router-dom";
+import OutcomesIcon from "../icon/OutcomesIcon/OutcomesIcon";
+import InventoryIcon from "../icon/InventoryIcon/InventoryIcon";
+import ReturnsIcon from "../icon/ReturnsIcon/ReturnsIcon";
+import CostsIcon from "../icon/CostsIcon/CostsIcon";
+import IncomesIcon from "../icon/IncomesIcon/IncomesIcon";
 
 function Sidebar() {
   return (
@@ -24,27 +29,31 @@ function Sidebar() {
         <SidebarButton to={paths.products}>
           <ProductsIcon />
         </SidebarButton>
-        <SidebarButton to={paths.errors}>
-          <ErrorsIcon />
-        </SidebarButton>
         <SidebarButton to={paths.categories}>
           <CategoriesIcon />
+        </SidebarButton>
+        <SidebarButton to={paths.outcomes}>
+          <OutcomesIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.upload}>
+          <IncomesIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.returns}>
+          <ReturnsIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.inventory}>
+          <InventoryIcon color="white" />
+        </SidebarButton>
+        <SidebarButton to={paths.errors}>
+          <ErrorsIcon />
         </SidebarButton>
         <SidebarButton to={paths.users}>
           <UsersIcon />
         </SidebarButton>
-        <SidebarButton to={paths.outcomes}>
-          <SearchIcon color="white" />
+        <SidebarButton to={paths.moves}>
+          <MovementsIcon />
         </SidebarButton>
-        <SidebarButton to={paths.inventory}>
-          <SearchIcon color="white" />
-        </SidebarButton>
-        <SidebarButton to={paths.upload}>
-          <SearchIcon color="red" />
-        </SidebarButton>
-        <SidebarButton to={paths.returns}>
-          <SearchIcon color="red" />
-        </SidebarButton>
+
         {/* <SidebarButton to={paths.notifications}>
           <NotificationsIcon />
         </SidebarButton> */}

@@ -1,5 +1,11 @@
+import { useState } from "react";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { LoginUser } from "../../utils/Handlers/Handlers";
+import { Link } from "react-router-dom";
+import { paths } from "../../routes/paths";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Mail inválido").required("Requerido"),
@@ -8,30 +14,32 @@ const validationSchema = Yup.object({
 
 
 function Login() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState<string | null>(null);
 
-  const url = "http://localhost:3000/login"
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "", 
     },
     validationSchema,
-    onSubmit: values => {
-      // Realiza la solicitud fetch con los valores del formulario
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Respuesta del servidor:', data);
-        })
-        .catch(error => {
-          console.error('Error en la solicitud:', error);
-        });
+    onSubmit: async values => {
+      try {
+        const response = await LoginUser(values);
+        const data = await response.json();
+
+        // Verifica si el servidor devuelve un token
+        if (data.token) {
+          // Almacena el token en sessionStorage
+          sessionStorage.setItem('miTokenJWT', data.token);
+          console.log('logueado exitosamente')
+          location.reload() // ! No te mereces ser programador flaco
+          // Asegúrate de cambiar 'miTokenJWT' según el nombre de tu token
+        }
+          
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+      }
     },
   });
 
@@ -83,6 +91,7 @@ function Login() {
                 <button
                   type="submit"
                   className="w-full p-3 mt-4 bg-blue-600 text-white shadow rounded-full"
+                  onClick={()=> navigate('/')}
                 >
                   Ingresar
                 </button>
