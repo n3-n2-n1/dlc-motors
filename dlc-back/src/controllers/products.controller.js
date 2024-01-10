@@ -79,6 +79,28 @@ export const createProduct = async (req, res) => {
       picture,
     } = req.body;
 
+    if (
+      !pieceCode ||
+      !OEMCode ||
+      !tangoCode ||
+      !description ||
+      !category ||
+      !origin ||
+      !compatibleBrands ||
+      !stock ||
+      !hasStock ||
+      !brokenOrReturned ||
+      !kit ||
+      !tag ||
+      !price ||
+      !picture
+    ) {
+      return res.status(400).send({
+        status: "error",
+        error: "Incomplete values",
+      });
+    }
+
     // Esto se va a usar para validar que el usuario tenga el rol necesario para realizar esta acción
     // const { jwtCookie: token } = req.cookies;
 
@@ -89,88 +111,71 @@ export const createProduct = async (req, res) => {
     //   });
     // }
 
-    
-  } catch (error) {}
-
-  const compatibleBrandsStr = compatibleBrands.join(", ");
-
-  // Realizar la lógica para insertar un nuevo producto en la base de datos
-  db.query(
-    "INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock, hasStock, Image, Origen, CodTango, CodOEM, marcasCompatibles, Devoluciones, Kit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
+    const createdProduct = productService.createProduct(
       pieceCode,
+      OEMCode,
+      tangoCode,
       description,
       category,
-      tag,
-      price,
+      origin,
+      compatibleBrands,
       stock,
       hasStock,
-      picture,
-      origin,
-      tangoCode,
-      OEMCode,
-      compatibleBrandsStr,
       brokenOrReturned,
       kit,
-    ],
-    function (error) {
-      if (error) {
-        console.error("An error occurred while executing the query", error);
-        res.status(500).json({ error: "Error al insertar el producto." });
-        return;
-      }
+      tag,
+      price,
+      picture
+    );
 
-      // Get the inserted product
-      db.query(
-        "SELECT * FROM productos WHERE Codigo = ?",
-        [pieceCode],
-        function (error, results, fields) {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            res
-              .status(500)
-              .json({ error: "Error al obtener el producto insertado." });
-            return;
-          }
-
-          res.status(200).json({
-            message: "Producto insertado correctamente.",
-            product: results[0],
-          });
-
-          console.log(results);
-        }
-      );
+    if (!createdProduct || createdProduct.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: `Failed to create product with code ${pieceCode}`,
+      });
     }
-  );
+
+    res.status(200).send({
+      status: "success",
+      payload: createdProduct,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create product",
+    });
+  }
 };
 
 //Eliminar el productito
 export const deleteProduct = (req, res) => {
-  const productId = req.params.pid;
+  try {
+    const productId = req.params.pid;
 
-  if (!productId) {
-    res.status(400).json({ error: "ID del producto no proporcionado." });
-    return;
-  }
-
-  db.query(
-    "DELETE FROM productos WHERE CodOEM = ?",
-    [productId],
-    (error, results, fields) => {
-      if (error) {
-        console.error("An error occurred while executing the query", error);
-        res.status(500).json({ error: "Error al abrir la base de datos." });
-        return;
-      }
-
-      if (results.affectedRows === 0) {
-        res.status(404).json({ error: "Producto no encontrado." });
-        return;
-      }
-
-      res.status(200).json({ message: "Producto eliminado correctamente." });
-      console.log("Borrado joya padre");
+    if (!productId) {
+      return res.status(400).send({
+        status: "error",
+        error: "Incomplete values",
+      });
     }
-  );
+
+    const deletedProduct = productService.deleteProduct(productId);
+
+    if (!deletedProduct || deletedProduct.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: `Failed to delete product with id ${productId}`,
+      });
+    }
+
+    res.status(200).send({
+      status: "success",
+      payload: deletedProduct,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to delete product",
+    });
+  }
 };

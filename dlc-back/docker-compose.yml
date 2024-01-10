@@ -3,6 +3,7 @@ version: '3'
 services:
   mysql:
     image: mariadb:10.5
+    command: --innodb_force_recovery=1
     ports:
       - "3306:3306"
     volumes:
