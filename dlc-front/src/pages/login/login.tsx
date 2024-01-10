@@ -90,7 +90,7 @@ function Login() {
 
                 <button
                   type="submit"
-                  className="w-full p-3 mt-4 bg-blue-600 text-white shadow rounded-full"
+                  className="w-full p-3 mt-4 bg-blue-600 text-gray-100 shadow rounded-full"
                   onClick={()=> navigate('/')}
                 >
                   Ingresar
@@ -98,10 +98,10 @@ function Login() {
               </form>
             </div>
 
-            <div className="flex justify-between p-8 text-sm border-t border-gray-300 dark:bg-gray-900 bg-gray-100">
+            <div className="flex justify-between p-8 text-sm border-t border-gray-350 dark:bg-gray-900 bg-gray-400">
               <a
                 href="#"
-                className="font-medium dark:text-indigo-300 text-blue-600"
+                className="font-medium dark:text-indigo-300 text-gray-200"
               >
                 ¿Necesitás ayuda?
               </a>

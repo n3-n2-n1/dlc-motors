@@ -90,28 +90,6 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 </div>
               ) : null}
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
-              >
-                Contraseña
-              </label>
-              <input
-                type="text"
-                id="password"
-                name="password"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.password || ""}
-              />
-              {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.password}
-                </div>
-              ) : null}
-            </div>
 
             <div className="mb-4">
               <label
@@ -132,6 +110,28 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
               {formik.touched.email && formik.errors.email ? (
                 <div className="text-red-500 text-sm mt-1">
                   {formik.errors.email}
+                </div>
+              ) : null}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Contraseña
+              </label>
+              <input
+                type="text"
+                id="password"
+                name="password"
+                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.password || ""}
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.password}
                 </div>
               ) : null}
             </div>
