@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+import mysql from 'mysql'
 
 // Configuración de la conexión a la base de datos
 const dbConfig = {
@@ -9,10 +9,10 @@ const dbConfig = {
   port: 3306,
 };
 
-const connection = mysql.createConnection(dbConfig);
+const db = mysql.createConnection(dbConfig);
 
 // Conectar a la base de datos
-connection.connect((err) => {
+db.connect((err) => {
   if (err) {
     console.error('Error al conectar a la base de datos:', err);
   } else {
@@ -20,4 +20,4 @@ connection.connect((err) => {
   }
 });
 
-module.exports = connection;
+export default db;
