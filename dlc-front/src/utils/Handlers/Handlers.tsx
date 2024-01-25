@@ -1,10 +1,10 @@
 import { User } from "../../Interfaces/User";
-import { Errors } from "../../Interfaces/Errors";
+import { Errors } from "../../components/ErrorCard/ErrorCard";
 import * as xlsx from 'xlsx'
 
 const fetchUser = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://localhost:3000/usuarios");
+    const response = await fetch("http://localhost:3000/api/v1/users");
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -20,7 +20,7 @@ const fetchUser = async (): Promise<User[]> => {
 
 const createUser = async (userData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/usuarios/registro", {
+    const response = await fetch("http://localhost:3000/api/v1/users/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,19 +44,26 @@ const createUser = async (userData: any) => {
 
 const fetchProducts = async () => {
   try {
-    const response = await fetch("http://localhost:3000/productos"); // Reemplaza con la ruta correcta
+    const response = await fetch("http://localhost:3000/api/v1/products");
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
     const data = await response.json();
-    return data;
+    console.log(data)
+    return data.payload;
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error; // Puedes manejar el error aquí o dejar que el componente principal lo maneje
+    throw error;
   }
 };
+
 
 const createProduct = async (productData: any) => {
 
   try {
-    const response = await fetch("http://localhost:3000/productos", {
+    const response = await fetch("http://localhost:3000/api/v1/products", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,13 +86,14 @@ const createProduct = async (productData: any) => {
 
 const fetchErrors = async (): Promise<Errors[]> => {
   try {
-    const response = await fetch("http://localhost:3000/getErrorProduct");
+    const response = await fetch("http://localhost:3000/api/v1/productErrors");
 
     if (!response.ok) {
       throw new Error("Error status");
     }
 
-    const errorData: Errors[] = await response.json();
+    const errorData = await response.json();
+    console.log(errorData)
     return errorData;
   } catch (error) {
     console.error("error", error);
@@ -95,7 +103,7 @@ const fetchErrors = async (): Promise<Errors[]> => {
 
 const createError = async (errorData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/errorProductCreate", {
+    const response = await fetch("http://localhost:3000/api/v1/productErrors", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +126,7 @@ const createError = async (errorData: any) => {
 const deleteProducts = async (productData: any) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/productos/${productData}`,
+      `http://localhost:3000/api/v1/products/${productData}`,
       {
         method: "DELETE",
       }
@@ -138,7 +146,7 @@ const deleteProducts = async (productData: any) => {
 
 const createReturns = async (returnData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/devoluciones", {
+    const response = await fetch("http://localhost:3000/api/v1/returns", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -161,7 +169,7 @@ const createReturns = async (returnData: any) => {
 };
 
 const LoginUser = async (values: any) => {
-  const url = "http://localhost:3000/usuarios/login";
+  const url = "http://localhost:3000/api/v1/usuarios/login";
 
   try {
     const response = await fetch(url, {
@@ -181,20 +189,22 @@ const LoginUser = async (values: any) => {
 
 const fetchHistorial = async () => {
   try {
-    const response = await fetch("http://localhost:3000/historial");
+    const response = await fetch("http://localhost:3000/api/v1/history");
     if (!response.ok) {
-      throw new Error("Error al obtener el historial de acciones");
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    return await response.json();  // Retorna los datos
+    const data = await response.json();
+    console.log(data)
+    return data.payload;
   } catch (error) {
-    console.error("Error:", error);
-    throw error;  // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
+    console.error("Error fetching historial:", error);
+    throw error;
   }
 };
 
 const fetchMoves = async () => {
   try{
-    const response = await fetch("http://localhost:3000/moves")
+    const response = await fetch("http://localhost:3000/api/v1/movements")
     if (!response.ok) {
       throw new Error("Error al obtener el historial de acciones");
     }
@@ -207,7 +217,7 @@ const fetchMoves = async () => {
 
 const createMovement = async (movementData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/moves", {
+    const response = await fetch("http://localhost:3000/api/v1/movements", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -256,7 +266,7 @@ const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
 const logoutUser = async() => {
   try {
-    const response = await fetch("http://localhost:3000/logout", {
+    const response = await fetch("http://localhost:3000/api/v1/logout", {
       method: "POST",
       
     });

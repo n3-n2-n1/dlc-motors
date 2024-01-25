@@ -1,40 +1,38 @@
-import { deleteProduct } from "../controllers/products.controller.js";
 import db from "../database/db.js";
 
 export default class ProductService {
   constructor() {}
 
   async getProducts() {
-    try {
+    return new Promise((resolve, reject) => {
       db.query("SELECT * FROM productos", (error, results) => {
         if (error) {
           console.error("An error occurred while executing the query", error);
-          throw new Error("Error al abrir la base de datos.");
+          reject(new Error("Error al obtener los productos."));
+        } else {
+          resolve(results);
         }
-        return results;
       });
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   async getProductsBySearchTerm(searchTerm) {
-    try {
+    return new Promise((resolve, reject) => {
       db.query(
         "SELECT * FROM productos WHERE Producto LIKE ?",
         [`%${searchTerm}%`],
         (error, results) => {
           if (error) {
             console.error("An error occurred while executing the query", error);
-            throw new Error("Error al abrir la base de datos.");
+            reject(new Error("Error al abrir la base de datos."));
+          } else {
+            resolve(results);
           }
-          return results;
         }
       );
-    } catch (error) {
-      throw error;
-    }
+    });
   }
+  
 
   async createProduct(
     pieceCode,

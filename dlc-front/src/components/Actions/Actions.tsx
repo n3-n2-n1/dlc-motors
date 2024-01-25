@@ -40,22 +40,24 @@ const Actions = () => {
 
   const handleSearch = async () => {
     try {
-      // Realiza la solicitud a la API para obtener la lista de productos
-      const response = await fetch(`http://localhost:3000/productos/${searchTerm}`);
-      console.log(searchTerm)
+      const response = await fetch(`http://localhost:3000/api/v1/products/${searchTerm}`);
+      
+      // Verifica si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+  
       const data = await response.json();
-      console.log(data)
-
-      setSearchResults(data); // Establece los resultados de búsqueda en el contexto
+      setSearchResults(data);
       setCurrentPage(1);
       const totalPages = Math.ceil(data.length / itemsPerPage);
       setTotalPages(totalPages);
     } catch (error) {
-      
       console.error("Error fetching products:", error);
-      // Puedes agregar lógica para manejar el error, por ejemplo, mostrar un mensaje al usuario
+      // Aquí puedes manejar el error, como mostrar un mensaje al usuario
     }
   };
+  
 
   return (
       <div className="w-full flex justify-between p-2 mb-3">
@@ -82,7 +84,7 @@ const Actions = () => {
         {/* Botón para agregar uno solo */}
         <Link to={paths.addProduct}>
         <button
-          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0 gap-3 hover:text-gray-100"
+          className="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-white dark:border-gray-800 leading-none py-0 gap-3 bg-blue-700 hover:text-gray-100 hover:bg-blue-800"
           >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_4_3946"  maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">

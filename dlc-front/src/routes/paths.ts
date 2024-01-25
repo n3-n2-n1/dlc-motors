@@ -17,6 +17,9 @@ export const paths = {
   outcomes:"/egresos", //Cargar egreso
   moves: "/movimientos", // Listado de todos los movimientos realizados en el sistema, tanto de ingresos como de egresos, devoluciones y errores
   
+
+  notifications:"/notificaciones",
   // notifications: "/notificaciones", // Acá figurarían las notificaciones de stock bajo, stock crítico, reposición de stock, etc.
   // management: "/gestion",
+  historyView:"/historyView"
 };

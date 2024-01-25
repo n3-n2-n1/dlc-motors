@@ -3,12 +3,9 @@ import { productService } from "../services/services.js";
 //Obtener los productitos
 export const getProducts = async (req, res) => {
   try {
-    // Acá podría recibir los parámetros de sorting desde la req.query, como limit, page, category, ordenamientos, etc.
+    const products = await productService.getProducts();
 
-    // Al getProducts() se le peuden pasar parámetros de sorting y los usa para ordenar los productos, traer menos, etc.
-    const products = productService.getProducts();
-
-    if (!products) {
+    if (!products || products.length === 0) {
       return res.status(404).send({
         status: "error",
         error: "No products found",
@@ -20,13 +17,13 @@ export const getProducts = async (req, res) => {
       payload: products,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).send({
       status: "error",
       error: "Failed to get products",
     });
   }
 };
-
 export const getProductsBySearchTerm = async (req, res) => {
   try {
     const searchTerm = req.params.query;
@@ -38,7 +35,8 @@ export const getProductsBySearchTerm = async (req, res) => {
       });
     }
 
-    const filteredProduct = productService.getProductsBySearchTerm(searchTerm);
+    // Usa 'await' para esperar a que la promesa se resuelva
+    const filteredProduct = await productService.getProductsBySearchTerm(searchTerm);
 
     if (!filteredProduct || filteredProduct.length === 0) {
       return res.status(404).send({
@@ -51,7 +49,9 @@ export const getProductsBySearchTerm = async (req, res) => {
       status: "success",
       payload: filteredProduct,
     });
+    console.log(filteredProduct);
   } catch (error) {
+    console.error("Error fetching product:", error);
     return res.status(500).send({
       status: "error",
       error: "Failed to get product",

@@ -2,8 +2,8 @@ import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { paths } from "./paths";
 import Layout from "../components/Layout/Layout";
-
 import { useSearchContext } from "../contexts/SearchContext.tsx";
+import HistoryView from "../pages/History/HistoryView.tsx";
 
 const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
@@ -26,7 +26,9 @@ const IncomesOutcomesForm = lazy(
   () => import("../pages/Management/IncomesOutcomesForm")
 );
 
-const IncomeObservations = [
+const Notifications = lazy(() => import("../pages/Notifications/Notifications.tsx"));
+
+export const IncomeObservations = [
   "Cancelación",
   "Devolución",
   "Error",
@@ -37,7 +39,7 @@ const IncomeObservations = [
   "Armado de kits",
 ];
 
-const OutcomeObservations = [
+export const OutcomeObservations = [
   "ML",
   "FLEX",
   "FLEX G",
@@ -57,14 +59,14 @@ const OutcomeObservations = [
   "Para armar kits",
 ];
 
-const ProductCategories = [
+export const ProductCategories = [
   "VENTA EN LOCAL",
   "OTRO",
   "ERROR",
   "Para armar kits",
 ]
 
-const Brands = [
+export const Brands = [
   "Volskwagen",
   "Ford",
   "Fiat",
@@ -90,6 +92,10 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.costs} element={<Costs />} />
         <Route path={paths.returns} element={<Returns products={products} />} />
         <Route path={paths.errors} element={<Errors />} />
+        <Route path={paths.moves} element={<Moves />} />
+
+        <Route path={paths.notifications} element={<Notifications />} />
+        <Route path={paths.historyView} element={<HistoryView/>} />
 
         <Route
           path={paths.upload}
@@ -115,7 +121,6 @@ const AppRoutes: React.FC = () => {
             />
           }
         />
-        <Route path={paths.moves} element={<Moves />} />
       </Route>
     </Routes>
   );

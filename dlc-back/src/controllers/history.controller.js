@@ -1,43 +1,60 @@
-import db from "../database/db.js";
+import { historyService } from "../services/services.js";
 
-export const getHistorial = (req, res) => {
-  db.query(
-    "SELECT * FROM devoluciones, errores, movimientos LIMIT 10",
-    (error, results, fields) => {
-      if (error) {
-        console.error("An error occurred while executing the query", error);
-        res.status(500).json({ error: "Error al abrir la base de datos." });
-        return;
-      }
+export const getHistory = async (req, res) => {
+  try {
+    const history = await historyService.getHistory();
 
-      console.log(results);
-      res.json(results);
+    if (!history) {
+      return res.status(404).send({
+        status: "error",
+        error: "No history found",
+      });
     }
-  );
+
+    res.status(200).send({
+      status: "success",
+      payload: history,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to get History",
+    });
+  }
 };
 
-export const createHistorial = (req, res) => {
-  const historialData = {
-    accion: "Nuevo Producto",
-    descripcion: "Producto insertado.",
-    fecha: "Ayer",
-  };
+export const createHistory = (req, res) => {
+  try {
+    const historialData = {
+      accion: "Nuevo Producto",
+      descripcion: "Producto insertado.",
+      fecha: "Ayer",
+    };
 
-  db.query(
-    "INSERT INTO historial (accion, descripcion, fecha) VALUES (?, ?, ?)",
-    [historialData.accion, historialData.descripcion, historialData.fecha],
-    (error) => {
-      if (error) {
-        console.error("Error al registrar la acción en el historial:", error);
-        return res
-          .status(400)
-          .json({ error: "Error al registrar la acción en el historial" });
-      }
-
-      console.log("Acción registrada en el historial correctamente.");
-      return res
-        .status(200)
-        .json({ message: "Acción registrada en el historial correctamente" });
+    if (!historialData) {
+      return res.status(400).send({
+        status: "error",
+        error: "Incomplete values",
+      });
     }
-  );
+
+    const history = historyService.createHistory(historialData);
+
+    if (!history) {
+      return res.status(404).send({
+        status: "error",
+        error: "Failed to create history",
+      });
+    }
+
+    res.status(200).send({
+      status: "success",
+      payload: history,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create History",
+    });
+  }
 };

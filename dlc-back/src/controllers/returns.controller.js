@@ -8,7 +8,6 @@ export const getReturns = (req, res) => {
       return;
     }
 
-    console.log(results);
     res.json(results);
   });
 };
@@ -60,7 +59,6 @@ export const createReturn = (req, res) => {
             message: "Devolucion insertado correctamente.",
           });
 
-          console.log(results);
         }
       );
     }

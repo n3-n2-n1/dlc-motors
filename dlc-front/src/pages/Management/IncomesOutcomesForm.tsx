@@ -79,15 +79,12 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   }, [selectedProduct, formik.values.quantity]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
+    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block hidden pt-4">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="mr-6 flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">
+          <h1 className="text-3xl mb-2 text-white font-weight-300 pb-4">
             {formName}s
           </h1>
-          <h2 className="text-gray-500 mb-4">
-            Cargá un {formName} al sistema de Inventario
-          </h2>
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"

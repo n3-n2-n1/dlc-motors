@@ -54,7 +54,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   // const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden mt-16">
+    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden pt-4 pb-4">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="flex-row">
           <h1 className="text-4xl mb-2 text-white font-weight-300">
@@ -91,28 +91,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
               ) : null}
             </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
-              >
-                Correo electrónico
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.email || ""}
-              />
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.email}
-                </div>
-              ) : null}
-            </div>
+
             <div className="mb-4">
               <label
                 htmlFor="password"
@@ -141,7 +120,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 htmlFor="role"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
-                Rol
+                Jerarquía
               </label>
               <select
                 id="role"
@@ -172,7 +151,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
             <div>
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white py-2 px-4 rounded-2xl hover:bg-blue-600"
               >
                 Aceptar
               </button>

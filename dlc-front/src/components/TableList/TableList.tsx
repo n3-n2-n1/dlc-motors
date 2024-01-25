@@ -9,9 +9,7 @@ import { paths } from "../../routes/paths.ts";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 
 function TableList() {
-  const { searchResults, currentPage, itemsPerPage, products } =
-    useSearchContext();
-
+  const { searchResults, currentPage, itemsPerPage, products } = useSearchContext();
   const [confirmationIndex, setConfirmationIndex] = useState(-1);
   const [openIndex, setOpenIndex] = useState(-1);
 
@@ -20,25 +18,49 @@ function TableList() {
     setConfirmationIndex(-1);
   }, [currentPage]);
 
-  const itemsToDisplay = searchResults || products;
+  useEffect(() => {
+  console.log("Search Results:", searchResults);
+  console.log("Products:", products);
+  // Otros console.log si es necesario
+}, [searchResults, products, currentPage]);
+
+  const itemsToDisplay = searchResults || products
 
   const columns = [
-    "Acciones",
-    "Imagen",
     "Codigo",
-    "CodigoOEM",
-    "Código Tango",
+    "SKU",
+    "OEM",
     "Descripción",
     "Rubro",
-    "Precio",
-    "Stock",
     "Origen",
     "MarcasCompat",
+    "Precio",
+    "Kit",
+    "Stock",
     "¿Stock?",
     "Devoluciones",
-    "Kit",
-    "Código de Barras",
+    "Check",
   ];
+  
+  // Estado inicial: todas las columnas tienen un ancho normal
+  const [columnWidths, setColumnWidths] = useState(new Array(columns.length).fill('normal'));
+
+  const toggleColumnWidth = index => {
+    // Cambia el ancho de la columna especificada
+    setColumnWidths(
+      columnWidths.map((width, i) => (i === index ? (width === 'normal' ? 'min' : 'normal') : width))
+    );
+  };
+
+  // Estilos para columnas minimizadas y normales
+  const columnStyles = width => ({
+    minWidth: width === 'min' ? '30px' : 'auto',
+    maxWidth: width === 'min' ? '30px' : 'auto',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    borderRight: '1px solid #aaa', // Ajusta el color del borde según tu tema
+  });
 
   const handleDeleteConfirmation = (index: any) => {
     setConfirmationIndex(index);
@@ -57,21 +79,21 @@ function TableList() {
   return (
     <>
       <div className="overflow-y-auto max-h-[calc(88vh-3rem)]">
-        <table className="w-full text-left">
-          <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
-            <tr className="text-gray-100">
-              {columns.map((column, index) => (
-                <th
-                  key={index}
-                  className={`font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 ${
-                    index === 6 ? "hidden md:table-cell" : "" // Hide column at index 6 on medium screens
-                  }`}
-                >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
+    <table className="w-full text-left">
+      <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
+        <tr className="text-gray-100">
+          {columns.map((column, index) => (
+            <th
+              key={index}
+              onClick={() => toggleColumnWidth(index)}
+              className="cursor-pointer font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800"
+              style={columnStyles(columnWidths[index])}
+            >
+              {column}
+            </th>
+          ))}
+        </tr>
+      </thead>
 
           <tbody className="text-gray-100">
             {/* {products.map((product, index) => ( */}
@@ -83,7 +105,7 @@ function TableList() {
               )
               .map((product, index) => (
                 <tr key={index}>
-                  <td className="relative sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                  {/* <td className="relative sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     <button
                       onClick={() =>
                         setOpenIndex(openIndex === index ? -1 : index)
@@ -124,78 +146,46 @@ function TableList() {
                         </div>
                       </>
                     )}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-100">
-                    <div className="flex items-center">
-                      <img
-                        src="/vite.svg"
-                        alt={`foto producto ${product.Codigo}`}
-                      />
-                    </div>
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Codigo.length > 5
-                      ? `${product.Codigo.slice(0, 5)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.Codigo}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {/* {product.CodBarras.length > 6
-                      ? `${product.CodBarras.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras} */}
+                  </td> */}
 
-                    {product.CodOEM}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.Codigo || '-'}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodTango}
+                    {product.CodTango || '-'}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.CodOEM || '-'}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     <div className="">
-                      {product.Producto.length > 16
-                        ? `${product.Producto.slice(0, 16)}...` // Trunca la cadena si tiene más de 20 caracteres
-                        : product.Producto}
+                      {product.Producto || '-'}
                     </div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 md:table-cell hidden">
-                    {product.Rubro.length > 6
-                      ? `${product.Rubro.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.Rubro}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 text-green-500">
-                    ${product.Precio}
-                  </td>
-
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-              {product.marcasCompatibles}
-            </td> */}
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {/* cantidadStock */}
-                    {product.Stock}
-                  </td>
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras.length > 4
-                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras}
-                  </td> */}
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Origen}
+                    {product.Rubro || '-'}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.marcasCompatibles}
+                    {product.Origen || product.CodBarras}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.marcasCompatibles || '-'}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.Precio || '-'}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.hasStock ? "Sí" : "No"}
                   </td>
-
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Devoluciones}
-                  </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.Kit ? "Sí" : "No"}
                   </td>
+                  
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras.length > 4
-                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras}
+                    {product.Devoluciones || '-'}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.CodBarras ? '-' : '-' }
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800"></td>
                 </tr>
@@ -218,8 +208,10 @@ function TableList() {
           </div>
         </div>
       )}
+      <div className="mt-4">
 
       <Pagination />
+      </div>
     </>
   );
 }

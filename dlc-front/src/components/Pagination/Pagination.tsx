@@ -4,68 +4,51 @@ import { useSearchContext } from "../../contexts/SearchContext.tsx";
 const Pagination: React.FC = ({}) => {
   const { totalPages, currentPage, setCurrentPage } = useSearchContext();
   const [leftPage, setLeftPage] = useState(1);
-  const [rightPage, setRightPage] = useState(Math.min(10, totalPages));
+  const [rightPage, setRightPage] = useState(Math.min(10, Math.max(totalPages, 1)));
 
   useEffect(() => {
     setLeftPage(1);
-    setRightPage(Math.min(10, totalPages));
+    setRightPage(Math.min(10, Math.max(totalPages, 1)));
   }, [totalPages]);
 
   const handleLeftClick = () => {
-    setLeftPage((prevLeftPage) => Math.max(1, prevLeftPage - 10));
-    setRightPage((prevRightPage) => Math.max(10, prevRightPage - 10));
+    const newLeftPage = Math.max(1, leftPage - 10);
+    setLeftPage(newLeftPage);
+    setRightPage(Math.min(newLeftPage + 9, totalPages));
   };
 
   const handleRightClick = () => {
-    setLeftPage((prevLeftPage) => Math.min(totalPages - 9, prevLeftPage + 10));
-    setRightPage((prevRightPage) => Math.min(totalPages, prevRightPage + 10));
+    const newRightPage = Math.min(totalPages, rightPage + 10);
+    setRightPage(newRightPage);
+    setLeftPage(Math.max(1, newRightPage - 9));
   };
+
+  // Calculamos la longitud del arreglo de forma segura
+  const pagesLength = Math.max(0, Math.min(rightPage, totalPages) - leftPage + 1);
+
 
   return (
     <div className="flex w-full items-center mb-7">
       <div className="flex w-full mt-5 space-x-2 justify-start">
-      {totalPages > 10 && (
-        <button onClick={handleLeftClick}>
-          <svg
-            className="w-4"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
+        {totalPages > 10 && (
+          <button onClick={handleLeftClick}>
+            {/* SVG y estilos para el botón izquierdo */}
+          </button>
         )}
-        {[...Array(rightPage - leftPage + 1)].map((_, index) => {
-          const pageNumber = leftPage + index;
-          return (
-            <button
-              key={pageNumber}
-              className={`inline-flex items-center h-8 w-8 justify-center rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none ${
-                currentPage === pageNumber ? "text-[#A9DFD8]" : "text-gray-500"
-              }`}
-              onClick={() => setCurrentPage(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          );
-        })}
+        {Array.from({ length: pagesLength }, (_, index) => leftPage + index).map(pageNumber => (
+          <button
+            key={pageNumber}
+            className={`inline-flex items-center h-8 w-8 justify-center rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none ${
+              currentPage === pageNumber ? "text-[#A9DFD8]" : "text-gray-500"
+            }`}
+            onClick={() => setCurrentPage(pageNumber)}
+          >
+            {pageNumber}
+          </button>
+        ))}
         {totalPages > 10 && (
           <button onClick={handleRightClick}>
-            <svg
-              className="w-4"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
+            {/* SVG y estilos para el botón derecho */}
           </button>
         )}
       </div>

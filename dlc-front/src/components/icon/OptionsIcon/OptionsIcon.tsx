@@ -2,7 +2,7 @@ interface OptionsIconProps {
   color?: string;
 }
 
-const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "white" }) => (
+const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "gray" }) => (
   
   <svg
     xmlns="http://www.w3.org/2000/svg"

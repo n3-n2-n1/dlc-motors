@@ -9,7 +9,7 @@ export const getProductErrors = (req, res) => {
         .json({ error: "Error en la consulta a la base de datos." });
       return;
     }
-
+    
     res.json(rows);
   });
 };

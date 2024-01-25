@@ -25,18 +25,18 @@ function Login() {
     validationSchema,
     onSubmit: async values => {
       try {
-        const response = await LoginUser(values);
-        const data = await response.json();
+        // Simular la llamada al backend
+        // En un entorno de producción, aquí llamarías a LoginUser(values)
+        console.log('Simulando login...');
 
-        // Verifica si el servidor devuelve un token
-        if (data.token) {
-          // Almacena el token en sessionStorage
-          sessionStorage.setItem('miTokenJWT', data.token);
-          console.log('logueado exitosamente')
-          location.reload() // ! No te mereces ser programador flaco
-          // Asegúrate de cambiar 'miTokenJWT' según el nombre de tu token
-        }
-          
+        // Simular una respuesta exitosa después de 2 segundos
+        setTimeout(() => {
+          const fakeToken = 'fakeToken123'; // Simula un token
+          sessionStorage.setItem('miTokenJWT', fakeToken);
+          console.log('logueado exitosamente');
+          location.reload(); // Recargar la página (esto se puede cambiar según tu flujo)
+        }, 2000);
+
       } catch (error) {
         console.error('Error en la solicitud:', error);
       }

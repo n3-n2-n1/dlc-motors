@@ -31,8 +31,6 @@ export const createUser = async (newUser, res) => {
         res.status(500).json({ error: "Error al crear el usuario" });
         return;
       }
-      console.log(results);
-      console.log('usuario creado')
     }
   );
 };
@@ -44,7 +42,6 @@ export const getUsers = (req, res) => {
       res.status(500).json({ error: "Error al obtener los usuarios" });
       return;
     }
-    console.log(results);
     res.json(results);
   });
 };

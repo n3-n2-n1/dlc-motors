@@ -3,6 +3,7 @@ import TableList from "../../components/TableList/TableList";
 import Filter from "../../components/Filter/Filter";
 import Actions from "../../components/Actions/Actions";
 
+
 function Products() {
   return (
     <div className="bg-gray-900 text-white h-screen flex overflow-hidden text-sm">

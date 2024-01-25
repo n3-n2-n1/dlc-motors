@@ -31,7 +31,7 @@ const env = async () => {
     console.log(
       cowsay.say({
         text: `Servidor arriba en puerto ${PORT}!`,
-        e: "^^",
+        e: "O.o",
       }).rainbow
     );
   });

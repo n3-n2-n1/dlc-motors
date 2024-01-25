@@ -7,8 +7,6 @@ export const getMovements = (req, res) => {
       res.status(500).json({ error: "Error al abrir la base de datos." });
       return;
     }
-
-    console.log(results);
     res.json(results);
   });
 };
@@ -63,7 +61,6 @@ export const createMovement = (req, res) => {
               product: results[0],
             });
 
-            console.log(results);
           }
         );
       }
@@ -109,7 +106,6 @@ export const createMovement = (req, res) => {
               product: results[0],
             });
 
-            console.log(results);
           }
         );
       }
