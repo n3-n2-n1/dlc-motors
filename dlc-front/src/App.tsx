@@ -2,18 +2,15 @@ import { Suspense } from "react";
 import Loader from "./components/Loader/Loader";
 import AppRoutes from "./routes/routes";
 import { SearchProvider } from "./contexts/SearchContext";
-import {useState, useEffect} from "react"
+import { FilterValuesProvider } from "./contexts/FilterContext";
+import { useState, useEffect } from "react";
 import Login from "./pages/login/login";
 
-
-
 const App = () => {
-
   const [authenticated, setAuthenticated] = useState(false);
 
-
   useEffect(() => {
-    const token = sessionStorage.getItem('miTokenJWT');
+    const token = sessionStorage.getItem("miTokenJWT");
 
     if (token) {
       setAuthenticated(true);
@@ -23,25 +20,17 @@ const App = () => {
     }
   }, []);
 
-  
-  const props = {}
-
+  const props = {};
 
   return (
-
-
-    (
-      <SearchProvider {...(props as any)}>
+    <SearchProvider {...(props as any)}>
+      <FilterValuesProvider>
       <Suspense fallback={<Loader />}>
-        {authenticated ? (
-          <AppRoutes />
-        ) : (
-          <Login />
-        )}
+        {authenticated ? <AppRoutes /> : <Login />}
       </Suspense>
+      </FilterValuesProvider>
     </SearchProvider>
-  )
-  )
+  );
 };
 
 export default App;

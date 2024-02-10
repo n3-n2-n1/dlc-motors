@@ -5,7 +5,7 @@ export default class HistoryService {
 
   async getHistory() {
     return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM devoluciones, errores, movimientos LIMIT 10", (error, results) => {
+      db.query("SELECT * FROM historial", (error, results) => {
         if (error) {
           console.error("An error occurred while executing the query", error);
           reject(new Error("Error al obtener el historial."));

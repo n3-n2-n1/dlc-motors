@@ -6,6 +6,7 @@ import { useSearchContext } from "../../contexts/SearchContext";
 interface SidebarButtonProps {
   to: string;
   children: ReactNode;
+  text: string;
 }
 
 function SidebarButton({ to, children }: SidebarButtonProps) {
@@ -17,7 +18,7 @@ function SidebarButton({ to, children }: SidebarButtonProps) {
       onClick={() => {
         setSearchResults(null as any);
       }}
-      className="flex items-center justify-center h-14 w-14 rounded-lg bg-gray-700 hover:bg-blue-500 dark:hover:bg-[#A9DFD8] hover:text-white dark:hover:text-white"
+      className="flex items-center  px-4 h-[30px] w-full hover:bg-blue-500 dark:hover:bg-[#A9DFD8] hover:text-white dark:hover:text-white mr-4"
     >
       {children}
     </Link>

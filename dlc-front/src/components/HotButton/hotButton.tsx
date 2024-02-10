@@ -10,8 +10,8 @@ interface HotButtonProps {
 const HotButton: React.FC<HotButtonProps & { onClick: () => void }> = ({ link, children, onClick }) => {
   return (
     <Link to={link}>
-      <div className="flex flex-col items-center justify-center bg-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-blue-500" onClick={onClick}>
-        <h3 className="text-xl text-gray-700 font-semibold my-3 rounded rounded-2xl hover:text-white-800">{children}</h3>
+      <div className="flex flex-col items-center justify-center bg-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-blue-500 hover:text-white" onClick={onClick}>
+        <h3 className="text-xl font-semibold my-3 rounded rounded-2xl hover:text-white">{children}</h3>
       </div>
     </Link>
   );

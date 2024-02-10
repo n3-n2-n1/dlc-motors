@@ -27,7 +27,7 @@ Cliente
 // import { createProduct } from "../../utils/Handlers/Handlers";
 
 interface UserFormProps {
-  user: User[];
+  user?: User[];
 }
 
 // Componente funcional del formulario de inventario
@@ -57,13 +57,9 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden pt-4 pb-4">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">
+          <p className="text-2xl mb-2 text-white font-weight-300">
             Agregar usuarios
-          </h1>
-          <h2 className="text-gray-500 mb-4">
-            Formulario para creación de nuevos Usuarios (Sólo administradores){" "}
-            <br />
-          </h2>
+          </p>
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"

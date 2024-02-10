@@ -4,6 +4,7 @@ import { paths } from "./paths";
 import Layout from "../components/Layout/Layout";
 import { useSearchContext } from "../contexts/SearchContext.tsx";
 import HistoryView from "../pages/History/HistoryView.tsx";
+import HandleFatal from "../pages/404/404.tsx";
 
 const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
@@ -26,7 +27,7 @@ const IncomesOutcomesForm = lazy(
   () => import("../pages/Management/IncomesOutcomesForm")
 );
 
-const Notifications = lazy(() => import("../pages/Notifications/Notifications.tsx"));
+const Notifications = lazy(() => import("../pages/Notifications/Notifications"));
 
 export const IncomeObservations = [
   "Cancelación",
@@ -59,11 +60,39 @@ export const OutcomeObservations = [
   "Para armar kits",
 ];
 
+export const ErrorsObservations = [
+  "Difiere ficha de sistema",
+  "Stock real diferente a ficha/sist",
+  "Todo diferente",
+  "Otro inconveniente	",
+];
+
+// ! Aplicar
+export const ReturnsObservations = [
+  "Producto distinto al enviado",
+  "Roto/fallado",
+  "Vuelve al stock",
+  "Otro inconveniente",
+];
+
+export const DeliveriesObservations = [
+  "Courier",
+  "Pedido",
+];
+
+// ! No se usa, se definió en Categories.tsx
 export const ProductCategories = [
   "VENTA EN LOCAL",
   "OTRO",
   "ERROR",
   "Para armar kits",
+]
+// ! Donde se usa está mal, quizás definir las categorías en un solo lugar como el context donde se fetchean los productos
+
+export const ProductOrigins = [
+  "Fábrica",
+  "Nacional",
+  "Importado",
 ]
 
 export const Brands = [
@@ -111,6 +140,7 @@ const AppRoutes: React.FC = () => {
           path={paths.inventory}
           element={<Inventory products={products} />}
         />
+        
         <Route
           path={paths.outcomes}
           element={
@@ -121,6 +151,9 @@ const AppRoutes: React.FC = () => {
             />
           }
         />
+        <Route path={paths.fatal} element={<HandleFatal />}/>
+
+
       </Route>
     </Routes>
   );

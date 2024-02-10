@@ -9,8 +9,7 @@ import routerAPI from "./src/routes/routes.js";
 import initializePassport from "./src/auth/passport.js";
 
 const app = express();
-
-const PORT = 3000;
+const PORT = process.env.PORT || 3000
 
 const corsOptions = {
   origin: "*",

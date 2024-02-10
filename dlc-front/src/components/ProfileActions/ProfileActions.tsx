@@ -68,8 +68,8 @@ function ProfileActions() {
         : "hidden"
     }
   >
-    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-400">
-      <button className="relative grid gap-6 bg-gray-700 px-5 py-6 sm:gap-8 sm:p-8 bg-red"
+    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-700">
+      <button className="relative bg-gray-700sm:gap-8 sm:p-8 bg-red"
       onClick={logoutUser}
       >
         <a
@@ -97,32 +97,7 @@ function ProfileActions() {
           </div>
         </a>
       </button>
-      <div className="relative grid gap-6 bg-gray-700 px-5 py-6 sm:gap-8 sm:p-8 bg-red">
-        <a
-          href="#"
-          className="-m-3 p-3 bg-gray-700 flex items-start rounded-lg hover:bg-gray-800"
-        >
-          {/* Heroicon name: outline/support */}
-          <svg
-            className="flex-shrink-0 h-6 w-6 text-indigo-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-          </svg>
-          <div className="ml-4">
-            <p className="text-base font-medium text-white">Ayuda</p>
-          </div>
-        </a>
-      </div>
+
     </div>
     
   </div>

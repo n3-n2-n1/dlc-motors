@@ -54,7 +54,7 @@ function Login() {
               <form onSubmit={formik.handleSubmit}>
                 <div className="relative mb-8">
                   <label className="block mb-2 text-sm font-medium text-gray-400">
-                    Email
+                    Usuario
                   </label>
                   <input
                     type="text"
@@ -98,7 +98,7 @@ function Login() {
               </form>
             </div>
 
-            <div className="flex justify-between p-8 text-sm border-t border-gray-350 dark:bg-gray-900 bg-gray-400">
+            <div className="flex justify-between p-8 text-sm border-t border-gray-350 dark:bg-gray-900 bg-gray-700">
               <a
                 href="#"
                 className="font-medium dark:text-indigo-300 text-gray-200"

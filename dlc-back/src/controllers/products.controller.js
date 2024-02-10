@@ -49,7 +49,6 @@ export const getProductsBySearchTerm = async (req, res) => {
       status: "success",
       payload: filteredProduct,
     });
-    console.log(filteredProduct);
   } catch (error) {
     console.error("Error fetching product:", error);
     return res.status(500).send({

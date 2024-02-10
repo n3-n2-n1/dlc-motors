@@ -3,6 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IProduct } from "../../Interfaces/Products";
 import { createReturns } from "../../utils/Handlers/Handlers";
+import { OutcomeObservations } from "../../routes/routes";
+import FiltroFloat from "../../components/SearchFloat/SearchFloat";
+
 
 const validationSchema = Yup.object().shape({
   productCode: Yup.string().required("Campo requerido"),
@@ -22,6 +25,7 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
   const initialValues = {
     date: null,
     productCode: "",
+    codOEM: null,
     productName: "",
     description: "",
     previousStock: null,
@@ -33,7 +37,6 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("uwu")
       console.log(values)
       createReturns(values)
     },
@@ -43,7 +46,19 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
     formik.setFieldValue("date", new Date().toLocaleString());
     formik.setFieldValue("productName", selectedProduct?.Producto || "");
     formik.setFieldValue("previousStock", selectedProduct?.Stock || 0);
+    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
+    formik.setFieldValue("descripcion", selectedProduct?.Producto);
+    formik.setFieldValue("stock", selectedProduct?.Stock);
   }, [selectedProduct, formik.values?.previousStock]);
+
+  useEffect(() => {
+    if (formik.values.fixedStock !== null && selectedProduct !== null) {
+      const fixedStock = typeof formik.values.fixedStock === 'number' ? formik.values.fixedStock : 0;
+      const productStock = typeof selectedProduct.Stock === 'number' ? selectedProduct.Stock : 0;
+      const appliedFix = fixedStock - productStock;
+      formik.setFieldValue('appliedFix', appliedFix);
+    }
+  }, [formik.values.fixedStock]);
 
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-hidden lg:block hidden pt-6">
@@ -102,6 +117,22 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
                 <div className="text-red-500 text-sm mt-1">
                 </div>
               ) : null}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="codOEM"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Código OEM
+              </label>
+              <input
+                type="text"
+                id="codOEM"
+                name="codOEM"
+                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
+              />
             </div>
             <div className="mb-4">
               <label
@@ -194,13 +225,15 @@ const Returns: React.FC<ReturnFormProps> = ({products}) => {
                 type="number"
                 id="appliedFix"
                 name="appliedFix"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.appliedFix || ""}
               />
               {formik.touched.appliedFix && formik.errors.appliedFix ? (
                 <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.appliedFix}
                 </div>
               ) : null}
             </div>

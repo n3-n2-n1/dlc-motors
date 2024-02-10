@@ -5,7 +5,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Actions from "../Actions/Actions";
 import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
-
+import FiltroFloat from "../SearchFloat/SearchFloat";
+import { OutcomeObservations } from "../../routes/routes";
+import { User } from "../../Interfaces/User";
+import { fetchUser } from "../../utils/Handlers/Handlers";
 export interface Errors {
   cantidad: string;
   detalle: string;
@@ -16,6 +19,9 @@ export interface Errors {
 const ErrorCard = () => {
   const [errorData, setErrorData] = useState<Errors[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const [userData, setUserData] =useState<User[]>([])
+
 
   const [isEditing, setIsEditing] = useState<boolean[]>(
     new Array(errorData.length).fill(false)
@@ -36,6 +42,17 @@ const ErrorCard = () => {
       }
     };
 
+    const getUsersData = async () => {
+      try {
+        const usersData = await fetchUser();
+        setUserData(usersData);
+        
+      } catch (error) {
+        
+      }
+    }
+
+    getUsersData();
     fetchData();
   }, []);
 
@@ -73,11 +90,32 @@ const ErrorCard = () => {
 
   return (
     <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 flex overflow-auto text-sm pt-6">
-      <div className="flex-row">
+      <div className="">
+        <div className="">
+          
         <h1 className="text-3xl mb-2 text-white font-weight-300 mb-4">
           Historial de Errores
         </h1>
+        <div className="flex flex-row">
+
+        <FiltroFloat
+          filtersConfig={[
+            { key: "search", label: "Buscar", type: "text", users: [] },
+            {
+              key: "observation",
+              label: "Observación",
+              type: "dropdown",
+              options: OutcomeObservations,
+              users: ["Ariana Argentati", "Matías Gallues", "Diego Cimino", "Maria Laura Ramos", "Mariela Fantozzi", "Marisa Cimino", "Alejandro Cabrera", "Jorge Galassi", "Omar Benitez", "Cesar Elifonzo", "Computadora Depósito", "Oscar De Lamo", "Fabio Cantarutti", "Cliente Anónimo"],
+            },
+            // Añadir más configuraciones aquí
+          ]}
+        />
+        </div>
+
       </div>
+      </div>
+
       {errorData.map((error, index) => (
         <div
           key={index}
@@ -105,16 +143,14 @@ const ErrorCard = () => {
                   }
                 />
 
-
                 <h2>Nueva cantidad</h2>
-                 <input
+                <input
                   type="text"
                   value={editableErrors[index].cantidad}
                   onChange={(e) =>
                     handleChange(index, "cantidad", e.target.value)
                   }
                 />
-
 
                 <h2>Nueva observacion</h2>
                 <input
@@ -125,12 +161,14 @@ const ErrorCard = () => {
                   }
                 />
                 <div className="pt-4 pb-6">
-                <button className="rounded rounded-full bg-blue-800 p-2 text-white" onClick={() => handleSave(index)}>
-                  Guardar
-                </button>
+                  <button
+                    className="rounded rounded-full bg-blue-800 p-2 text-white"
+                    onClick={() => handleSave(index)}
+                  >
+                    Guardar
+                  </button>
                 </div>
                 <img src="../../../public/logo.png" alt="" />
-
               </div>
             ) : (
               <div>
@@ -159,14 +197,14 @@ const ErrorCard = () => {
                 </h3>
 
                 <div className="w-[180px] flex flex-row items-center">
-                <h3 className="text-slate-900 dark:text-white mt-1 text-lg font-medium tracking-tight">
-                  Imagen:
-                </h3>
-                <img src="../../../public/logo.png" alt="" />
+                  <h3 className="text-slate-900 dark:text-white mt-1 text-lg font-medium tracking-tight">
+                    Imagen:
+                  </h3>
+                  <img src="../../../public/logo.png" alt="" />
                 </div>
               </div>
             )}
-            <button onClick={() => toggleEdit(index)}>
+            <button onClick={() => console.log(setUserData)}>
               <OptionsIcon />
             </button>
           </div>

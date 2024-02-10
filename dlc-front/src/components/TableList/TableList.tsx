@@ -24,7 +24,8 @@ function TableList() {
   // Otros console.log si es necesario
 }, [searchResults, products, currentPage]);
 
-  const itemsToDisplay = searchResults || products
+  // const itemsToDisplay = searchResults || products
+  const itemsToDisplay = Array.isArray(searchResults) ? searchResults : Array.isArray(products) ? products : [];
 
   const columns = [
     "Codigo",
@@ -45,7 +46,7 @@ function TableList() {
   // Estado inicial: todas las columnas tienen un ancho normal
   const [columnWidths, setColumnWidths] = useState(new Array(columns.length).fill('normal'));
 
-  const toggleColumnWidth = index => {
+  const toggleColumnWidth = (index: any) => {
     // Cambia el ancho de la columna especificada
     setColumnWidths(
       columnWidths.map((width, i) => (i === index ? (width === 'normal' ? 'min' : 'normal') : width))
@@ -53,7 +54,7 @@ function TableList() {
   };
 
   // Estilos para columnas minimizadas y normales
-  const columnStyles = width => ({
+  const columnStyles = (width: any) => ({
     minWidth: width === 'min' ? '30px' : 'auto',
     maxWidth: width === 'min' ? '30px' : 'auto',
     overflow: 'hidden',
@@ -78,7 +79,7 @@ function TableList() {
   };
   return (
     <>
-      <div className="overflow-y-auto max-h-[calc(88vh-3rem)]">
+      <div className="overflow-y-auto max-h-[calc(108vh-3rem)]">
     <table className="w-full text-left">
       <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
         <tr className="text-gray-100">
@@ -96,8 +97,6 @@ function TableList() {
       </thead>
 
           <tbody className="text-gray-100">
-            {/* {products.map((product, index) => ( */}
-
             {itemsToDisplay
               .slice(
                 (currentPage - 1) * itemsPerPage,
@@ -105,49 +104,6 @@ function TableList() {
               )
               .map((product, index) => (
                 <tr key={index}>
-                  {/* <td className="relative sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    <button
-                      onClick={() =>
-                        setOpenIndex(openIndex === index ? -1 : index)
-                      }
-                    >
-                      <OptionsIcon />
-                    </button>
-                    {openIndex === index && (
-                      <>
-                        <ArrowIcon className="rotate-180 text-gray-400 absolute right-4 top-3.5" />
-                        <div className="absolute top-0 left-12 mt-2 w-48 bg-gray-800 border border-gray-600 divide-y divide-gray-600 rounded-md shadow-lg text-white z-50">
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Editar
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p
-                              className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer"
-                              onClick={() => handleDeleteConfirmation(index)}
-                            >
-                              Eliminar
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Agregar ingreso
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Agregar egreso
-                            </p>
-                          </Link>
-                        </div>
-                      </>
-                    )}
-                  </td> */}
-
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.Codigo || '-'}
                   </td>

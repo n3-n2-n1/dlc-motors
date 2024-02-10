@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createMovement } from "../../utils/Handlers/Handlers";
+import { Link } from "react-router-dom";
 
 // Define la interfaz para los props del componente
 interface IncomesOutcomesFormProps {
@@ -39,6 +40,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   const initialValues = {
     date: "",
     movementType: "",
+    codOEM: null,
     productCode: "",
     description: "",
     quantity: null,
@@ -50,6 +52,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     Codigo: string;
     Producto: string;
     Stock: number;
+    CodOEM: string;
   }
 
   const formik = useFormik({
@@ -69,6 +72,9 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   useEffect(() => {
     formik.setFieldValue("date", new Date().toLocaleString());
     formik.setFieldValue("movementType", formName);
+    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
+    formik.setFieldValue("descripcion", selectedProduct?.Producto);
+    formik.setFieldValue("stock", selectedProduct?.Stock);
 
     formik.setFieldValue(
       "updatedStock",
@@ -81,10 +87,13 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block hidden pt-4">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6 flex-row">
+        
+        <div className="mr-6">
           <h1 className="text-3xl mb-2 text-white font-weight-300 pb-4">
             {formName}s
           </h1>
+          
+
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
@@ -167,6 +176,22 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
             </div>
 
             {/* Campos fijos de Detalles del producto a cambiar. */}
+            <div className="mb-4">
+              <label
+                htmlFor="codOEM"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Código OEM
+              </label>
+              <input
+                type="text"
+                id="codOEM"
+                name="codOEM"
+                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
+              />
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="producto"

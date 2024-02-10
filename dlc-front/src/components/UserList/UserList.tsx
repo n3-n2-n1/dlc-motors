@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import UserActions from "./UserActions";
-import { fetchUser } from "../../utils/Handlers/Handlers";
 import UserForm from "../../pages/users/UserForm";
-import { User } from "../../Interfaces/User";
+// import { User } from "../../Interfaces/User";
+import { useUser } from "../../contexts/UserContext";
 
 const UserList: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(users);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await fetchUser();
-        setUsers(userData);
-      } catch (error) {
-        // Handle the error here if needed
-      }
-    };
-
-    fetchData();
-  }, []);
+  // console.log(users);
+  const { users } = useUser();
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = users.filter((user) => user.role);
+  const handleEditUser = () => {
+    alert('editar')
+  }
+
+  const filteredUsers = users?.filter((user) => user.role);
 
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
@@ -34,16 +26,16 @@ const UserList: React.FC = () => {
         <div className="mr-6 flex-row">
           <h1 className="text-4xl mb-2 text-white font-weight-300">Usuarios</h1>
         </div>
-        <UserActions />
         <div className="justify-center">
           <div className="mt-6"></div>
         </div>
       </div>
       <div className="w-auto">
+        {/* // ! La prop debería ser opcional en base a si se va a editar o no algo y solo enviar el usuario a editar */}
         <UserForm user={users} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-3 text-gray-300">
-        {filteredUsers.map((user) => (
+        {filteredUsers?.map((user) => (
           <div
             key={user.name}
             className="bg-gray-300 p-3 flex flex-col rounded-md dark:bg-gray-800 shadow"
@@ -82,6 +74,11 @@ const UserList: React.FC = () => {
             Jerarquía: {user.role}
             </div>
             <div className=" text-gray-700 font-bold">Contraseña: {user.password}</div>
+            <div className="text-gray-300 font-bold pt-4" onClick={()=> handleEditUser}>
+              <button  className="px-4 py-2 rounded rounded-full bg-black hover:bg-blue-700 hover:text-gray-300">
+                Editar
+              </button>
+            </div>
           </div>
         ))}
       </div>

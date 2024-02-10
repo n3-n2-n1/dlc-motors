@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { paths } from "../../routes/paths";
 import { Link } from "react-router-dom";
 
+import { useSearchContext } from "../../contexts/SearchContext";
+
 const Categories = () => {
   const [categories, setCategories] = useState<string[]>([]);
-
-  const productCat = ["Cable Espiral", "Sensores de Abs", "Arboles de Leva", "Valvulas", "Teclados Levantavidrios", "Teclas Varias"];
+  const { products } = useSearchContext();
 
   useEffect(() => {
     try {
-      // Extrigo productosss
-      const uniqueCategories = [...new Set(productCat)];
+      const uniqueCategories = [...new Set(products.map(product => product.Rubro))];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -21,14 +21,14 @@ const Categories = () => {
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden ">
       <div className="bg-gray-900 p-6 shadow-lg text-white">
         <h2 className="text-4xl">Rubros</h2>
-        <div className="overflow-hidden max-h-[840px]">
+        <div className="overflow-auto max-h-[840px]">
         <ul>
             {categories.map((category, index) => (
-              <div key={index} className="flex flex-row justify-between items-center border-b border-gray-700 py-4">
+              <div key={index} className="flex flex-row justify-between items-center border-b border-gray-700 py-4 mr-5">
                 <li className="text-xl">
                   {category}
                 </li>
-                <Link to={`${paths.products}/${category}`}>
+                <Link to={`${paths.products}/:${category}`}>
                   <button className="bg-blue-700 hover:bg-gray-700 text-white font-bold py-2 px-8 rounded rounded-2xl">
                     Ir
                   </button>

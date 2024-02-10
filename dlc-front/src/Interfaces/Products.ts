@@ -5,6 +5,7 @@ export interface IProduct {
   CodBarras: string;
   Precio: string;
   Stock: string;
+  CodOEM: string;
 }
 
 export interface NewIProduct {

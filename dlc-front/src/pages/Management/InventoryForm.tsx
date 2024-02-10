@@ -23,6 +23,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   const initialValues = {
     date: "",
     movementType: "",
+    codOEM: null,
     productCode: "",
     description: "",
     fixedStock: null,
@@ -33,14 +34,15 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     Codigo: string;
     Producto: string;
     Stock: number;
+    CodOEM: string;
   }
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      createMovement(values)
-      alert('Creado');
+      createMovement(values);
+      alert("Creado");
       console.log(values);
     },
   });
@@ -51,8 +53,18 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
   useEffect(() => {
     formik.setFieldValue("date", new Date().toLocaleString());
-    formik.setFieldValue('movementType', 'Inventario');
+    formik.setFieldValue("movementType", "Inventario");
+    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
+    formik.setFieldValue("descripcion", selectedProduct?.Producto);
+    formik.setFieldValue("stock", selectedProduct?.Stock);
   }, [selectedProduct]);
+
+  useEffect(() => {
+    if (formik.values.fixedStock !== null && selectedProduct !== null) {
+      const appliedFix = formik.values.fixedStock - selectedProduct.Stock;
+      formik.setFieldValue("appliedFix", appliedFix);
+    }
+  }, [formik.values.fixedStock]);
 
   return (
     <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block hidden pt-6">
@@ -115,6 +127,22 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
             </div>
             <div className="mb-4">
               <label
+                htmlFor="codOEM"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Código OEM
+              </label>
+              <input
+                type="text"
+                id="codOEM"
+                name="codOEM"
+                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
+              />
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="producto"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
@@ -145,7 +173,6 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
                 disabled
               />
             </div>
-
 
             {/* Campo de Cantidad */}
             <div className="mb-4">
@@ -183,7 +210,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
                 type="number"
                 id="appliedFix"
                 name="appliedFix"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.appliedFix || ""}
