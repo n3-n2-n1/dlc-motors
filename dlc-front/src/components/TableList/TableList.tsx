@@ -92,25 +92,27 @@ function TableList({ category }) {
   const handleEdit = (index: string) => {
     const productToEdit = itemsToDisplay[index];
     console.log(productToEdit);
-    // if (productToEdit) {
-    //   const prodCod = productToEdit.CodOEM;
-    //   deleteProducts(prodCod);
-    //   setOpenIndex(-1);
-    //   setConfirmationIndex(-1);
-    // }
+    if (productToEdit) {
+      const prodCod = productToEdit.codigoInt;
+      // deleteProducts(prodCod);
+      // setOpenIndex(-1);
+      // setConfirmationIndex(-1);
+    }
   };
 
-  const handleDeleteConfirmation = (index: any) => {
-    setConfirmationIndex(index);
+  const handleDeleteConfirmation = (pageIndex: any) => {
+    const indexInOriginalArray = (currentPage - 1) * itemsPerPage + pageIndex;
+    console.log("index", indexInOriginalArray);
+    setConfirmationIndex(indexInOriginalArray);
+    // setConfirmationIndex(index);
   };
 
   const handleDelete = () => {
     const productToDelete = itemsToDisplay[confirmationIndex];
-    console.log(productToDelete);
-    if (productToDelete) {
-      const prodCod = productToDelete.Codigo;
-      // deleteProducts(prodCod);
-      navigate(0)
+    const prodCod = productToDelete.codigoInt;
+    if (prodCod) {
+      deleteProducts(prodCod);
+      // navigate(0)
     }
   };
 
@@ -121,7 +123,7 @@ function TableList({ category }) {
           <thead className="sticky top-0 bg-gray-900 text-gray-100">
             <tr className="text-gray-100">
               <th className="font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-                Actions
+                Acciones
               </th>
               {columns.map((column, index) => (
                 <th
@@ -177,38 +179,38 @@ function TableList({ category }) {
                     )}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Codigo || "-"}
+                    {product.codigoInt || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    {product.CodTango || "-"}
+                    {product.codigoTango || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodOEM || "-"}
+                    {product.codOEM || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    <div className="">{product.Producto || "-"}</div>
+                    <div className="">{product.descripcion || "-"}</div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Rubro || "-"}
+                    {product.rubro || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Origen || product.CodBarras}
+                    {product.origen}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.marcasCompatibles || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Precio || "-"}
+                    {product.precio || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-80  md:table-cell hidden0">
                     {product.hasStock ? "Sí" : "No"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    {product.Kit ? "Sí" : "No"}
+                    {product.kit ? "Sí" : "No"}
                   </td>
 
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    {product.Devoluciones || "-"}
+                    {product.contadorDevoluciones || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.CodBarras ? "-" : "-"}

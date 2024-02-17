@@ -24,7 +24,7 @@ const Moves: React.FC = () => {
   const changeToDelivery = () => setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations}/>);
 
   return (
-    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 overflow-y-hidden">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-full overflow-auto text-sm p-6 overflow-y-hidden">
       <div className="flex-row">
         <h1 className="text-4xl mb-2 text-white font-weight-300">
           Movimientos

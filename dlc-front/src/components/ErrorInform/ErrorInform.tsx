@@ -3,6 +3,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createError } from "../../utils/Handlers/Handlers";
 import { useState, useEffect } from "react";
+import { uploadImageToCloudinary } from "../../utils/cloudinaryTool";
+import { toast } from 'react-toastify';
+import { setTimeout } from "timers/promises";
+
 
 // Define la interfaz para los props del componente
 interface ErrorFormProps {
@@ -34,7 +38,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     observaciones: "",
     codigoInt: "",
     codOEM: null,
-    descripcion: "",
+    desc: "",
     stock: 0,
     detalle: "",
     stockReal: 1,
@@ -51,9 +55,25 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createError(values);
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        console.log(values);
+        const imageUrl = await uploadImageToCloudinary(values.imagen);
+        console.log('URL de la imagen cargada:', imageUrl);
+        toast.success('Imagen cargada con éxito');
+        
+        const updatedValues = {
+          ...values,
+          imagen: imageUrl, 
+        };
+        console.log('Valores del formulario actualizados:', updatedValues); 
+        createError(updatedValues); 
+
+        toast.success('Reporte cargado con éxito');
+      } catch (error) {
+        console.error('Error en el formulario:', error);
+        toast.error('Error al cargar la imagen: ' + error);
+      }
     },
   });
 
@@ -63,7 +83,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     formik.setFieldValue("fecha", new Date().toLocaleString());
     formik.setFieldValue("movementType", formName);
     formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
-    formik.setFieldValue("descripcion", selectedProduct?.Producto);
+    formik.setFieldValue("desc", selectedProduct?.Producto);
     formik.setFieldValue("stock", selectedProduct?.Stock);
   }, [selectedProduct, formik.values.stockReal]);
 
@@ -279,11 +299,12 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
 
             {/* Previsualización de la imagen */}
             {imagePreview && (
-              <div className="mb-4 p-6 bg-white rounded rounded-l">
+              <div className="flex flex-col items-center mb-4 rounded-lg gap-1">
+                <h1 className="block text-lg font-medium text-gray-200 dark:text-gray-300">Imagen a cargar:</h1>
                 <img
                   src={imagePreview}
                   alt="Previsualización"
-                  style={{ width: "200px", height: "100px" }}
+                  className="w-32 rounded-xl"
                 />
               </div>
             )}

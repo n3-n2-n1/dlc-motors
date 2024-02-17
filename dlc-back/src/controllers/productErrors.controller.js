@@ -15,16 +15,13 @@ export const getProductErrors = (req, res) => {
 };
 
 export const createProductError = (req, res) => {
-  const { fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img } = req.body;
+  const { fecha, observaciones, codigoInt, codOEM, descripcion, stock, detalle, stockReal, imagen  } = req.body;
 
-  console.log(
-    `cantidad: ${cantidad}, detalle: ${detalle}, observaciones: ${observaciones}, oemProducto: ${oemProducto}`
-  );
 
   // Realizar la lógica para insertar un nuevo producto en la base de datos
   db.query(
-    "INSERT INTO errores (fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [cantidad, detalle, observaciones, oemProducto],
+    "INSERT INTO errores (fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [fecha, observaciones, codigoInt, codOEM, descripcion, stock, detalle, stockReal, imagen],
     function (error) {
       if (error) {
         console.error("An error occurred while executing the query", error);

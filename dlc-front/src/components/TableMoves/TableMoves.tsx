@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import FiltroFloat from "../SearchFloat/SearchFloat";
 import { OutcomeObservations } from "../../routes/routes";
-import { fetchErrors, fetchReturns, fetchDelivery, fetchCosts, fetchUser } from "../../utils/Handlers/Handlers";
+import { fetchErrors, fetchReturns, fetchDelivery, fetchCosts, fetchUser, fetchMoves } from "../../utils/Handlers/Handlers";
 import { useFilterValues } from "../../contexts/FilterContext";
 
 export interface CostImportedTable {
@@ -411,22 +411,21 @@ export const HistorialInventoryTable: React.FC<HistorialInventoryTableProps> = (
     ? applyFilters(historialInventoryData, filterValues)
     : historialInventoryData;
 
-  useEffect(() => {
-    const fetchInventoryData = async () => {
-      try {
-        const response = await fetchHistorial();
-        if (response && response.payload.length > 0) {
-          // Asumiendo que response.payload ya es del tipo Movement[]
-          setHistorialInventoryData(response.payload);
-          console.log(historialInventoryData);
+    useEffect(() => {
+      const fetchInventoryData = async () => {
+        try {
+          const response = await fetchMoves();
+          // Suponiendo que fetchMoves devuelve directamente el arreglo de objetos
+          if (response && response.length > 0) {
+            setHistorialInventoryData(response);
+          }
+        } catch (error) {
+          console.error("Error fetching historial:", error);
         }
-      } catch (error) {
-        console.error("Error fetching historial:", error);
-      }
-    };
-
-    fetchInventoryData();
-  }, []);
+      };
+    
+      fetchInventoryData();
+    }, []);
 
   console.log("filtro INVENTORY", filteredData);
 
@@ -490,7 +489,7 @@ export const HistorialInventoryTable: React.FC<HistorialInventoryTableProps> = (
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData.length > 0 ? (
+                  {filteredData.length ? (
                     filteredData.map((hist, index) => (
                       <tr tabIndex={index}>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -505,12 +504,12 @@ export const HistorialInventoryTable: React.FC<HistorialInventoryTableProps> = (
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.movimiento}
+                            {hist.tipoMov}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.observacion}
+                            {hist.observaciones}
                           </p>
                         </td>{" "}
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -692,7 +691,7 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.descripcion}
+                            {hist.desc}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -707,7 +706,7 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.codigoInt}
+                            {hist.codInterno}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

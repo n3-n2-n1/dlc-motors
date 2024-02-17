@@ -19,7 +19,7 @@ export default class ProductService {
   async getProductsBySearchTerm(searchTerm) {
     return new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM productos WHERE Producto LIKE ?",
+        "SELECT * FROM productos WHERE descripcion LIKE ?",
         [`%${searchTerm}%`],
         (error, results) => {
           if (error) {
@@ -35,42 +35,42 @@ export default class ProductService {
   
 
   async createProduct(
-    pieceCode,
-    OEMCode,
-    tangoCode,
-    description,
-    category,
-    origin,
-    compatibleBrands,
+    codigoInt,
+    codOEM,
+    codTango,
+    descripcion,
+    rubro,
+    origen,
+    marcasCompatibles,
     stock,
     hasStock,
-    brokenOrReturned,
+    imagen,
+    contadorDevoluciones,
     kit,
     tag,
-    price,
-    picture
+    precio,
   ) {
     try {
-      const compatibleBrandsStr = compatibleBrands.join(", ");
+      const marcasCompatiblesString = marcasCompatibles.join(", ");
 
       // Realizar la lógica para insertar un nuevo producto en la base de datos
       db.query(
-        "INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock, hasStock, Image, Origen, CodTango, CodOEM, marcasCompatibles, Devoluciones, Kit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO productos (codigoInt, codOEM, codTango, descripcion, rubro, origen, marcasCompatibles, stock, hasStock, imagen, contadorDevoluciones, kit, tag, precio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
-          pieceCode,
-          description,
-          category,
-          tag,
-          price,
+          codigoInt,
+          codOEM,
+          codTango,
+          descripcion,
+          rubro,
+          origen,
+          marcasCompatiblesString,
           stock,
           hasStock,
-          picture,
-          origin,
-          tangoCode,
-          OEMCode,
-          compatibleBrandsStr,
-          brokenOrReturned,
+          imagen,
+          contadorDevoluciones,
           kit,
+          tag,
+          precio,
         ],
         function (error) {
           if (error) {
@@ -80,8 +80,8 @@ export default class ProductService {
 
           // Get the inserted product
           db.query(
-            "SELECT * FROM productos WHERE Codigo = ?",
-            [pieceCode],
+            "SELECT * FROM productos WHERE codigoInt = ?",
+            [codigoInt],
             function (error, results) {
               if (error) {
                 console.error(
@@ -104,7 +104,7 @@ export default class ProductService {
   async deleteProduct(productId) {
     try {
       db.query(
-        "DELETE FROM productos WHERE Codigo = ?",
+        "DELETE FROM productos WHERE codigoInt = ?",
         [productId],
         (error, results) => {
           if (error) {

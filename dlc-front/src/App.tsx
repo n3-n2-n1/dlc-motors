@@ -5,6 +5,8 @@ import { SearchProvider } from "./contexts/SearchContext";
 import { FilterValuesProvider } from "./contexts/FilterContext";
 import { useState, useEffect } from "react";
 import Login from "./pages/login/login";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -26,6 +28,7 @@ const App = () => {
     <SearchProvider {...(props as any)}>
       <FilterValuesProvider>
       <Suspense fallback={<Loader />}>
+      <ToastContainer />
         {authenticated ? <AppRoutes /> : <Login />}
       </Suspense>
       </FilterValuesProvider>

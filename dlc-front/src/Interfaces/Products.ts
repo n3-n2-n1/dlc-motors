@@ -9,19 +9,19 @@ export interface IProduct {
 }
 
 export interface NewIProduct {
-  pieceCode: string;
-  OEMCode: string;
-  tangoCode: string;
-  description: string;
-  category: string;
-  origin: string;
-  compatibleBrands: string[];
-  newCompatibleBrand: string;
-  stock: number | null;
-  hasStock: boolean;
-  picture: string; // ! Robar de Libertapp? Anular temporalmente
-  brokenOrReturned: number;
-  kit: boolean;
-  tag: string;
-  price: number | null;
+  codigoInt: string,
+  codOEM: string,
+  codTango: string,
+  descripcion: string,
+  rubro:string,
+  origen: string,
+  marcasCompatibles: string[],
+  newCompatibleBrand: string | string[],
+  stock: any,
+  hasStock: boolean,
+  imagen: any,
+  contadorDevoluciones: number,
+  kit: boolean,
+  tag: string,
+  precio: any,
 }

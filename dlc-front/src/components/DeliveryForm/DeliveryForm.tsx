@@ -31,7 +31,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     observaciones: "",
     codigoInt: "",
     codOEM: null,
-    descripcion: "",
+    desc: "",
     stock: 0,
     numeroImportacion: "",
     cantidad: 0,
@@ -59,7 +59,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     formik.setFieldValue("fecha", new Date().toLocaleString());
     formik.setFieldValue("movementType", formName);
     formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
-    formik.setFieldValue("descripcion", selectedProduct?.Producto);
+    formik.setFieldValue("desc", selectedProduct?.Producto);
     formik.setFieldValue("stock", selectedProduct?.Stock);
   }, [selectedProduct, formik.values.cantidad]);
 

@@ -26,7 +26,7 @@ const Errors = () => {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <ErrorInform
           formName="Errores"
           observationsList={ErrorsObservations}

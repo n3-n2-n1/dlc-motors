@@ -3,6 +3,7 @@ import { useSearchContext } from "../../contexts/SearchContext";
 import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { OutcomeObservations } from "../../routes/routes";
 import { useUser } from "../../contexts/UserContext";
+import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 
 interface Notification {
   name: string;

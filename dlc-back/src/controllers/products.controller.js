@@ -62,36 +62,34 @@ export const getProductsBySearchTerm = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const {
-      pieceCode,
-      OEMCode,
-      tangoCode,
-      description,
-      category,
-      origin,
-      compatibleBrands,
+      codigoInt,
+      codOEM,
+      codTango,
+      descripcion,
+      rubro,
+      origen,
+      marcasCompatibles,
       stock,
       hasStock,
-      brokenOrReturned,
+      imagen,
+      contadorDevoluciones,
       kit,
       tag,
-      price,
-      picture,
+      precio,
     } = req.body;
 
     if (
-      !OEMCode ||
-      !brokenOrReturned ||
-      !category ||
-      !compatibleBrands ||
-      !description ||
-      !kit ||
-      !origin ||
-      !picture ||
-      !pieceCode ||
-      !price ||
+
+      !codigoInt ||
+      !codOEM ||
+      !codTango ||
+      !descripcion ||
+      !rubro ||
+      !origen ||
+      !marcasCompatibles ||
       !stock ||
       !tag ||
-      !tangoCode
+      !precio
     ) {
       return res.status(400).send({
         status: "error",
@@ -110,26 +108,26 @@ export const createProduct = async (req, res) => {
     // }
 
     const createdProduct = productService.createProduct(
-      pieceCode,
-      OEMCode,
-      tangoCode,
-      description,
-      category,
-      origin,
-      compatibleBrands,
+      codigoInt,
+      codOEM,
+      codTango,
+      descripcion,
+      rubro,
+      origen,
+      marcasCompatibles,
       stock,
       hasStock,
-      brokenOrReturned,
+      imagen,
+      contadorDevoluciones,
       kit,
       tag,
-      price,
-      picture
+      precio,
     );
 
     if (!createdProduct || createdProduct.length === 0) {
       return res.status(404).send({
         status: "error",
-        error: `Failed to create product with code ${pieceCode}`,
+        error: `Failed to create product with code ${codigoInt}`,
       });
     }
 
