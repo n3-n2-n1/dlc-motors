@@ -5,7 +5,7 @@ export const getDeliveries = async (req, res) => {
   try {
     const deliveries = await deliveryService.getDeliveries();
 
-    if (!products || products.length === 0) {
+    if (!deliveries || deliveries.length === 0) {
       return res.status(404).send({
         status: "error",
         error: "No deliveries found",
@@ -25,7 +25,7 @@ export const getDeliveries = async (req, res) => {
   }
 };
 
-const createDelivery = async (req, res) => {
+export const createDelivery = async (req, res) => {
   try {
     const { cantidad, codigoInt, fecha, movementType, numeroImportacion, observaciones } = req.body;
 
@@ -57,5 +57,3 @@ const createDelivery = async (req, res) => {
     });
   }
 };
-
-export default { getDeliveries, createDelivery };

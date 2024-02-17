@@ -18,6 +18,14 @@ const UserList: React.FC = () => {
     alert('editar')
   }
 
+  function generatePastelColor() {
+    // Genera un color RGB con valores altos para un efecto pastel
+    const baseRed = Math.floor(Math.random() * 255 + 100);
+    const baseGreen = Math.floor(Math.random() * 323 + 100);
+    const baseBlue = Math.floor(Math.random() * 777 + 100);
+    return `rgb(${baseRed}, ${baseGreen}, ${baseBlue})`;
+  }
+
   const filteredUsers = users?.filter((user) => user.role);
 
   return (
@@ -36,9 +44,10 @@ const UserList: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-3 text-gray-300">
         {filteredUsers?.map((user) => (
-          <div
+            <div
             key={user.name}
-            className="bg-gray-300 p-3 flex flex-col rounded-md dark:bg-gray-800 shadow"
+            style={{ backgroundColor: generatePastelColor() }}
+            className="p-3 flex flex-col rounded-md dark:bg-gray-800 shadow"
           >
             <div className="flex flex-row items-center font-medium text-gray-700 pb-2 mb-2 border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full bg-blue">
               <div className="mr-2 font-bold text-gray-700">
@@ -74,8 +83,8 @@ const UserList: React.FC = () => {
             Jerarquía: {user.role}
             </div>
             <div className=" text-gray-700 font-bold">Contraseña: {user.password}</div>
-            <div className="text-gray-300 font-bold pt-4" onClick={()=> handleEditUser}>
-              <button  className="px-4 py-2 rounded rounded-full bg-black hover:bg-blue-700 hover:text-gray-300">
+            <div className="text-black font-bold pt-4" onClick={()=> handleEditUser}>
+              <button  className="px-4 py-2 rounded-full bg-white hover:bg-blue-700 hover:text-gray-300 border-2xl">
                 Editar
               </button>
             </div>

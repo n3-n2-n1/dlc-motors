@@ -24,19 +24,19 @@ const Actions = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleEditMassive = () => {
-    // Lógica para la edición masiva
-    console.log("Editar masivamente");
-  };
+  // const handleEditMassive = () => {
+  //   // Lógica para la edición masiva
+  //   console.log("Editar masivamente");
+  // };
 
   const handleDownload = () => {
     exportToExcel()
   };
 
 
-  const handleAddMassiveData = (event: React.MouseEvent<HTMLButtonElement>) => {
-    handleAddMassive(event as any);
-  };
+  // const handleAddMassiveData = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   handleAddMassive(event as any);
+  // };
 
 
 
@@ -69,7 +69,7 @@ const Actions = () => {
         {/* Botón para descarga */}
         <button
           onClick={handleDownload}
-          className="bg-blue-700 inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none py-0 py-0 hover:text-gray-200"
+          className="bg-blue-700 inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200"
         >
           Descargar
         </button>

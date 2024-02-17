@@ -67,7 +67,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   }, [formik.values.fixedStock]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block hidden pt-6">
+    <div className="bg-gray-900 w-full flex-shrink-0 h-screen lg:block hidden pt-6 overflow-y-auto">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="mr-6 flex-row">
           <h1 className="text-3xl mb-4 text-white font-weight-300">

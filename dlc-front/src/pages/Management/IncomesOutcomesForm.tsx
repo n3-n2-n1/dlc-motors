@@ -85,10 +85,10 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   }, [selectedProduct, formik.values.quantity]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block hidden pt-4">
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
+    <div className="bg-gray-900 w-full flex-shrink-0 h-screen lg:block hidden pt-4 pb-10 overflow-auto">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
         
-        <div className="mr-6">
+        <div className="mr-6 pb-10 overflow-auto">
           <h1 className="text-3xl mb-2 text-white font-weight-300 pb-4">
             {formName}s
           </h1>

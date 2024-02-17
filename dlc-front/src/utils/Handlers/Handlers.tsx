@@ -5,6 +5,12 @@ import { toast } from "react-toastify";
 
 const URL = "http://localhost:3000";
 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//----------------------READING HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+
 const fetchUser = async (): Promise<User[]> => {
   try {
     const response = await fetch(`${URL}/api/v1/users`);
@@ -71,19 +77,6 @@ const fetchReturns = async () => {
   }
 };
 
-const fetchHistorial = async () => {
-  try {
-    const response = await fetch(`${URL}/api/v1/history`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching historial:", error);
-    throw error;
-  }
-};
-
 const fetchMoves = async () => {
   try {
     const response = await fetch(`${URL}/api/v1/movements`);
@@ -122,6 +115,12 @@ const fetchCosts = async () => {
     throw error;
   }
 };
+
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//---------------------CREATION HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
 
 const createUser = async (userData: string) => {
   try {
@@ -168,6 +167,31 @@ const createProduct = async (productData: any) => {
   } catch (error) {
     console.error("Error creating product:");
   }
+};
+
+const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0]; // Verifica si target y files están definidos
+  if (!file) {
+    console.error("No se seleccionó ningún archivo.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const data = e.target?.result; // Verifica si target está definido
+    if (!data) {
+      console.error("No se pudo leer el archivo.");
+      return;
+    }
+
+    const workbook = xlsx.read(data, { type: "binary" });
+
+    // Procesa los datos del archivo Excel aquí
+    // Puedes enviarlos al servidor mediante una solicitud HTTP
+  };
+
+  reader.readAsBinaryString(file);
 };
 
 const createError = async (errorData: any) => {
@@ -260,6 +284,12 @@ const createDelivery = async (deliveryData: any) => {
   }
 };
 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//---------------------DELETION HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+
 const deleteProducts = async (productData: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/products/${productData}`, {
@@ -278,30 +308,11 @@ const deleteProducts = async (productData: any) => {
   }
 };
 
-const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0]; // Verifica si target y files están definidos
-  if (!file) {
-    console.error("No se seleccionó ningún archivo.");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function (e) {
-    const data = e.target?.result; // Verifica si target está definido
-    if (!data) {
-      console.error("No se pudo leer el archivo.");
-      return;
-    }
-
-    const workbook = xlsx.read(data, { type: "binary" });
-
-    // Procesa los datos del archivo Excel aquí
-    // Puedes enviarlos al servidor mediante una solicitud HTTP
-  };
-
-  reader.readAsBinaryString(file);
-};
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//-----------------------USERS HANDLERS--------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
 
 const LoginUser = async (values: any) => {
   const url = `${URL}/api/v1/usuarios/login`;
@@ -343,7 +354,6 @@ export {
   LoginUser,
   createReturns,
   fetchMoves,
-  fetchHistorial,
   handleAddMassive,
   createMovement,
   createDelivery,

@@ -5,3 +5,13 @@
 html{
     font-family: 'Space Grotesk', sans-serif !important;
 }
+
+/* Estilos personalizados para el scrollbar */
+.scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+    background-color: green; /* Color del pulgar */
+    border-radius: 10px;
+  }
+  
+.scrollbar-thumb-rounded::-webkit-scrollbar-track {
+    background-color: red; /* Color de la pista */
+  }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchContext } from "../../contexts/SearchContext.tsx";
+import ArrowIcon from "../icon/ArrowIcon/ArrowIcon.tsx";
 
-const Pagination: React.FC = ({}) => {
+const Pagination: React.FC = () => {
   const { totalPages, currentPage, setCurrentPage } = useSearchContext();
   const [leftPage, setLeftPage] = useState(1);
   const [rightPage, setRightPage] = useState(Math.min(10, Math.max(totalPages, 1)));
@@ -32,7 +33,7 @@ const Pagination: React.FC = ({}) => {
       <div className="flex w-full mt-5 space-x-2 justify-start">
         {totalPages > 10 && (
           <button onClick={handleLeftClick}>
-            {/* SVG y estilos para el botón izquierdo */}
+            <ArrowIcon className="rotate-180" color="white" />
           </button>
         )}
         {Array.from({ length: pagesLength }, (_, index) => leftPage + index).map(pageNumber => (
@@ -48,7 +49,7 @@ const Pagination: React.FC = ({}) => {
         ))}
         {totalPages > 10 && (
           <button onClick={handleRightClick}>
-            {/* SVG y estilos para el botón derecho */}
+            <ArrowIcon color="white" />
           </button>
         )}
       </div>

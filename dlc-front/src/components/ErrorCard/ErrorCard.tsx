@@ -89,7 +89,7 @@ const ErrorCard = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 flex overflow-auto text-sm pt-6">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 flex overflow-auto text-sm pt-6">
       <div className="">
         <div className="">
           
@@ -106,7 +106,7 @@ const ErrorCard = () => {
               label: "Observación",
               type: "dropdown",
               options: OutcomeObservations,
-              users: ["Ariana Argentati", "Matías Gallues", "Diego Cimino", "Maria Laura Ramos", "Mariela Fantozzi", "Marisa Cimino", "Alejandro Cabrera", "Jorge Galassi", "Omar Benitez", "Cesar Elifonzo", "Computadora Depósito", "Oscar De Lamo", "Fabio Cantarutti", "Cliente Anónimo"],
+              users: [],
             },
             // Añadir más configuraciones aquí
           ]}

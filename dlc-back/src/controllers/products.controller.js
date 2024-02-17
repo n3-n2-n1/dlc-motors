@@ -79,20 +79,19 @@ export const createProduct = async (req, res) => {
     } = req.body;
 
     if (
-      !pieceCode ||
       !OEMCode ||
-      !tangoCode ||
-      !description ||
-      !category ||
-      !origin ||
-      !compatibleBrands ||
-      !stock ||
-      !hasStock ||
       !brokenOrReturned ||
+      !category ||
+      !compatibleBrands ||
+      !description ||
       !kit ||
-      !tag ||
+      !origin ||
+      !picture ||
+      !pieceCode ||
       !price ||
-      !picture
+      !stock ||
+      !tag ||
+      !tangoCode
     ) {
       return res.status(400).send({
         status: "error",

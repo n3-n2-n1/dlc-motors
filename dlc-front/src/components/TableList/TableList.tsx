@@ -2,14 +2,25 @@ import { useState, useEffect } from "react";
 
 import { useSearchContext } from "../../contexts/SearchContext.tsx";
 import Pagination from "../Pagination/Pagination";
-import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
-import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
-import { Link } from "react-router-dom";
-import { paths } from "../../routes/paths.ts";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
+import { useNavigate } from "react-router-dom";
 
-function TableList() {
-  const { searchResults, currentPage, itemsPerPage, products } = useSearchContext();
+import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
+// import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
+// import { Link } from "react-router-dom";
+// import { paths } from "../../routes/paths.ts";
+
+function TableList({ category }) {
+  const navigate = useNavigate();
+
+  const {
+    searchResults,
+    currentPage,
+    itemsPerPage,
+    products,
+    setProducts,
+    setTotalPages,
+  } = useSearchContext();
   const [confirmationIndex, setConfirmationIndex] = useState(-1);
   const [openIndex, setOpenIndex] = useState(-1);
 
@@ -18,14 +29,28 @@ function TableList() {
     setConfirmationIndex(-1);
   }, [currentPage]);
 
-  useEffect(() => {
-  console.log("Search Results:", searchResults);
-  console.log("Products:", products);
-  // Otros console.log si es necesario
-}, [searchResults, products, currentPage]);
+  // useEffect(() => {
+  //   console.log("Search Results:", searchResults);
+  //   console.log("Products:", products);
+  //   // Otros console.log si es necesario
+  // }, [searchResults, products, currentPage]);
 
   // const itemsToDisplay = searchResults || products
-  const itemsToDisplay = Array.isArray(searchResults) ? searchResults : Array.isArray(products) ? products : [];
+  const itemsToDisplay = Array.isArray(searchResults)
+    ? searchResults
+    : Array.isArray(products)
+    ? category
+      ? products.filter((product) => product.Rubro === category)
+      : products
+    : [];
+
+  console.log(itemsToDisplay);
+
+  useEffect(() => {
+    if (category) {
+      setTotalPages(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }
+  }, [category, itemsPerPage, itemsToDisplay.length, setTotalPages]);
 
   const columns = [
     "Codigo",
@@ -42,26 +67,38 @@ function TableList() {
     "Devoluciones",
     "Check",
   ];
-  
-  // Estado inicial: todas las columnas tienen un ancho normal
-  const [columnWidths, setColumnWidths] = useState(new Array(columns.length).fill('normal'));
+
+  // Initialize all columns as not shrunk
+  const [shrunkColumns, setShrunkColumns] = useState(
+    new Array(columns.length).fill(false)
+  );
+
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   const toggleColumnWidth = (index: any) => {
-    // Cambia el ancho de la columna especificada
-    setColumnWidths(
-      columnWidths.map((width, i) => (i === index ? (width === 'normal' ? 'min' : 'normal') : width))
+    setShrunkColumns((shrunkColumns) =>
+      shrunkColumns.map((isShrunk, i) => (i === index ? !isShrunk : isShrunk))
     );
   };
 
-  // Estilos para columnas minimizadas y normales
-  const columnStyles = (width: any) => ({
-    minWidth: width === 'min' ? '30px' : 'auto',
-    maxWidth: width === 'min' ? '30px' : 'auto',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    borderRight: '1px solid #aaa', // Ajusta el color del borde según tu tema
+  const columnStyles = (isShrunk: boolean) => ({
+    width: isShrunk ? "30px" : "auto",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    borderRight: "1px solid #aaa",
   });
+
+  const handleEdit = (index: string) => {
+    const productToEdit = itemsToDisplay[index];
+    console.log(productToEdit);
+    // if (productToEdit) {
+    //   const prodCod = productToEdit.CodOEM;
+    //   deleteProducts(prodCod);
+    //   setOpenIndex(-1);
+    //   setConfirmationIndex(-1);
+    // }
+  };
 
   const handleDeleteConfirmation = (index: any) => {
     setConfirmationIndex(index);
@@ -71,30 +108,33 @@ function TableList() {
     const productToDelete = itemsToDisplay[confirmationIndex];
     console.log(productToDelete);
     if (productToDelete) {
-      const prodCod = productToDelete.CodOEM;
-      deleteProducts(prodCod);
-      setOpenIndex(-1);
-      setConfirmationIndex(-1);
+      const prodCod = productToDelete.Codigo;
+      // deleteProducts(prodCod);
+      navigate(0)
     }
   };
+
   return (
     <>
-      <div className="overflow-y-auto max-h-[calc(108vh-3rem)]">
-    <table className="w-full text-left">
-      <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
-        <tr className="text-gray-100">
-          {columns.map((column, index) => (
-            <th
-              key={index}
-              onClick={() => toggleColumnWidth(index)}
-              className="cursor-pointer font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800"
-              style={columnStyles(columnWidths[index])}
-            >
-              {column}
-            </th>
-          ))}
-        </tr>
-      </thead>
+      <div className="overflow-x-auto max-h-[calc(90vh-3rem)]">
+        <table className="w-full h-[80vh] text-left">
+          <thead className="sticky top-0 bg-gray-900 text-gray-100">
+            <tr className="text-gray-100">
+              <th className="font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
+                Actions
+              </th>
+              {columns.map((column, index) => (
+                <th
+                  key={index}
+                  onClick={() => toggleColumnWidth(index)}
+                  className="cursor-pointer font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800"
+                  style={columnStyles(shrunkColumns[index])}
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
           <tbody className="text-gray-100">
             {itemsToDisplay
@@ -104,44 +144,74 @@ function TableList() {
               )
               .map((product, index) => (
                 <tr key={index}>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Codigo || '-'}
+                  <td className="relative flex items-center justify-center h-full">
+                    <button
+                      onClick={() =>
+                        setOpenDropdown(openDropdown === index ? null : index)
+                      }
+                      className="h-full"
+                    >
+                      <OptionsIcon color="white" />
+                    </button>
+                    {openDropdown === index && (
+                      <div className="z-50 absolute -right-[120px] w-32 rounded-md shadow-lg bg-gray-700">
+                        <div className="py-1">
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
+                            role="menuitem"
+                            onClick={() => handleEdit(index)}
+                          >
+                            Editar
+                          </a>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
+                            role="menuitem"
+                            onClick={() => handleDeleteConfirmation(index)}
+                          >
+                            Eliminar
+                          </a>
+                        </div>
+                      </div>
+                    )}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodTango || '-'}
+                    {product.Codigo || "-"}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    {product.CodTango || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodOEM || '-'}
+                    {product.CodOEM || "-"}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    <div className="">{product.Producto || "-"}</div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    <div className="">
-                      {product.Producto || '-'}
-                    </div>
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 md:table-cell hidden">
-                    {product.Rubro || '-'}
+                    {product.Rubro || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.Origen || product.CodBarras}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.marcasCompatibles || '-'}
+                    {product.marcasCompatibles || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Precio || '-'}
+                    {product.Precio || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-80  md:table-cell hidden0">
                     {product.hasStock ? "Sí" : "No"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
                     {product.Kit ? "Sí" : "No"}
                   </td>
-                  
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Devoluciones || '-'}
+
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    {product.Devoluciones || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras ? '-' : '-' }
+                    {product.CodBarras ? "-" : "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800"></td>
                 </tr>
@@ -165,8 +235,7 @@ function TableList() {
         </div>
       )}
       <div className="mt-4">
-
-      <Pagination />
+        <Pagination />
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import FiltroFloat from "../SearchFloat/SearchFloat";
 import { OutcomeObservations } from "../../routes/routes";
-import { fetchErrors, fetchReturns, fetchHistorial, fetchDelivery, fetchCosts, fetchUser } from "../../utils/Handlers/Handlers";
+import { fetchErrors, fetchReturns, fetchDelivery, fetchCosts, fetchUser } from "../../utils/Handlers/Handlers";
 import { useFilterValues } from "../../contexts/FilterContext";
 
 export interface CostImportedTable {

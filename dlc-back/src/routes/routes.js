@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-import historyRouter from "./history.routes.js";
 import massiveAddRouter from "./massiveAdd.routes.js";
 import movementsRouter from "./movements.routes.js";
 import productErrorsRouter from "./productErrors.routes.js";
@@ -13,7 +12,6 @@ import costsRouter from "./costs.routes.js";
 const routerAPI = (app) => {
   const router = Router();
   app.use("/api/v1", router);
-  router.use("/history", historyRouter);
   router.use("/massiveAdd", massiveAddRouter);
   router.use("/movements", movementsRouter);
   router.use("/productErrors", productErrorsRouter);

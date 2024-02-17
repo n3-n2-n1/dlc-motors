@@ -27,7 +27,9 @@ const IncomesOutcomesForm = lazy(
   () => import("../pages/Management/IncomesOutcomesForm")
 );
 
-const Notifications = lazy(() => import("../pages/Notifications/Notifications"));
+const Notifications = lazy(
+  () => import("../pages/Notifications/Notifications")
+);
 
 export const IncomeObservations = [
   "Cancelación",
@@ -75,10 +77,7 @@ export const ReturnsObservations = [
   "Otro inconveniente",
 ];
 
-export const DeliveriesObservations = [
-  "Courier",
-  "Pedido",
-];
+export const DeliveriesObservations = ["Courier", "Pedido"];
 
 // ! No se usa, se definió en Categories.tsx
 export const ProductCategories = [
@@ -86,22 +85,12 @@ export const ProductCategories = [
   "OTRO",
   "ERROR",
   "Para armar kits",
-]
+];
 // ! Donde se usa está mal, quizás definir las categorías en un solo lugar como el context donde se fetchean los productos
 
-export const ProductOrigins = [
-  "Fábrica",
-  "Nacional",
-  "Importado",
-]
+export const ProductOrigins = ["Fábrica", "Nacional", "Importado"];
 
-export const Brands = [
-  "Volskwagen",
-  "Ford",
-  "Fiat",
-  "Renault",
-  "Citroen"
-]
+export const Brands = ["Volskwagen", "Ford", "Fiat", "Renault", "Citroen"];
 
 const AppRoutes: React.FC = () => {
   const { products } = useSearchContext();
@@ -115,7 +104,13 @@ const AppRoutes: React.FC = () => {
 
         <Route path={paths.home} element={<Home />} />
         <Route path={paths.products} element={<Products />} />
-        <Route path={paths.addProduct} element={<AddProduct categories={ProductCategories} brands={Brands}/>} />
+        <Route path={`${paths.products}/:category`} element={<Products />} />
+        <Route
+          path={paths.addProduct}
+          element={
+            <AddProduct categories={ProductCategories} brands={Brands} />
+          }
+        />
         <Route path={paths.categories} element={<Categories />} />
 
         <Route path={paths.costs} element={<Costs />} />
@@ -124,15 +119,15 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.moves} element={<Moves />} />
 
         <Route path={paths.notifications} element={<Notifications />} />
-        <Route path={paths.historyView} element={<HistoryView/>} />
+        <Route path={paths.historyView} element={<HistoryView />} />
 
         <Route
           path={paths.upload}
           element={
             <IncomesOutcomesForm
-            formName={"Ingreso"}
-            observationsList={IncomeObservations}
-            products={products}
+              formName={"Ingreso"}
+              observationsList={IncomeObservations}
+              products={products}
             />
           }
         />
@@ -140,21 +135,19 @@ const AppRoutes: React.FC = () => {
           path={paths.inventory}
           element={<Inventory products={products} />}
         />
-        
+
         <Route
           path={paths.outcomes}
           element={
             <IncomesOutcomesForm
-            formName={"Egreso"}
-            observationsList={OutcomeObservations}
-            products={products}
+              formName={"Egreso"}
+              observationsList={OutcomeObservations}
+              products={products}
             />
           }
         />
-        <Route path={paths.fatal} element={<HandleFatal />}/>
-
-
       </Route>
+      <Route path={paths.fatal} element={<HandleFatal />} />
     </Routes>
   );
 };

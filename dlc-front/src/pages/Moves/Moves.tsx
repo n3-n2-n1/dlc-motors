@@ -1,7 +1,4 @@
-import { fetchHistorial } from "../../utils/Handlers/Handlers";
-import { useEffect } from "react";
 import { useState } from "react";
-import { Historial } from "../../Interfaces/Historial";
 import Dashcards from "../../components/Dashcards/Dashcards";
 import Errors from "../Errors/Errors";
 import InventoryForm from "../Management/InventoryForm";
@@ -19,8 +16,6 @@ const Moves: React.FC = () => {
   const { products } = useSearchContext();
   
   const [currentComponent, setCurrentComponent] = useState<React.ReactNode>(null);
-  const [historial, setHistorial] = useState<Historial[]>([]);
-
   const changeToErrors = () => setCurrentComponent(<Errors />);
   const changeToIncomes = () => setCurrentComponent(<IncomesOutcomesForm formName="Ingreso" observationsList={IncomeObservations} products={products} />);
   const changeToInventory = () => setCurrentComponent(<InventoryForm products={products} />);
@@ -28,30 +23,8 @@ const Moves: React.FC = () => {
   const changeToReturns = () => setCurrentComponent(<Returns products={products}/>);
   const changeToDelivery = () => setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations}/>);
 
-
-
-
-  // Falta egresos
-  // const changeToErrors = () => setCurrentComponent(<Errors />);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const historialData = await fetchHistorial();
-        // Asegúrate de que historialData sea un arreglo
-        if (Array.isArray(historialData)) {
-          setHistorial(historialData);
-        }
-      } catch (error) {
-        console.error("Error fetching historial:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
-    <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6 overflow-y-hidden">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 overflow-y-hidden">
       <div className="flex-row">
         <h1 className="text-4xl mb-2 text-white font-weight-300">
           Movimientos

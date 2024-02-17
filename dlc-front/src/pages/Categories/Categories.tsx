@@ -10,35 +10,40 @@ const Categories = () => {
 
   useEffect(() => {
     try {
-      const uniqueCategories = [...new Set(products.map(product => product.Rubro))];
+      const uniqueCategories = [
+        ...new Set(products.map((product) => product.Rubro)),
+      ];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  }, []);
+  }, [products]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden ">
-      <div className="bg-gray-900 p-6 shadow-lg text-white">
-        <h2 className="text-4xl">Rubros</h2>
-        <div className="overflow-auto max-h-[840px]">
-        <ul>
-            {categories.map((category, index) => (
-              <div key={index} className="flex flex-row justify-between items-center border-b border-gray-700 py-4 mr-5">
-                <li className="text-xl">
-                  {category}
-                </li>
-                <Link to={`${paths.products}/:${category}`}>
-                  <button className="bg-blue-700 hover:bg-gray-700 text-white font-bold py-2 px-8 rounded rounded-2xl">
-                    Ir
-                  </button>
-                </Link>
-              </div>
-            ))}
-          </ul>
-        </div>
-      </div>
+    
+  <div className="bg-gray-900 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto">
+  <div className="bg-gray-900 p-4 md:p-6 shadow-lg text-white">
+    <h2 className="text-2xl md:text-4xl">Rubros</h2>
+    <div className="overflow-auto max-h-[890px] scrollbar-thin scrollbar-thumb-rounded">
+      <ul>
+        {categories.map((category, index) => (
+          <div
+            key={index}
+            className="flex flex-col md:flex-row justify-between items-center border-b border-gray-700 py-2 md:py-4 mr-2 md:mr-5"
+          >
+            <li className="text-lg md:text-xl mb-2 md:mb-0">{category}</li>
+            <Link to={`${paths.products}/${category}`}>
+              <button className="bg-blue-700 hover:bg-gray-700 text-white font-bold py-2 px-4 md:px-8 rounded-2xl">
+                Ir
+              </button>
+            </Link>
+          </div>
+        ))}
+      </ul>
     </div>
+  </div>
+</div>
+
   );
 };
 

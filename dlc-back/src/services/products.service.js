@@ -104,7 +104,7 @@ export default class ProductService {
   async deleteProduct(productId) {
     try {
       db.query(
-        "DELETE FROM productos WHERE CodOEM = ?",
+        "DELETE FROM productos WHERE Codigo = ?",
         [productId],
         (error, results) => {
           if (error) {

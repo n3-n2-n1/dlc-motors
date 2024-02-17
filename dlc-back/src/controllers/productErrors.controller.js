@@ -15,7 +15,7 @@ export const getProductErrors = (req, res) => {
 };
 
 export const createProductError = (req, res) => {
-  const { cantidad, detalle, observaciones, oemProducto } = req.body;
+  const { fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img } = req.body;
 
   console.log(
     `cantidad: ${cantidad}, detalle: ${detalle}, observaciones: ${observaciones}, oemProducto: ${oemProducto}`
@@ -23,7 +23,7 @@ export const createProductError = (req, res) => {
 
   // Realizar la lógica para insertar un nuevo producto en la base de datos
   db.query(
-    "INSERT INTO errores (cantidad, detalle, observaciones, oemProducto) VALUES (?, ?, ?, ?)",
+    "INSERT INTO errores (fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [cantidad, detalle, observaciones, oemProducto],
     function (error) {
       if (error) {
@@ -44,7 +44,7 @@ export const deleteProductError = (req, res) => {
   }
 
   db.query(
-    "DELETE FROM errores WHERE Codigo = ?",
+    "DELETE FROM errores WHERE codInterno = ?",
     [errorId],
     (error, results, fields) => {
       if (error) {

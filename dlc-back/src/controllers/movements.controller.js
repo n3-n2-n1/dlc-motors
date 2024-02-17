@@ -12,24 +12,15 @@ export const getMovements = (req, res) => {
 };
 
 export const createMovement = (req, res) => {
-  const {
-    date,
-    productCode,
-    description,
-    movementType,
-    quantity,
-    observations,
-    updatedStock,
-    fixedStock,
-    appliedFix,
+  const {fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos
   } = req.body;
 
   if (movementType === "Inventario") {
     // Query Inventario
     console.log("QUERY INVENTARIO")
     db.query(
-      "INSERT INTO movimientos (date, productCode, description, movementType, fixedStock, appliedFix) VALUES (?,?,?,?,?,?)",
-      [date, productCode, description, movementType, fixedStock, appliedFix],
+      "INSERT INTO movimientos (fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
+      [fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo],
       function (error) {
         if (error) {
           console.error("An error occurred while executing the query", error);
@@ -41,7 +32,7 @@ export const createMovement = (req, res) => {
 
         // Get the inserted product
         db.query(
-          "SELECT * FROM movimientos WHERE date = ?",
+          "SELECT * FROM movimientos WHERE fecha = ?",
           [date],
           function (error, results) {
             if (error) {
@@ -68,15 +59,9 @@ export const createMovement = (req, res) => {
   } else {
     console.log("QUERY INGRESO/EGRESO")
     db.query(
-      "INSERT INTO movimientos (date, productCode, description, movementType, quantity, observations, updatedStock) VALUES (?,?,?,?,?,?,?)",
+      "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?)",
       [
-        date,
-        productCode,
-        description,
-        movementType,
-        quantity,
-        observations,
-        updatedStock,
+        fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct
       ],
       function (error) {
         if (error) {
@@ -87,7 +72,7 @@ export const createMovement = (req, res) => {
 
         // Get the inserted product
         db.query(
-          "SELECT * FROM movimientos WHERE date = ?",
+          "SELECT * FROM movimientos WHERE fecha = ?",
           [date],
           function (error, results, fields) {
             if (error) {

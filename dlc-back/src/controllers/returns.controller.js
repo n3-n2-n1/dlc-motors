@@ -14,26 +14,14 @@ export const getReturns = (req, res) => {
 
 export const createReturn = (req, res) => {
   const {
-    productCode,
-    description,
-    fixedStock,
-    appliedFix,
-    previousStock,
-    date,
-    productName,
+    fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit,
   } = req.body;
 
   // Realizar la lógica para insertar un nuevo producto en la base de datos
   db.query(
-    "INSERT INTO devoluciones (Fecha, Codigo, Descripcion, StockArreglo, Arreglo, Stock, Producto) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO devoluciones (fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
-      date,
-      productCode,
-      description,
-      fixedStock,
-      appliedFix,
-      previousStock,
-      productName,
+      fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit,
     ],
     function (error) {
       if (error) {
@@ -44,7 +32,7 @@ export const createReturn = (req, res) => {
 
       // Get the inserted product
       db.query(
-        "SELECT * FROM devoluciones WHERE Codigo = ?",
+        "SELECT * FROM devoluciones WHERE codInterno = ?",
         [productCode],
         function (error, results, fields) {
           if (error) {
@@ -74,7 +62,7 @@ export const deleteReturn = (req, res) => {
   }
 
   db.query(
-    "DELETE FROM productos WHERE CodOEM = ?",
+    "DELETE FROM productos WHERE codOEM = ?",
     [productId],
     (error, results, fields) => {
       if (error) {

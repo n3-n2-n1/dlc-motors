@@ -1,9 +1,16 @@
-// import Pagination from "../../components/Pagination/Pagination";
+import { useParams } from "react-router-dom";
+
 import TableList from "../../components/TableList/TableList";
-import Filter from "../../components/Filter/Filter";
 import Actions from "../../components/Actions/Actions";
 
+// import Pagination from "../../components/Pagination/Pagination";
+// import Filter from "../../components/Filter/Filter";
+
+// Inside your component
+
 function Products() {
+  const { category } = useParams();
+
   return (
     <div className="bg-gray-900 text-white h-screen flex overflow-hidden text-sm">
       <div className="flex-grow overflow-hidden h-full flex flex-col">
@@ -19,7 +26,7 @@ function Products() {
                 </div>
               </div>
             </div>
-            <TableList />
+            <TableList category={category} />
           </div>
         </div>
       </div>

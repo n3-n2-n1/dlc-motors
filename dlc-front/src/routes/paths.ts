@@ -22,5 +22,5 @@ export const paths = {
   // notifications: "/notificaciones", // Acá figurarían las notificaciones de stock bajo, stock crítico, reposición de stock, etc.
   // management: "/gestion",
   historyView:"/historyView",
-  fatal:"/404"
+  fatal:"*"
 };
