@@ -4,7 +4,7 @@ import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { OutcomeObservations } from "../../routes/routes";
 import { useUser } from "../../contexts/UserContext";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
-
+import Navbar from "../../components/Navbar/Navbar";
 interface Notification {
   name: string;
   message: string;
@@ -92,29 +92,29 @@ const Notifications = () => {
     const newNotifications = products
       .slice(loadIndex, loadIndex + 100)
       .map((product) => {
-        const prevStock = previousStock.get(product.Producto) || product.Stock;
+        const prevStock = previousStock.get(product.descripcion) || product.stock;
         let message = "";
 
         if (product.Stock === 0) {
           message = `No hay stock`;
-        } else if (product.Stock <= 10) {
+        } else if (product.stock <= 10) {
           message = `Stock bajo`;
-        } else if (product.Stock > prevStock) {
+        } else if (product.stock > prevStock) {
           message = `Reposición`;
         }
 
-        previousStock.set(product.Producto, product.Stock);
+        previousStock.set(product.descripcion, product.stock);
         return message
           ? {
-              name: product.Producto,
+              name: product.descripcion,
               message,
-              origen: product.Origen,
-              rubro: product.Rubro,
-              oem: product.CodOEM,
-              marca: product.Marca,
-              stock: product.Stock,
-              image: product.Image,
-              codInterno: product.Codigo,
+              origen: product.origen,
+              rubro: product.rubro,
+              oem: product.codOEM,
+              marca: product.marcasCompatibles,
+              stock: product.stock,
+              image: product.imagen,
+              codInterno: product.codigoInt,
             }
           : null;
       })
@@ -129,13 +129,8 @@ const Notifications = () => {
   return (
     <div className="flex flex-col bg-gray-900 text-white h-screen overflow-hidden text-sm p-6">
 
-      <div className="flex flex-col">
-        <h1 className="text-3xl mb-2 font-semibold">Notificaciones</h1>
-        <h2 className="text-lg mb-4">
-          Alertas de stock, errores y movimientos.
-        </h2>
+      <Navbar title="Notificaciones" subtitle="Visualizá faltantes, egresos y stocks" />
         <FiltroFloat filtersConfig={NotificationsFilterConfig} /> 
-      </div>
       <div className="mt-4 overflow-x-auto shadow-lg">
         <table className="min-w-full divide-y divide-gray-700">
           <thead className="bg-gray-700">

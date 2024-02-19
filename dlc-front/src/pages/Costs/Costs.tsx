@@ -6,6 +6,10 @@ import { useFilterValues } from "../../contexts/FilterContext";
 import { OutcomeObservations } from "../../routes/routes";
 import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { CostFabricTable, CostImportedTable, CostResaleTable } from "../../components/TableMoves/TableMoves";
+import Navbar from "../../components/Navbar/Navbar";
+
+
+
 const Costs = () => {
 
   const { products } = useSearchContext();
@@ -67,14 +71,8 @@ const Costs = () => {
 
   return (
     <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6">
-      <div className="flex-row">
-        <h1 className="text-4xl mb-2 text-white font-weight-300">
-          Costos
-        </h1>
-        <h2 className="text-gray-500 mb-4">
-          Visualizá costos entre proveedores <br />
-        </h2>
-      </div>
+
+      <Navbar title="Costos" subtitle="Costos de producto y demás" />
 
       <section className="flex flex-row gap-6">
         <Dashcards buttons={[

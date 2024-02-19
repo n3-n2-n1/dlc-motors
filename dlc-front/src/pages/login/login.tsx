@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { toast } from 'react-toastify';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { LoginUser } from "../../utils/Handlers/Handlers";
@@ -28,17 +28,20 @@ function Login() {
         // Simular la llamada al backend
         // En un entorno de producción, aquí llamarías a LoginUser(values)
         console.log('Simulando login...');
-
+        
         // Simular una respuesta exitosa después de 2 segundos
         setTimeout(() => {
           const fakeToken = 'fakeToken123'; // Simula un token
           sessionStorage.setItem('miTokenJWT', fakeToken);
           console.log('logueado exitosamente');
+          toast.success('Sesión iniciada correctamente.')
           location.reload(); // Recargar la página (esto se puede cambiar según tu flujo)
         }, 2000);
 
+
       } catch (error) {
         console.error('Error en la solicitud:', error);
+        toast.error('Error al iniciar sesión.')
       }
     },
   });

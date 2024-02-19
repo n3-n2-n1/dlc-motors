@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { toast } from 'react-toastify';
 
 import { User } from "../../Interfaces/User";
 import { createUser } from "../../utils/Handlers/Handlers";
@@ -9,9 +10,6 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("Campo requerido"),
   password: Yup.string().required("Campo requerido"),
   role: Yup.string().required("Campo requerido"),
-  email: Yup.string()
-    .email("Debe ingresar un email válido")
-    .required("Campo requerido"),
 });
 
 /** Administrador
@@ -37,18 +35,28 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     name: "",
     password: "",
     role: "",
-    email: "",
   };
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createUser(values as any);
-      location.reload();
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        createUser(values as any);
+        // location.reload();
+        console.log(values);
+        toast.success('Usuario correctamente.')
+      } catch (error) {
+        console.log(error)
+        toast.error( `Error al crear el usuario. ${error}`)
+      }
     },
   });
+
+  useEffect(() => {
+    console.log(formik.errors)
+  }, [formik.errors])
+  
 
   // Estado para manejar el producto seleccionado
   // const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);

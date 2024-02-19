@@ -1,67 +1,83 @@
-import db from "../database/db.js";
-import jwt from "jsonwebtoken";
+import {userService}  from "../services/services.js";
 
-import { isValidPassword } from "../utils/bcrypt.js";
+// export const createUser = async (newUser, res) => {
+//   const { name, password, role } = newUser;
 
-const secretKey = "12233"; // Debes cambiar esto y utilizar una clave segura
+//   // console.log(newUser);
 
-// Función para comparar contraseñas
-async function passwordValidate (user, password) {
-  return isValidPassword(user, password)
+//   db.query(
+//     "INSERT INTO usuarios (name, password, role) VALUES (?, ?, ?, ?)",
+//     [name, password, role],
+//     (err, results) => {
+//       if (err) {
+//         console.error(err.message);
+//         res.status(500).json({ error: "Error al crear el usuario" });
+//         return;
+//       }
+//     }
+//   );
+// };
+
+export const registerUser = async (req, res) => {
+  try {
+    console.log("user registrado")
+    // return res
+    //   .status(201)
+    //   .send({ status: 'success', message: 'User registered' })
+  } catch (error) {
+    console.trace(`Failed to register user: ${error}`)
+    // return res
+    //   .status(500)
+    //   .send({ status: 'error', error: 'Failed to register user' })
+  }
 }
 
-// Función para generar un token de sesión (deberías implementar esta función)
-function generateSessionToken(userId) {
-  const token = jwt.sign({ userId }, secretKey, { expiresIn: "1h" }); // Puedes ajustar el tiempo de expiración según tus necesidades
-  return token;
-}
+export const getUsers = async (req, res) => {
+  try {
+    const users = await userService.getUsers();
 
-
-export const createUser = async (newUser, res) => {
-  const { name, email, password, role } = newUser;
-
-  // console.log(newUser);
-
-  db.query(
-    "INSERT INTO usuarios (name, email, password, role) VALUES (?, ?, ?, ?)",
-    [name, email, password, role],
-    (err, results) => {
-      if (err) {
-        console.error(err.message);
-        res.status(500).json({ error: "Error al crear el usuario" });
-        return;
-      }
+    if (!users || users.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: "No Users found",
+      });
     }
-  );
-};
 
-export const getUsers = (req, res) => {
-  db.query("SELECT * FROM usuarios", (err, results) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).json({ error: "Error al obtener los usuarios" });
-      return;
-    }
-    res.json(results);
-  });
+    res.status(200).send({
+      status: "success",
+      payload: users,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to get Users",
+    });
+  }
 };
 
 export const getUserByEmail = async (req, res) => {
-  const email = req.params.email;
+  const { email } = req.params;
 
-  db.query("SELECT * FROM usuarios WHERE Email = ?", [email], (err, results) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).json({ error: `Error al obtener el usuario ${email}.` });
-      return;
-    }
+  if (!email) {
+    return res.status(400).send({
+      status: "error",
+      error: "Incomplete values",
+    });
+  }
 
-    if (results.length === 0) {
-      res.status(404).json({ error: `No se encontró el usuario ${email}.` });
-      return;
-    }
+  const user = await userService.getUserByEmail(email);
 
-    res.json(results[0]);
+  if (!user || user.length === 0) {
+    return res.status(404).send({
+      status: "error",
+      error: `User with email '${email}' was not found`,
+    });
+  }
+
+  res.status(200).send({
+    status: "success",
+    payload: user,
   });
 };
 
@@ -106,7 +122,7 @@ export const loginUser = async (req, res) => {
         .send({ status: 'error', error: 'Contraseña incorrecta.' })
         // generalizar este mensaje luego
     }
-
+s
     // // Verificar si la contraseña coincide (en texto plano)
     // if (password !== user.password) {
     //   return res.status(401).json({ error: "Contraseña incorrecta" });

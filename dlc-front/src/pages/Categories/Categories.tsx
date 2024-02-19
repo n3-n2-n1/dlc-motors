@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { paths } from "../../routes/paths";
 import { Link } from "react-router-dom";
-
+import Navbar from "../../components/Navbar/Navbar";
 import { useSearchContext } from "../../contexts/SearchContext";
 
 const Categories = () => {
@@ -11,7 +11,7 @@ const Categories = () => {
   useEffect(() => {
     try {
       const uniqueCategories = [
-        ...new Set(products.map((product) => product.Rubro)),
+        ...new Set(products.map((product) => product.rubro)),
       ];
       setCategories(uniqueCategories);
     } catch (error) {
@@ -23,7 +23,7 @@ const Categories = () => {
     
   <div className="bg-gray-900 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto">
   <div className="bg-gray-900 p-4 md:p-6 shadow-lg text-white">
-    <h2 className="text-2xl md:text-4xl">Rubros</h2>
+    <Navbar title="Rubros" subtitle='' />
     <div className="overflow-auto max-h-[890px] scrollbar-thin scrollbar-thumb-rounded">
       <ul>
         {categories.map((category, index) => (

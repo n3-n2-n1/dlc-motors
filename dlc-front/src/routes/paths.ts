@@ -16,8 +16,8 @@ export const paths = {
   inventory:"/inventario", //Cargar inventario
   outcomes:"/egresos", //Cargar egreso
   moves: "/movimientos", // Listado de todos los movimientos realizados en el sistema, tanto de ingresos como de egresos, devoluciones y errores
+  scanner: "/scanner",
   
-
   notifications:"/notificaciones",
   // notifications: "/notificaciones", // Acá figurarían las notificaciones de stock bajo, stock crítico, reposición de stock, etc.
   // management: "/gestion",

@@ -20,7 +20,7 @@ const fetchUser = async (): Promise<User[]> => {
     }
 
     const userData: User[] = await response.json();
-    return userData;
+    return (userData as any).payload;
   } catch (error) {
     console.error("Error fetching user data:", error);
     throw error;
@@ -273,14 +273,15 @@ const createDelivery = async (deliveryData: any) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
+      const deliveryData = await response.json();
+      throw new Error(deliveryData.error);
     }
 
     const responseData = await response.json();
     console.log("Delivery created successfully:", responseData);
   } catch (error) {
     console.error("Error creating product:");
+    console.log(deliveryData)
   }
 };
 

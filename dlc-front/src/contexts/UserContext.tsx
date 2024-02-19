@@ -16,10 +16,13 @@ export const UserProvider: React.FC = ({ children }: { children?: React.ReactNod
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const fakeToken = 'fakeToken123'; // Simula un token
+        sessionStorage.setItem('miTokenJWT', fakeToken);
         const token = sessionStorage.getItem('miTokenJWT');
 
         if (token) {
           const userData = await fetchUser();
+          console.log("usuarios de db", userData)
           setUsers(userData);
         }
 

@@ -18,14 +18,15 @@ export default class DeliveryService {
 
 
 
-  async createDelivery() {
-    return new Promise((resolve, reject) => {
+  async createDelivery({cantidad, codigoInt, fecha, desc, numImpo, observaciones}) {
+        return new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO delivery (fecha, observacion, numImpo, cantidad, codInt, descripcion, oem, productos, stockDeposito, stockAcumulados) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [historialData.accion, historialData.descripcion, historialData.fecha],
+        "INSERT INTO delivery (cantidad, fecha, `desc`, numImpo, observaciones) VALUES (?, ?, ?, ?, ?)",
+        [cantidad, fecha, desc, numImpo, observaciones],
         (error, results) => {
           if (error) {
-          reject(new Error("Error al crear los pedidos/delivery"));
+            console.error("SQL Error: ", error);
+          reject(new Error("Error al crear los pedidos/delivery", error));
           } else {
             resolve(results);
           }

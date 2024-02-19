@@ -40,7 +40,7 @@ function TableList({ category }) {
     ? searchResults
     : Array.isArray(products)
     ? category
-      ? products.filter((product) => product.Rubro === category)
+      ? products.filter((product) => product.rubro === category)
       : products
     : [];
 
@@ -86,7 +86,7 @@ function TableList({ category }) {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    borderRight: "1px solid #aaa",
+    borderRight: "0px solid #aaa",
   });
 
   const handleEdit = (index: string) => {
@@ -120,16 +120,18 @@ function TableList({ category }) {
     <>
       <div className="overflow-x-auto max-h-[calc(90vh-3rem)]">
         <table className="w-full h-[80vh] text-left">
-          <thead className="sticky top-0 bg-gray-900 text-gray-100">
+          <thead className="sticky top-0 bg-gray-600 text-gray-100 ">
             <tr className="text-gray-100">
-              <th className="font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
+              <th className="font-bold text-gray-100 bg-gray-600 px-4 pt-2 pb-3  dark:border-gray-800 rounded-3xl">
+               <div>
                 Acciones
+               </div>
               </th>
               {columns.map((column, index) => (
                 <th
                   key={index}
                   onClick={() => toggleColumnWidth(index)}
-                  className="cursor-pointer font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800"
+                  className="cursor-pointer text-gray-100 bg-gray-900 px-3 pb-3 items-center border-b pt-2 items-center justify-center"
                   style={columnStyles(shrunkColumns[index])}
                 >
                   {column}
@@ -146,12 +148,12 @@ function TableList({ category }) {
               )
               .map((product, index) => (
                 <tr key={index}>
-                  <td className="relative flex items-center justify-center h-full">
+                  <td className="relative flex items-center justify-center h-full hover:bg-slate-600">
                     <button
                       onClick={() =>
                         setOpenDropdown(openDropdown === index ? null : index)
                       }
-                      className="h-full"
+                      className="h-full "
                     >
                       <OptionsIcon color="white" />
                     </button>

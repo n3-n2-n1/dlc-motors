@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createDelivery } from "../../utils/Handlers/Handlers";
 import { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
+
 
 // Define la interfaz para los props del componente
 interface DeliveryFormProps {
@@ -15,7 +17,7 @@ interface DeliveryFormProps {
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
-  numeroImportacion: Yup.string().required("Campo requerido"),
+  numImpo: Yup.string().required("Campo requerido"),
   cantidad: Yup.number().required("Campo requerido"),
 });
 
@@ -33,23 +35,31 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     codOEM: null,
     desc: "",
     stock: 0,
-    numeroImportacion: "",
+    numImpo: "",
     cantidad: 0,
   };
 
   interface IProduct {
-    Codigo: string;
-    Producto: string;
-    Stock: number;
-    CodOEM: string;
+    codigoInt: string;
+    descripcion: string;
+    stock: number;
+    codOEM: string;
+    
   }
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createDelivery(values);
+    onSubmit: async(values) => {
+      try {
+        
       console.log(values);
+      createDelivery(values);
+      toast.success('{} creado correctamente')
+      } catch (error) {
+        console.log(error)
+        toast.error('Error al crear el reporte.')
+      }
     },
   });
 
@@ -57,10 +67,10 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
 
   useEffect(() => {
     formik.setFieldValue("fecha", new Date().toLocaleString());
-    formik.setFieldValue("movementType", formName);
-    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
-    formik.setFieldValue("desc", selectedProduct?.Producto);
-    formik.setFieldValue("stock", selectedProduct?.Stock);
+    formik.setFieldValue("observaciones", formName);
+    formik.setFieldValue("codOEM", selectedProduct?.codOEM);
+    formik.setFieldValue("desc", selectedProduct?.desc);
+    formik.setFieldValue("stock", selectedProduct?.stock);
   }, [selectedProduct, formik.values.cantidad]);
 
   return (
@@ -132,7 +142,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
                   const codigoInt = e.target.value;
                   const product = products.find(
-                    (product) => product.Codigo === codigoInt
+                    (product) => product.codigoInt === codigoInt
                   );
                   product && setSelectedProduct(product);
                   product || setSelectedProduct(null);
@@ -160,7 +170,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="text"
                 id="codOEM"
                 name="codOEM"
-                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                value={selectedProduct?.codOEM || "codOEM no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -176,7 +186,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="text"
                 id="producto"
                 name="producto"
-                value={selectedProduct?.Producto || "Producto no encontrado"}
+                value={selectedProduct?.descripcion || "Producto no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -192,7 +202,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="text"
                 id="stockActual"
                 name="stockActual"
-                value={selectedProduct?.Stock || 0}
+                value={selectedProduct?.stock || 0}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -201,23 +211,23 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             {/* Campo para ingresar el numero de importacion del movimiento */}
             <div className="mb-4">
               <label
-                htmlFor="numeroImportacion"
+                htmlFor="numImpo"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Numero de Importacion
               </label>
               <input
                 type="text"
-                id="numeroImportacion"
-                name="numeroImportacion"
+                id="numImpo"
+                name="numImpo"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.numeroImportacion}
+                value={formik.values.numImpo}
               />
-              {formik.touched.numeroImportacion && formik.errors.numeroImportacion ? (
+              {formik.touched.numImpo && formik.errors.numImpo ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.numeroImportacion}
+                  {formik.errors.numImpo}
                 </div>
               ) : null}
             </div>

@@ -97,7 +97,7 @@ interface HistorialDeliveryTableProps {
 }
 
 interface CostImportedTableProps {
-  costImported: costImportedTable[];
+  costImported: CostImportedTable[];
 }
 
 export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
@@ -130,13 +130,13 @@ export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
   console.log("filtro ERRORS", filteredData); // ! Ver si filtra la response OK. => SI
 
   return (
-    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm">
-      <div className="h-full w-full bg-gray-900">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen w-full flex overflow-auto text-sm">
+      <div className=" bg-gray-900">
         <div className="py-1 pt-4">
           <div className="overflow-x-auto">
-            <div className="shadow-md rounded-lg overflow-hidden">
+            <div className="shadow-md rounded-lg">
               <table className="leading-normal bg-gray-900">
-                <thead>
+                <thead className="w-screen">
                   <tr>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Usuario
@@ -590,9 +590,7 @@ export const HistorialInventoryTable: React.FC<HistorialInventoryTableProps> = (
 };
 
 export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () => {
-  const [historialDeliveryData, setHistorialDeliveryData] = useState<
-    DeliveryTable[]
-  >([]);
+  const [historialDeliveryData, setHistorialDeliveryData] = useState<DeliveryTable[]>([]);
 
   const { filterValues, applyFilters } = useFilterValues();
   const hasFilters = Object.values(filterValues).some((value) => value !== "");
@@ -604,9 +602,9 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
     const fetchDeliveryData = async () => {
       try {
         const response = await fetchDelivery(); // Suponiendo que esta es tu función de API
-        if (response && response.length > 0) {
+        if (response.payload.length > 0) {
           // Asumiendo que response.payload ya es del tipo Movement[]
-          setHistorialDeliveryData(response);
+          setHistorialDeliveryData(response.payload);
           console.log(historialDeliveryData);
         }
       } catch (error) {
@@ -666,7 +664,7 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                       <tr tabIndex={index}>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.date}
+                            {hist.fecha}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

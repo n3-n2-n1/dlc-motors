@@ -31,6 +31,10 @@ const Notifications = lazy(
   () => import("../pages/Notifications/Notifications")
 );
 
+const Scanner = lazy(
+  () => import("../pages/Scanner/Scanner")
+);
+
 export const IncomeObservations = [
   "Cancelación",
   "Devolución",
@@ -148,6 +152,7 @@ const AppRoutes: React.FC = () => {
         />
       </Route>
       <Route path={paths.fatal} element={<HandleFatal />} />
+      <Route path={paths.scanner} element={<Scanner/>} />
     </Routes>
   );
 };

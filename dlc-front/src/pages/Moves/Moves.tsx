@@ -9,6 +9,7 @@ import { OutcomeObservations } from "../../routes/routes";
 import { DeliveriesObservations } from "../../routes/routes";
 import { useSearchContext } from "../../contexts/SearchContext";
 import DeliveryForm from "../../components/DeliveryForm/DeliveryForm";
+import Navbar from "../../components/Navbar/Navbar";
 
 
 const Moves: React.FC = () => {
@@ -24,15 +25,8 @@ const Moves: React.FC = () => {
   const changeToDelivery = () => setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations}/>);
 
   return (
-    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-full overflow-auto text-sm p-6 overflow-y-hidden">
-      <div className="flex-row">
-        <h1 className="text-4xl mb-2 text-white font-weight-300">
-          Movimientos
-        </h1>
-        <h2 className="text-gray-500 mb-4">
-          Generá movimientos<br />
-        </h2>
-      </div>
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-full w-full overflow-auto text-sm p-6 overflow-y-hidden">
+      <Navbar title='Movimientos' subtitle="Generá movimientos" />
       <section className="flex flex-row gap-6"> 
 
       <Dashcards buttons={[{ text: "Errores", action: changeToErrors, link:'' }]} />
@@ -43,7 +37,7 @@ const Moves: React.FC = () => {
       <Dashcards buttons={[{ text: "Pedidos", action: changeToDelivery, link:'' }]} />
 
       </section>
-      <div className="border-t border-gray-200 mt-4">
+      <div className="border-t border-gray-200 mt-4 h-screen">
         {currentComponent}
       </div>
     </div>

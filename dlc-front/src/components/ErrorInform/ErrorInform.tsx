@@ -46,10 +46,10 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   };
 
   interface IProduct {
-    Codigo: string;
-    Producto: string;
-    Stock: number;
-    CodOEM: string;
+    codigoInt: string;
+    descripcion: string;
+    stock: number;
+    codOEM: string;
   }
 
   const formik = useFormik({
@@ -82,9 +82,9 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   useEffect(() => {
     formik.setFieldValue("fecha", new Date().toLocaleString());
     formik.setFieldValue("movementType", formName);
-    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
-    formik.setFieldValue("desc", selectedProduct?.Producto);
-    formik.setFieldValue("stock", selectedProduct?.Stock);
+    formik.setFieldValue("codOEM", selectedProduct?.codOEM);
+    formik.setFieldValue("desc", selectedProduct?.descripcion);
+    formik.setFieldValue("stock", selectedProduct?.stock);
   }, [selectedProduct, formik.values.stockReal]);
 
   return (
@@ -184,7 +184,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="text"
                 id="codOEM"
                 name="codOEM"
-                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                value={selectedProduct?.codOEM || "codOEM no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -200,7 +200,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="text"
                 id="producto"
                 name="producto"
-                value={selectedProduct?.Producto || "Producto no encontrado"}
+                value={selectedProduct?.descripcion || "Producto no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -216,7 +216,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="text"
                 id="stockActual"
                 name="stockActual"
-                value={selectedProduct?.Stock || 0}
+                value={selectedProduct?.stock || 0}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />

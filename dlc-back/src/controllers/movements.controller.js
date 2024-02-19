@@ -12,14 +12,14 @@ export const getMovements = (req, res) => {
 };
 
 export const createMovement = (req, res) => {
-  const {fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos
+  const {fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos,observaciones, det, cantidad,kit
   } = req.body;
 
-  if (movementType === "Inventario") {
+  if (desc === "Inventario") {
     // Query Inventario
     console.log("QUERY INVENTARIO")
     db.query(
-      "INSERT INTO movimientos (fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
+      "INSERT INTO movimientos (fecha, codInterno, codOEM, ` desc` , stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
       [fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo],
       function (error) {
         if (error) {
@@ -33,7 +33,7 @@ export const createMovement = (req, res) => {
         // Get the inserted product
         db.query(
           "SELECT * FROM movimientos WHERE fecha = ?",
-          [date],
+          [fecha],
           function (error, results) {
             if (error) {
               console.error(
@@ -59,7 +59,7 @@ export const createMovement = (req, res) => {
   } else {
     console.log("QUERY INGRESO/EGRESO")
     db.query(
-      "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?)",
+      "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, `desc` , stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?,?,?,?)",
       [
         fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct
       ],
@@ -73,7 +73,7 @@ export const createMovement = (req, res) => {
         // Get the inserted product
         db.query(
           "SELECT * FROM movimientos WHERE fecha = ?",
-          [date],
+          [fecha],
           function (error, results, fields) {
             if (error) {
               console.error(

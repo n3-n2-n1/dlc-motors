@@ -27,7 +27,7 @@ export default function Sidebar() {
   };
 
  // Clases base del sidebar
- let sidebarClasses = "bg-gray-900 border-gray-800 flex-shrink-0 border-r border-gray-200 flex-col sm:flex p-4";
+ let sidebarClasses = "bg-gray-900 border-gray-800 flex-shrink-0 border-r border-gray-200 flex-col sm:flex";
 
  // Ajustar clases basadas en la visibilidad
  if (!isSidebarVisible) {
@@ -49,44 +49,44 @@ export default function Sidebar() {
       <div className="flex mx-auto flex-grow mt-2 flex-col text-gray-400 space-y-4 align-lefts">
         <SidebarButton to={paths.products} text={"Productos"}>
           <ProductsIcon />
-          <div className="ml-3">
+          <div className="ml-3 font-bold">
           Productos
         </div>
         </SidebarButton>
         <SidebarButton to={paths.categories} text={"Rubros"}>
           <CategoriesIcon />
-          <div className="ml-3">
+          <div className="ml-3 font-bold">
           Rubros
         </div>
         </SidebarButton>
         <SidebarButton to={paths.users} text={"Usuarios"}>
          <UsersIcon /> 
-         <div className="ml-3">
+         <div className="ml-3 font-bold">
           Usuarios
         </div>
         </SidebarButton> 
        
         <SidebarButton to={paths.costs} text={"Costos"}>
          <CostsIcon />
-         <div className="ml-3">
+         <div className="ml-3 font-bold">
           Costos
         </div>
         </SidebarButton>
         <SidebarButton to={paths.historyView} text={"Historial"}>
         <SearchIcon /> 
-        <div className="ml-3">
+        <div className="ml-3 font-bold">
           Historial
         </div>
         </SidebarButton>
         <SidebarButton to={paths.moves} text={"Movimientos"}>
         <MovementsIcon /> 
-        <div className="ml-3">
+        <div className="ml-3 font-bold">
           Movimientos
         </div>
         </SidebarButton>
         <SidebarButton to={paths.notifications} text={"Notificaciones"}>
           <NotificationsIcon />
-          <div className="ml-3">
+          <div className="ml-3 font-bold">
           Notificaciones
         </div>
         </SidebarButton>
@@ -104,7 +104,7 @@ export default function Sidebar() {
       <div>
 
       <button onClick={toggleSidebar} className="">
-        <div className="mb-6 hover:bg-blue-60 ml-4 ">
+        <div className="mb-6 hover:bg-blue-60 ml-8 ">
         <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M13 8L9 12M9 12L13 16M9 12H21M19.4845 7C17.8699 4.58803 15.1204 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C15.1204 21 17.8699 19.412 19.4845 17" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
         
         </div>

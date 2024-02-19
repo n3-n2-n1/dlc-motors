@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 
 import TableList from "../../components/TableList/TableList";
 import Actions from "../../components/Actions/Actions";
+import QRCodeScanner from "../../components/qrScanner/qrScanner";
 
 // import Pagination from "../../components/Pagination/Pagination";
 // import Filter from "../../components/Filter/Filter";
@@ -18,7 +19,7 @@ function Products() {
           <div className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-center">
               <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row justify-between w-full">
-                <h1 className="text-2xl sm:text-4xl mb-2 text-white font-light">
+                <h1 className="text-3xl mb-2 font-semibold text-white">
                   Productos
                 </h1>
                 <div className="flex space-x-2 sm:space-x-4">

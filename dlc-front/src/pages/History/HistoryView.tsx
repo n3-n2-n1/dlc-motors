@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import Navbar from "../../components/Navbar/Navbar";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useFilterValues } from "../../contexts/FilterContext";
 import { useUser } from "../../contexts/UserContext";
@@ -217,14 +217,7 @@ const HistoryView = () => {
 
   return (
     <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6">
-      <div className="flex-row">
-        <h1 className="text-4xl mb-2 text-white font-weight-300">
-          Historial de Movimientos
-        </h1>
-        <h2 className="text-gray-500 mb-4">
-          Visualizá sobre movimientos generales <br />
-        </h2>
-      </div>
+      <Navbar title= 'Historial de Movimientos' subtitle="Visualizá movimientos" />
       <section className="flex flex-row gap-6">
         <Dashcards
           buttons={[

@@ -27,21 +27,21 @@ export const getDeliveries = async (req, res) => {
 
 export const createDelivery = async (req, res) => {
   try {
-    const { cantidad, codigoInt, fecha, movementType, numeroImportacion, observaciones } = req.body;
+    const { cantidad, fecha, desc, numImpo, observaciones } = req.body;
 
-    if (!cantidad || !codigoInt || !fecha || !movementType || !numeroImportacion || !observaciones) {
+    if (!fecha) {
       return res.status(400).send({
         status: "error",
         error: "Incomplete values",
       });
     }
 
-    const createdDelivery = await deliveryService.createDelivery(cantidad, codigoInt, fecha, movementType, numeroImportacion, observaciones);
+    const createdDelivery = await deliveryService.createDelivery(cantidad, fecha, desc, numImpo, observaciones);
 
-    if (!createdDelivery || createdProduct.length === 0) {
+    if (!createdDelivery) {
       return res.status(404).send({
         status: "error",
-        error: `Failed to create delivery with code ${pieceCode}`,
+        error: `Failed to create delivery with code ${desc}`,
       });
     }
 

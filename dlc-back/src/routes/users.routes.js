@@ -4,7 +4,8 @@ import passport from "passport";
 import {
   getUsers,
   getUserByEmail,
-  createUser,
+  // createUser,
+  registerUser,
   loginUser,
   logoutUser,
 } from "../controllers/users.controller.js";
@@ -26,15 +27,16 @@ usersRouter.post(
   passport.authenticate("register", {
     session: false,
   }),
-  (req, res) => {
-    try {
-      createUser(req, res);
-      res.send("Usuario creado exitosamente.");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error al crear el usuario.");
-    }
-  }
+  // (req, res) => {
+  //   try {
+  //     createUser(req, res);
+  //     res.send("Usuario creado exitosamente.");
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send("Error al crear el usuario.");
+  //   }
+  // }
+  registerUser
 );
 
 usersRouter.post("/login", (req, res) => {
@@ -45,8 +47,5 @@ usersRouter.post("/logout", (req, res) => {
   logoutUser(req, res);
 });
 
-// router.post("/404", (req, res) => {
-//   usuariosController.errorFatal(req,res);
-// })
 
 export default usersRouter;
