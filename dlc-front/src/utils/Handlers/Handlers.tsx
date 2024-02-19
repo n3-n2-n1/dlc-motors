@@ -4,7 +4,7 @@ import * as xlsx from 'xlsx'
 
 const fetchUser = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://localhost:3000/usuarios");
+    const response = await fetch("http://crystal-dev.site/usuarios");
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -20,7 +20,7 @@ const fetchUser = async (): Promise<User[]> => {
 
 const createUser = async (userData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/usuarios/registro", {
+    const response = await fetch("https://crystal-dev.site/usuarios/registro", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const createUser = async (userData: any) => {
 
 const fetchProducts = async () => {
   try {
-    const response = await fetch("http://localhost:3000/productos"); // Reemplaza con la ruta correcta
+    const response = await fetch("https://crystal-dev.site/productos"); // Reemplaza con la ruta correcta
     const data = await response.json();
     return data;
   } catch (error) {
@@ -56,7 +56,7 @@ const fetchProducts = async () => {
 const createProduct = async (productData: any) => {
 
   try {
-    const response = await fetch("http://localhost:3000/productos", {
+    const response = await fetch("https://crystal-dev.site/productos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +79,7 @@ const createProduct = async (productData: any) => {
 
 const fetchErrors = async (): Promise<Errors[]> => {
   try {
-    const response = await fetch("http://localhost:3000/getErrorProduct");
+    const response = await fetch("https://crystal-dev.site/getErrorProduct");
 
     if (!response.ok) {
       throw new Error("Error status");
@@ -95,7 +95,7 @@ const fetchErrors = async (): Promise<Errors[]> => {
 
 const createError = async (errorData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/errorProductCreate", {
+    const response = await fetch("https://crystal-dev.site/errorProductCreate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const createError = async (errorData: any) => {
 const deleteProducts = async (productData: any) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/productos/${productData}`,
+      `https://crystal-dev.site/productos/${productData}`,
       {
         method: "DELETE",
       }
@@ -138,7 +138,7 @@ const deleteProducts = async (productData: any) => {
 
 const createReturns = async (returnData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/devoluciones", {
+    const response = await fetch("https://crystal-dev.site/devoluciones", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const createReturns = async (returnData: any) => {
 };
 
 const LoginUser = async (values: any) => {
-  const url = "http://localhost:3000/usuarios/login";
+  const url = "https://crystal-dev.site/usuarios/login";
 
   try {
     const response = await fetch(url, {
@@ -181,7 +181,7 @@ const LoginUser = async (values: any) => {
 
 const fetchHistorial = async () => {
   try {
-    const response = await fetch("http://localhost:3000/historial");
+    const response = await fetch("https://crystal-dev.site/historial");
     if (!response.ok) {
       throw new Error("Error al obtener el historial de acciones");
     }
@@ -194,7 +194,7 @@ const fetchHistorial = async () => {
 
 const fetchMoves = async () => {
   try{
-    const response = await fetch("http://localhost:3000/moves")
+    const response = await fetch("https://crystal-dev.site/moves")
     if (!response.ok) {
       throw new Error("Error al obtener el historial de acciones");
     }
@@ -207,7 +207,7 @@ const fetchMoves = async () => {
 
 const createMovement = async (movementData: any) => {
   try {
-    const response = await fetch("http://localhost:3000/moves", {
+    const response = await fetch("https://crystal-dev.site/moves", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -256,7 +256,7 @@ const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
 const logoutUser = async() => {
   try {
-    const response = await fetch("http://localhost:3000/logout", {
+    const response = await fetch("https://crystal-dev.site/logout", {
       method: "POST",
       
     });
