@@ -20,7 +20,6 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/app.js",
-    "start": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
