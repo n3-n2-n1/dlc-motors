@@ -29,7 +29,7 @@ export const SearchProvider: React.FC = ({
   const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState<any[]>([]);
 
-  const itemsPerPage = 20;
+  const itemsPerPage = 17;
   // useEffect para obtener productos desde el backend
   useEffect(() => {
     const fetchData = async () => {

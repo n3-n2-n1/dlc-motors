@@ -1,26 +1,133 @@
 import { User } from "../../Interfaces/User";
-import { Errors } from "../../Interfaces/Errors";
-import * as xlsx from 'xlsx'
+import { Errors } from "../../components/ErrorCard/ErrorCard";
+import * as xlsx from "xlsx";
+import { toast } from "react-toastify";
+
+const URL = "http://localhost:3000";
+
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//----------------------READING HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
 
 const fetchUser = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://crystal-dev.site/usuarios");
+    const response = await fetch(`${URL}/api/v1/users`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const userData: User[] = await response.json();
-    return userData;
+    return (userData as any).payload;
   } catch (error) {
     console.error("Error fetching user data:", error);
     throw error;
   }
 };
 
-const createUser = async (userData: any) => {
+const fetchProducts = async () => {
   try {
-    const response = await fetch("https://crystal-dev.site/usuarios/registro", {
+    const response = await fetch(`${URL}/api/v1/products`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.payload;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+const fetchErrors = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/productErrors`);
+
+    if (!response.ok) {
+      throw new Error("Error status");
+    }
+
+    const errorData = await response.json();
+    console.log(errorData);
+    return errorData;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+};
+
+const fetchReturns = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/returns`);
+
+    if (!response.ok) {
+      throw new Error("Error status");
+    }
+
+    const returnsData = await response.json();
+    console.log(returnsData);
+    return returnsData;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+};
+
+const fetchMoves = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/movements`);
+    if (!response.ok) {
+      throw new Error("Error al obtener el historial de acciones");
+    }
+    return await response.json(); // Retorna los datos
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
+  }
+};
+
+const fetchDelivery = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/delivery`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching historial:", error);
+    throw error;
+  }
+};
+
+const fetchCosts = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/costos`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching historial:", error);
+    throw error;
+  }
+};
+
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//---------------------CREATION HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+
+const createUser = async (userData: string) => {
+  try {
+
+    const response = await fetch(`${URL}/api/v1/users/register`, {
+
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,9 +142,10 @@ const createUser = async (userData: any) => {
 
     const responseData = await response.json();
     console.log("User created successfully:", responseData);
-    alert('creado');
+    toast.success("creado");
     location.reload();
   } catch (error) {
+
     console.error("Error creating product:", error);
   }
 };
@@ -50,13 +158,14 @@ const fetchProducts = async () => {
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error; // Puedes manejar el error aquí o dejar que el componente principal lo maneje
+
   }
 };
 
 const createProduct = async (productData: any) => {
-
   try {
-    const response = await fetch("https://crystal-dev.site/productos", {
+    const response = await fetch(`${URL}/api/v1/products`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,26 +185,35 @@ const createProduct = async (productData: any) => {
     console.error("Error creating product:");
   }
 };
+const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0]; // Verifica si target y files están definidos
+  if (!file) {
+    console.error("No se seleccionó ningún archivo.");
+    return;
+  }
 
-const fetchErrors = async (): Promise<Errors[]> => {
-  try {
-    const response = await fetch("https://crystal-dev.site/getErrorProduct");
+  const reader = new FileReader();
 
-    if (!response.ok) {
-      throw new Error("Error status");
+  reader.onload = function (e) {
+    const data = e.target?.result; // Verifica si target está definido
+    if (!data) {
+      console.error("No se pudo leer el archivo.");
+      return;
     }
 
-    const errorData: Errors[] = await response.json();
-    return errorData;
-  } catch (error) {
-    console.error("error", error);
-    throw error;
-  }
+    const workbook = xlsx.read(data, { type: "binary" });
+
+    // Procesa los datos del archivo Excel aquí
+    // Puedes enviarlos al servidor mediante una solicitud HTTP
+  };
+
+  reader.readAsBinaryString(file);
 };
 
 const createError = async (errorData: any) => {
   try {
-    const response = await fetch("https://crystal-dev.site/errorProductCreate", {
+    const response = await fetch(`${URL}/api/v1/productErrors`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,30 +233,10 @@ const createError = async (errorData: any) => {
   }
 };
 
-const deleteProducts = async (productData: any) => {
-  try {
-    const response = await fetch(
-      `https://crystal-dev.site/productos/${productData}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
-    }
-
-    const responseData = await response.json();
-    console.log("Product deleted successfully:", responseData);
-  } catch (error) {
-    console.error("Error deleting product:", error);
-  }
-};
-
 const createReturns = async (returnData: any) => {
   try {
-    const response = await fetch("https://crystal-dev.site/devoluciones", {
+    const response = await fetch(`${URL}/api/v1/returns`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -160,8 +258,103 @@ const createReturns = async (returnData: any) => {
   }
 };
 
+
 const LoginUser = async (values: any) => {
   const url = "https://crystal-dev.site/usuarios/login";
+  try {
+    const response = await fetch(`${URL}/api/v1/movements`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(movementData),
+    });
+
+
+    return response; // Devuelve la respuesta para que pueda ser manejada en el código que llama a LoginUser
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error; // Re-lanza el error para que pueda ser manejado en el código que llama a LoginUser
+  }
+};
+
+const fetchHistorial = async () => {
+  try {
+    const response = await fetch("https://crystal-dev.site/historial");
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+
+const fetchMoves = async () => {
+  try{
+    const response = await fetch("https://crystal-dev.site/moves")
+    if (!response.ok) {
+      throw new Error("Error al obtener el historial de acciones");
+    }
+    return await response.json();  // Retorna los datos
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+};
+
+const createDelivery = async (deliveryData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/delivery`, {
+
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(deliveryData),
+    });
+
+    if (!response.ok) {
+      const deliveryData = await response.json();
+      throw new Error(deliveryData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Delivery created successfully:", responseData);
+  } catch (error) {
+    console.error("Error creating product:");
+    console.log(deliveryData)
+  }
+};
+
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//---------------------DELETION HANDLERS-------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+
+const deleteProducts = async (productData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/products/${productData}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Product deleted successfully:", responseData);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
+
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+//-----------------------USERS HANDLERS--------------------------// 
+//---------------------------------------------------------------// 
+//---------------------------------------------------------------// 
+
+const LoginUser = async (values: any) => {
+  const url = `${URL}/api/v1/usuarios/login`;
 
   try {
     const response = await fetch(url, {
@@ -179,92 +372,16 @@ const LoginUser = async (values: any) => {
   }
 };
 
-const fetchHistorial = async () => {
+const logoutUser = async () => {
   try {
-    const response = await fetch("https://crystal-dev.site/historial");
-    if (!response.ok) {
-      throw new Error("Error al obtener el historial de acciones");
-    }
-    return await response.json();  // Retorna los datos
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;  // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
-  }
-};
+    const response = await fetch(`${URL}/api/v1/logout`, {
 
-const fetchMoves = async () => {
-  try{
-    const response = await fetch("https://crystal-dev.site/moves")
-    if (!response.ok) {
-      throw new Error("Error al obtener el historial de acciones");
-    }
-    return await response.json();  // Retorna los datos
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;  // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
-  }
-}
-
-const createMovement = async (movementData: any) => {
-  try {
-    const response = await fetch("https://crystal-dev.site/moves", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(movementData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
-    }
-
-    const responseData = await response.json();
-    console.log("Movimiento created successfully:", responseData);
-  } catch (error) {
-    console.error("Error creating product:");
-  }
-}
-
-
-const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0]; // Verifica si target y files están definidos
-  if (!file) {
-    console.error("No se seleccionó ningún archivo.");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function (e) {
-    const data = e.target?.result; // Verifica si target está definido
-    if (!data) {
-      console.error("No se pudo leer el archivo.");
-      return;
-    }
-
-    const workbook = xlsx.read(data, { type: 'binary' });
-
-    // Procesa los datos del archivo Excel aquí
-    // Puedes enviarlos al servidor mediante una solicitud HTTP
-  };
-
-  reader.readAsBinaryString(file);
-};
-
-
-const logoutUser = async() => {
-  try {
-    const response = await fetch("https://crystal-dev.site/logout", {
-      method: "POST",
-      
     });
   } catch (error) {
     console.error("Error creating loogout");
-    
   }
-}
+};
 
 export {
   fetchUser,
@@ -277,8 +394,11 @@ export {
   LoginUser,
   createReturns,
   fetchMoves,
-  fetchHistorial,
   handleAddMassive,
   createMovement,
-  logoutUser
+  createDelivery,
+  logoutUser,
+  fetchReturns,
+  fetchDelivery,
+  fetchCosts,
 };

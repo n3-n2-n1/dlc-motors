@@ -6,16 +6,6 @@ function ProfileActions() {
   const [isDarkMode, setIsDarkMode] = useState([]);
   const [flyer, setFlyer] = useState(false);
 
-  //Necesitamos este switch falopita, es del dark mode
-  // const darkToogle = () => {
-
-  //   return(
-  //     <section className={`${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} absolute h-full w-full flex items-center justify-center`}>
-  //     <DarkModeToggle onToggle={setIsDarkMode} />
-  //   </section>
-  //   )
-  // }
-
   return (
 <div className="relative inline-block text-left">
   <div
@@ -30,7 +20,7 @@ function ProfileActions() {
         fill="currentColor"
         aria-hidden="true"
       >
-        <mask id="mask0_4_4471" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
+        <mask id="mask0_4_4471" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
           <rect width="30" height="30" fill="#D9D9D9" />
         </mask>
         <g mask="url(#mask0_4_4471)">
@@ -68,8 +58,8 @@ function ProfileActions() {
         : "hidden"
     }
   >
-    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-400">
-      <button className="relative grid gap-6 bg-gray-700 px-5 py-6 sm:gap-8 sm:p-8 bg-red"
+    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-700">
+      <button className="relative bg-gray-700sm:gap-8 sm:p-8 bg-red w-full h-full"
       onClick={logoutUser}
       >
         <a
@@ -97,7 +87,11 @@ function ProfileActions() {
           </div>
         </a>
       </button>
-      <div className="relative grid gap-6 bg-gray-700 px-5 py-6 sm:gap-8 sm:p-8 bg-red">
+
+      <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-slate-700">
+      <button className="relative bg-gray-700sm:gap-8 sm:p-8 bg-red w-full h-full"
+      onClick={logoutUser}
+      >
         <a
           href="#"
           className="-m-3 p-3 bg-gray-700 flex items-start rounded-lg hover:bg-gray-800"
@@ -119,11 +113,17 @@ function ProfileActions() {
             />
           </svg>
           <div className="ml-4">
-            <p className="text-base font-medium text-white">Ayuda</p>
+            <p className="text-base font-medium text-white">Soporte</p>
           </div>
         </a>
-      </div>
+      </button>
+
     </div>
+
+    </div>
+
+
+    
     
   </div>
 </div>

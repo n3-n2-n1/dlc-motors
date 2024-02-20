@@ -3,5 +3,5 @@ export interface User {
     role: string;
     email: string;
     id: string;
-    // Add other user properties as needed
+    password: string;
   }

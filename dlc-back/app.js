@@ -1,39 +1,39 @@
-const express = require("express");
-const cors = require('cors');
-const usuariosRoutes = require('./src/routes/userRoutes');
-const productosRoutes = require('./src/routes/productsRoutes');
-const errorProductsRoutes = require('./src/routes/errorProductsRoutes');
-const returnProductRoutes = require('./src/routes/returnRoutes');
-const historialRoutes = require('./src/routes/historialRoutes');
-const movesRoutes = require('./src/routes/movesRoutes');
-const massiveAddRoutes = require('./src/routes/massiveAddRoutes');
-const initializePassport = require('./src/auth/passport');
-// const mysql = require('mysql');
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
+import cowsay from "cowsay";
+import colors from "colors";
+
+import routerAPI from "./src/routes/routes.js";
+import initializePassport from "./src/auth/passport.js";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000
 
 const corsOptions = {
-  origin: '*',
+  origin: "*",
   credentials: true,
   optionSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
-app.use(express.json());
+const env = async () => {
+  app.use(cors(corsOptions));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
+  initializePassport();
 
+  routerAPI(app);
 
-// Usa los routers exportados
-app.use(usuariosRoutes);
-app.use(productosRoutes);
-app.use(errorProductsRoutes);
-app.use(returnProductRoutes);
-app.use(historialRoutes);
-app.use(movesRoutes);
-app.use(massiveAddRoutes);
-initializePassport();
+  app.listen(PORT, () => {
+    console.log(
+      cowsay.say({
+        text: `Servidor arriba en puerto ${PORT}!`,
+        e: "O.o",
+      }).rainbow
+    );
+  });
+};
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en localhost:${PORT}`);
-});
+env();

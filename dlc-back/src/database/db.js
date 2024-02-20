@@ -1,18 +1,27 @@
-const mysql = require("mysql");
+import mysql from 'mysql'
 
-// Configuración de la conexión a la base de datos
+// Configuración de la conexión a la base de datos CON SSH
+// const dbConfig = {
+//   host: "127.0.0.1" || "localhost", // Host local debido al túnel SSH
+//   user: "crysiupm_dlc-back" || "crystal", // Tu usuario de la base de datos
+//   password: "S4nrZ2vDZhw8U@N" || "crystal", // Tu contraseña de la base de datos
+//   database: "crysiupm_dlc-back" || "crystal", // El nombre de tu base de datos
+//   port: 5522 || 3306, // El puerto local del túnel SSH
+// };
+
+
 const dbConfig = {
-  host: "localhost",
-  user: "crystal",
-  password: "crystal",
-  database: "crystal",
-  port: 3306,
+  host:  "localhost", // Host local debido al túnel SSHs
+  user:  "crystal", // Tu usuario de la base de datos
+  password:"crystal", // Tu contraseña de la base de datos
+  database:"crystal", // El nombre de tu base de datos
+  port:3306, // El puerto local del túnel SSH
 };
 
-const connection = mysql.createConnection(dbConfig);
+const db = mysql.createConnection(dbConfig);
 
 // Conectar a la base de datos
-connection.connect((err) => {
+db.connect((err) => {
   if (err) {
     console.error('Error al conectar a la base de datos:', err);
   } else {
@@ -20,4 +29,4 @@ connection.connect((err) => {
   }
 });
 
-module.exports = connection;
+export default db;

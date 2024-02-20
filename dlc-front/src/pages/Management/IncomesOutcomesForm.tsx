@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createMovement } from "../../utils/Handlers/Handlers";
+import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 // Define la interfaz para los props del componente
 interface IncomesOutcomesFormProps {
@@ -23,10 +25,10 @@ interface IncomesOutcomesFormProps {
 
 // Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
-  observations: Yup.string().required("Campo requerido"),
-  description: Yup.string().required("Campo requerido"),
-  quantity: Yup.number().required("Campo requerido"),
-  productCode: Yup.string().required("Campo requerido"),
+  observaciones: Yup.string().required("Campo requerido"),
+  desc: Yup.string().required("Campo requerido"),
+  cantidad: Yup.number().required("Campo requerido"),
+  codigoInt: Yup.string().required("Campo requerido"),
 });
 
 // Componente funcional del formulario de inventario
@@ -38,71 +40,84 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   // Valores iniciales del formulario
   const initialValues = {
     date: "",
-    movementType: "",
-    productCode: "",
-    description: "",
-    quantity: null,
-    observations: "",
-    updatedStock: 0,
+    observaciones: "",
+    codigoInt: "",
+    codOEM: null,
+    tipoMov: "",
+    desc: "",
+    cantidad: null,
+    stockAct: 0,
   };
 
   interface IProduct {
-    Codigo: string;
-    Producto: string;
-    Stock: number;
+    codigoInt: string;
+    descripcion: string;
+    stock: number;
+    codOEM: string;
   }
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createMovement(values);
-      alert("creadooooooo");
+    onSubmit: async(values) => {
+      try {
+        
+      await createMovement(values);
       console.log(values);
+      toast.success('Movimiento creado');
+      
+      } catch (error) {
+
+        console.log(error)
+        toast.error('Error al crear el movimiento')
+      }
     },
   });
 
   // Estado para manejar el producto seleccionado
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
-  // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
+  // Establecer el valor de 'date' y 'stockAct' en el estado de Formik
   useEffect(() => {
     formik.setFieldValue("date", new Date().toLocaleString());
-    formik.setFieldValue("movementType", formName);
+    formik.setFieldValue("tipoMov", formName);
+    formik.setFieldValue("codOEM", selectedProduct?.codOEM);
+    formik.setFieldValue("descripcion", selectedProduct?.descripcion);
+    formik.setFieldValue("stock", selectedProduct?.stock);
 
     formik.setFieldValue(
-      "updatedStock",
+      "stockAct",
       formName === "Ingreso"
-        ? (selectedProduct?.Stock ?? 0) + (formik.values?.quantity ?? 0)
-        : (selectedProduct?.Stock ?? 0) - (formik.values?.quantity ?? 0)
+        ? (selectedProduct?.stock ?? 0) + (formik.values?.cantidad ?? 0)
+        : (selectedProduct?.stock ?? 0) - (formik.values?.cantidad ?? 0)
     );
-  }, [selectedProduct, formik.values.quantity]);
+  }, [selectedProduct, formik.values.cantidad]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6 flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">
+    <div className="bg-gray-900 w-full flex-shrink-0 h-screen lg:block hidden pt-4 pb-10 overflow-auto">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
+        
+        <div className="mr-6 pb-10 overflow-auto">
+          <h1 className="text-3xl mb-2 text-white font-weight-300 pb-4">
             {formName}s
           </h1>
-          <h2 className="text-gray-500 mb-4">
-            Cargá un {formName} al sistema de Inventario
-          </h2>
+          
+
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
           >
             <div className="mb-4">
               <label
-                htmlFor="date"
+                htmlFor="fecha"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Fecha y Hora
               </label>
               <input
                 type="text"
-                id="date"
-                name="date"
+                id="fecha"
+                name="fecha"
                 value={new Date().toLocaleString()}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 onChange={formik.handleChange}
@@ -112,14 +127,14 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
 
             <div className="mb-4">
               <label
-                htmlFor="observations"
+                htmlFor="observaciones"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Observaciones
               </label>
               <select
-                id="observations"
-                name="observations"
+                id="observaciones"
+                name="observaciones"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 text-gray-800"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -131,45 +146,61 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                   </option>
                 ))}
               </select>
-              {formik.touched.observations && formik.errors.observations ? (
+              {formik.touched.observaciones && formik.errors.observaciones ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.observations}
+                  {formik.errors.observaciones}
                 </div>
               ) : null}
             </div>
 
             <div className="mb-4">
               <label
-                htmlFor="productCode"
+                htmlFor="codigoInt"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Código de Producto
               </label>
               <input
                 type="text"
-                id="productCode"
-                name="productCode"
+                id="codigoInt"
+                name="codigoInt"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
-                  const productCode = e.target.value;
+                  const codigoInt = e.target.value;
                   const product = products.find(
-                    (product) => product.Codigo === productCode
+                    (product) => product.codigoInt === codigoInt
                   );
                   product && setSelectedProduct(product);
                   product || setSelectedProduct(null);
 
-                  formik.setFieldValue("productCode", productCode);
+                  formik.setFieldValue("codigoInt", codigoInt);
                 }}
                 onBlur={formik.handleBlur}
               />
-              {formik.touched.productCode && formik.errors.productCode ? (
+              {formik.touched.codigoInt && formik.errors.codigoInt ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.productCode}
+                  {formik.errors.codigoInt}
                 </div>
               ) : null}
             </div>
 
             {/* Campos fijos de Detalles del producto a cambiar. */}
+            <div className="mb-4">
+              <label
+                htmlFor="codOEM"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Código OEM
+              </label>
+              <input
+                type="text"
+                id="codOEM"
+                name="codOEM"
+                value={selectedProduct?.codOEM || "codOEM no encontrado"}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
+              />
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="producto"
@@ -181,7 +212,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 type="text"
                 id="producto"
                 name="producto"
-                value={selectedProduct?.Producto || "Producto no encontrado"}
+                value={selectedProduct?.descripcion || "Producto no encontrado"}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -197,7 +228,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 type="text"
                 id="stockActual"
                 name="stockActual"
-                value={selectedProduct?.Stock || 0}
+                value={selectedProduct?.stock || 0}
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled
               />
@@ -206,23 +237,23 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
             {/* Campo para ingresar el detalle del movimiento */}
             <div className="mb-4">
               <label
-                htmlFor="description"
+                htmlFor="desc"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Detalle
               </label>
               <input
                 type="text"
-                id="description"
-                name="description"
+                id="desc"
+                name="desc"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.description}
+                value={formik.values.desc}
               />
-              {formik.touched.description && formik.errors.description ? (
+              {formik.touched.desc && formik.errors.desc ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.description}
+                  {formik.errors.desc}
                 </div>
               ) : null}
             </div>
@@ -230,23 +261,23 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
             {/* Campo para la cantidad ingresada/egresada */}
             <div className="mb-4">
               <label
-                htmlFor="quantity"
+                htmlFor="cantidad"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Cantidad {formName === "Ingreso" ? "ingresada" : "descontada"}
               </label>
               <input
                 type="number"
-                id="quantity"
-                name="quantity"
+                id="cantidad"
+                name="cantidad"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.quantity || ""}
+                value={formik.values.cantidad || ""}
               />
-              {formik.touched.quantity && formik.errors.quantity ? (
+              {formik.touched.cantidad && formik.errors.cantidad ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.quantity}
+                  {formik.errors.cantidad}
                 </div>
               ) : null}
             </div>
@@ -254,21 +285,21 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
             {/* Campo fijo de Stock resultante */}
             <div className="mb-4">
               <label
-                htmlFor="updatedStock"
+                htmlFor="stockAct"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Stock actualizado
               </label>
               <input
                 type="number"
-                id="updatedStock"
-                name="updatedStock"
+                id="stockAct"
+                name="stockAct"
                 value={
                   formName === "Ingreso"
-                    ? (selectedProduct?.Stock ?? 0) +
-                      (formik.values.quantity ?? 0)
-                    : (selectedProduct?.Stock ?? 0) -
-                      (formik.values.quantity ?? 0)
+                    ? (selectedProduct?.stock ?? 0) +
+                      (formik.values.cantidad ?? 0)
+                    : (selectedProduct?.stock ?? 0) -
+                      (formik.values.cantidad ?? 0)
                 }
                 className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
                 disabled

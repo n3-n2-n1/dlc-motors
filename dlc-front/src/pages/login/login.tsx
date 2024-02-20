@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { toast } from 'react-toastify';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { LoginUser } from "../../utils/Handlers/Handlers";
@@ -25,20 +25,23 @@ function Login() {
     validationSchema,
     onSubmit: async values => {
       try {
-        const response = await LoginUser(values);
-        const data = await response.json();
+        // Simular la llamada al backend
+        // En un entorno de producción, aquí llamarías a LoginUser(values)
+        console.log('Simulando login...');
+        
+        // Simular una respuesta exitosa después de 2 segundos
+        setTimeout(() => {
+          const fakeToken = 'fakeToken123'; // Simula un token
+          sessionStorage.setItem('miTokenJWT', fakeToken);
+          console.log('logueado exitosamente');
+          toast.success('Sesión iniciada correctamente.')
+          location.reload(); // Recargar la página (esto se puede cambiar según tu flujo)
+        }, 2000);
 
-        // Verifica si el servidor devuelve un token
-        if (data.token) {
-          // Almacena el token en sessionStorage
-          sessionStorage.setItem('miTokenJWT', data.token);
-          console.log('logueado exitosamente')
-          location.reload() // ! No te mereces ser programador flaco
-          // Asegúrate de cambiar 'miTokenJWT' según el nombre de tu token
-        }
-          
+
       } catch (error) {
         console.error('Error en la solicitud:', error);
+        toast.error('Error al iniciar sesión.')
       }
     },
   });
@@ -54,7 +57,7 @@ function Login() {
               <form onSubmit={formik.handleSubmit}>
                 <div className="relative mb-8">
                   <label className="block mb-2 text-sm font-medium text-gray-400">
-                    Email
+                    Usuario
                   </label>
                   <input
                     type="text"
@@ -90,7 +93,7 @@ function Login() {
 
                 <button
                   type="submit"
-                  className="w-full p-3 mt-4 bg-blue-600 text-white shadow rounded-full"
+                  className="w-full p-3 mt-4 bg-blue-600 text-gray-100 shadow rounded-full"
                   onClick={()=> navigate('/')}
                 >
                   Ingresar
@@ -98,10 +101,10 @@ function Login() {
               </form>
             </div>
 
-            <div className="flex justify-between p-8 text-sm border-t border-gray-300 dark:bg-gray-900 bg-gray-100">
+            <div className="flex justify-between p-8 text-sm border-t border-gray-350 dark:bg-gray-900 bg-gray-700">
               <a
                 href="#"
-                className="font-medium dark:text-indigo-300 text-blue-600"
+                className="font-medium dark:text-indigo-300 text-gray-200"
               >
                 ¿Necesitás ayuda?
               </a>

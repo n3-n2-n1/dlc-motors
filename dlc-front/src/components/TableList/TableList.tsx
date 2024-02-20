@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 
 import { useSearchContext } from "../../contexts/SearchContext.tsx";
 import Pagination from "../Pagination/Pagination";
-import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
-import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
-import { Link } from "react-router-dom";
-import { paths } from "../../routes/paths.ts";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
+import { useNavigate } from "react-router-dom";
 
-function TableList() {
-  const { searchResults, currentPage, itemsPerPage, products } =
-    useSearchContext();
+import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
+// import ArrowIcon from "../icon/ArrowIcon/ArrowIcon";
+// import { Link } from "react-router-dom";
+// import { paths } from "../../routes/paths.ts";
 
+function TableList({ category }) {
+  const navigate = useNavigate();
+
+  const {
+    searchResults,
+    currentPage,
+    itemsPerPage,
+    products,
+    setProducts,
+    setTotalPages,
+  } = useSearchContext();
   const [confirmationIndex, setConfirmationIndex] = useState(-1);
   const [openIndex, setOpenIndex] = useState(-1);
 
@@ -20,52 +29,110 @@ function TableList() {
     setConfirmationIndex(-1);
   }, [currentPage]);
 
-  const itemsToDisplay = searchResults || products;
+  // useEffect(() => {
+  //   console.log("Search Results:", searchResults);
+  //   console.log("Products:", products);
+  //   // Otros console.log si es necesario
+  // }, [searchResults, products, currentPage]);
+
+  // const itemsToDisplay = searchResults || products
+  const itemsToDisplay = Array.isArray(searchResults)
+    ? searchResults
+    : Array.isArray(products)
+    ? category
+      ? products.filter((product) => product.rubro === category)
+      : products
+    : [];
+
+  console.log(itemsToDisplay);
+
+  useEffect(() => {
+    if (category) {
+      setTotalPages(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }
+  }, [category, itemsPerPage, itemsToDisplay.length, setTotalPages]);
 
   const columns = [
-    "Acciones",
-    "Imagen",
     "Codigo",
-    "CodigoOEM",
-    "Código Tango",
+    "SKU",
+    "OEM",
     "Descripción",
     "Rubro",
-    "Precio",
-    "Stock",
     "Origen",
     "MarcasCompat",
+    "Precio",
+    "Kit",
+    "Stock",
     "¿Stock?",
     "Devoluciones",
-    "Kit",
-    "Código de Barras",
+    "Check",
   ];
 
-  const handleDeleteConfirmation = (index: any) => {
-    setConfirmationIndex(index);
+  // Initialize all columns as not shrunk
+  const [shrunkColumns, setShrunkColumns] = useState(
+    new Array(columns.length).fill(false)
+  );
+
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const toggleColumnWidth = (index: any) => {
+    setShrunkColumns((shrunkColumns) =>
+      shrunkColumns.map((isShrunk, i) => (i === index ? !isShrunk : isShrunk))
+    );
+  };
+
+  const columnStyles = (isShrunk: boolean) => ({
+    width: isShrunk ? "30px" : "auto",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    borderRight: "0px solid #aaa",
+  });
+
+  const handleEdit = (index: string) => {
+    const productToEdit = itemsToDisplay[index];
+    console.log(productToEdit);
+    if (productToEdit) {
+      const prodCod = productToEdit.codigoInt;
+      // deleteProducts(prodCod);
+      // setOpenIndex(-1);
+      // setConfirmationIndex(-1);
+    }
+  };
+
+  const handleDeleteConfirmation = (pageIndex: any) => {
+    const indexInOriginalArray = (currentPage - 1) * itemsPerPage + pageIndex;
+    console.log("index", indexInOriginalArray);
+    setConfirmationIndex(indexInOriginalArray);
+    // setConfirmationIndex(index);
   };
 
   const handleDelete = () => {
     const productToDelete = itemsToDisplay[confirmationIndex];
-    console.log(productToDelete);
-    if (productToDelete) {
-      const prodCod = productToDelete.CodOEM;
+    const prodCod = productToDelete.codigoInt;
+    if (prodCod) {
       deleteProducts(prodCod);
-      setOpenIndex(-1);
-      setConfirmationIndex(-1);
+      // navigate(0)
     }
   };
+
   return (
     <>
-      <div className="overflow-y-auto max-h-[calc(88vh-3rem)]">
-        <table className="w-full text-left">
-          <thead className="sticky top-0 bg-gray-900 text-gray-100 align-center">
+      <div className="overflow-x-auto max-h-[calc(90vh-3rem)]">
+        <table className="w-full h-[80vh] text-left">
+          <thead className="sticky top-0 bg-gray-600 text-gray-100 ">
             <tr className="text-gray-100">
+              <th className="font-bold text-gray-100 bg-gray-600 px-4 pt-2 pb-3  dark:border-gray-800 rounded-3xl">
+               <div>
+                Acciones
+               </div>
+              </th>
               {columns.map((column, index) => (
                 <th
                   key={index}
-                  className={`font-bold text-gray-400 bg-gray-900 px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 ${
-                    index === 6 ? "hidden md:table-cell" : "" // Hide column at index 6 on medium screens
-                  }`}
+                  onClick={() => toggleColumnWidth(index)}
+                  className="cursor-pointer text-gray-100 bg-gray-900 px-3 pb-3 items-center border-b pt-2 items-center justify-center"
+                  style={columnStyles(shrunkColumns[index])}
                 >
                   {column}
                 </th>
@@ -74,8 +141,6 @@ function TableList() {
           </thead>
 
           <tbody className="text-gray-100">
-            {/* {products.map((product, index) => ( */}
-
             {itemsToDisplay
               .slice(
                 (currentPage - 1) * itemsPerPage,
@@ -83,119 +148,74 @@ function TableList() {
               )
               .map((product, index) => (
                 <tr key={index}>
-                  <td className="relative sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                  <td className="relative flex items-center justify-center h-full hover:bg-slate-600">
                     <button
                       onClick={() =>
-                        setOpenIndex(openIndex === index ? -1 : index)
+                        setOpenDropdown(openDropdown === index ? null : index)
                       }
+                      className="h-full "
                     >
-                      <OptionsIcon />
+                      <OptionsIcon color="white" />
                     </button>
-                    {openIndex === index && (
-                      <>
-                        <ArrowIcon className="rotate-180 text-gray-400 absolute right-4 top-3.5" />
-                        <div className="absolute top-0 left-12 mt-2 w-48 bg-gray-800 border border-gray-600 divide-y divide-gray-600 rounded-md shadow-lg text-white z-50">
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Editar
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p
-                              className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer"
-                              onClick={() => handleDeleteConfirmation(index)}
-                            >
-                              Eliminar
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Agregar ingreso
-                            </p>
-                          </Link>
-
-                          <Link to="">
-                            <p className="block px-4 py-2 text-sm text-white hover:bg-gray-600 cursor-pointer">
-                              Agregar egreso
-                            </p>
-                          </Link>
+                    {openDropdown === index && (
+                      <div className="z-50 absolute -right-[120px] w-32 rounded-md shadow-lg bg-gray-700">
+                        <div className="py-1">
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
+                            role="menuitem"
+                            onClick={() => handleEdit(index)}
+                          >
+                            Editar
+                          </a>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
+                            role="menuitem"
+                            onClick={() => handleDeleteConfirmation(index)}
+                          >
+                            Eliminar
+                          </a>
                         </div>
-                      </>
+                      </div>
                     )}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-100">
-                    <div className="flex items-center">
-                      <img
-                        src="/vite.svg"
-                        alt={`foto producto ${product.Codigo}`}
-                      />
-                    </div>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                    {product.codigoInt || "-"}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    {product.codigoTango || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Codigo.length > 5
-                      ? `${product.Codigo.slice(0, 5)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.Codigo}
+                    {product.codOEM || "-"}
+                  </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    <div className="">{product.descripcion || "-"}</div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {/* {product.CodBarras.length > 6
-                      ? `${product.CodBarras.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras} */}
-
-                    {product.CodOEM}
+                    {product.rubro || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodTango}
+                    {product.origen}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    <div className="">
-                      {product.Producto.length > 16
-                        ? `${product.Producto.slice(0, 16)}...` // Trunca la cadena si tiene más de 20 caracteres
-                        : product.Producto}
-                    </div>
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 md:table-cell hidden">
-                    {product.Rubro.length > 6
-                      ? `${product.Rubro.slice(0, 6)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.Rubro}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 text-green-500">
-                    ${product.Precio}
-                  </td>
-
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-              {product.marcasCompatibles}
-            </td> */}
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {/* cantidadStock */}
-                    {product.Stock}
-                  </td>
-                  {/* <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras.length > 4
-                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras}
-                  </td> */}
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Origen}
+                    {product.marcasCompatibles || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.marcasCompatibles}
+                    {product.precio || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-80  md:table-cell hidden0">
                     {product.hasStock ? "Sí" : "No"}
                   </td>
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    {product.kit ? "Sí" : "No"}
+                  </td>
 
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Devoluciones}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                    {product.contadorDevoluciones || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.Kit ? "Sí" : "No"}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras.length > 4
-                      ? `${product.CodBarras.slice(0, 4)}...` // Trunca la cadena si tiene más de 20 caracteres
-                      : product.CodBarras}
+                    {product.CodBarras ? "-" : "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800"></td>
                 </tr>
@@ -218,8 +238,9 @@ function TableList() {
           </div>
         </div>
       )}
-
-      <Pagination />
+      <div className="mt-4">
+        <Pagination />
+      </div>
     </>
   );
 }

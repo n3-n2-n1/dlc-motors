@@ -1,48 +1,40 @@
-import ErrorCard from "../../components/ErrorCard/ErrorCard"
-import ErrorInform from "../../components/ErrorInform/ErrorInform"
+import { Link } from "react-router-dom";
 
-const OutcomeObservations = [] || undefined
+import { useSearchContext } from "../../contexts/SearchContext";
 
-const products = [] || undefined
+import { ErrorsObservations } from "../../routes/routes";
+
+import ErrorInform from "../../components/ErrorInform/ErrorInform";
 
 const Errors = () => {
+  const { products } = useSearchContext();
+
   return (
-    <div className="flex flex-col overflow-x-auto w-full bg-gray-900 flex text-sm p-6 h-screen">
+    <div className="flex flex-col overflow-x-auto w-full bg-gray-900 flex text-sm h-screen pt-6">
       <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
         <div className="mr-6">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">Errores</h1>
-          <h2 className="text-gray-500">Reporta y visualiza errores.</h2>
+          <h1 className="text-3xl text-white font-weight-300">Errores</h1>
         </div>
-        <div className="justify-center">
-          <div className="mt-6"></div>
-        </div>
-      </div>
-
-
-      <div className="flex flex-col">
-
-      <div className="">
-      <ErrorInform observationsList={OutcomeObservations} products={products} />
-      </div>
-
-      <div className="mt-14">
-      <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-dark-gray">
-        <div className="mr-6">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">Historial de errores</h1>
-          <h2 className="text-gray-500">Ultimos errores reportados</h2>
-        </div>
-        <div className="justify-center">
-          <div className="mt-6"></div>
+        <div className="bg-white rounded rounded-full justify-center hover:bg-blue-700">
+          <div className="">
+            <Link to="/historyView">
+              <button className="p-3 text-md text-gray-800 font-bold hover:text-white">
+                Historial
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
-      <ErrorCard />
-      </div>
-    
-      </div>
 
-
+      <div className="flex flex-col w-full">
+        <ErrorInform
+          formName="Errores"
+          observationsList={ErrorsObservations}
+          products={products}
+        />
+      </div>
     </div>
-  )
-  }  
+  );
+};
 
-export default Errors
+export default Errors;

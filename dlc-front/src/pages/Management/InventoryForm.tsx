@@ -11,36 +11,38 @@ interface InventoryFormProps {
 
 // Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
-  productCode: Yup.string().required("Campo requerido"),
-  description: Yup.string().required("Campo requerido"),
-  fixedStock: Yup.number().required("Campo requerido"),
-  appliedFix: Yup.number().required("Campo requerido"),
+  codigoInt: Yup.string().required("Campo requerido"),
+  desc: Yup.string().required("Campo requerido"),
+  stockAct: Yup.number().required("Campo requerido"),
+  arreglo: Yup.number().required("Campo requerido"),
 });
 
 // Componente funcional del formulario de inventario
 const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   // Valores iniciales del formulario
   const initialValues = {
-    date: "",
-    movementType: "",
-    productCode: "",
-    description: "",
-    fixedStock: null,
-    appliedFix: null,
+    fecha: "",
+    codOEM: null,
+    tipoMov: "",
+    codigoInt: "",
+    desc: "",
+    stockAct: null,
+    arreglo: null,
   };
 
   interface IProduct {
     Codigo: string;
     Producto: string;
     Stock: number;
+    CodOEM: string;
   }
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      createMovement(values)
-      alert('Creado');
+      createMovement(values);
+      alert("Creado");
       console.log(values);
     },
   });
@@ -50,24 +52,27 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
 
   // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
   useEffect(() => {
-    formik.setFieldValue("date", new Date().toLocaleString());
-    formik.setFieldValue('movementType', 'Inventario');
+    formik.setFieldValue("fecha", new Date().toLocaleString());
+    formik.setFieldValue("tipoMov", "Inventario");
+    formik.setFieldValue("codOEM", selectedProduct?.CodOEM);
+    formik.setFieldValue("desc", selectedProduct?.Producto);
+    formik.setFieldValue("stock", selectedProduct?.Stock);
   }, [selectedProduct]);
 
+  useEffect(() => {
+    if (formik.values.stockAct !== null && selectedProduct !== null) {
+      const arreglo = formik.values.stockAct - selectedProduct.Stock;
+      formik.setFieldValue("arreglo", arreglo);
+    }
+  }, [formik.values.stockAct]);
+
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block hidden p-6">
+    <div className="bg-gray-900 w-full flex-shrink-0 h-screen lg:block hidden pt-6 overflow-y-auto">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="mr-6 flex-row">
-          <h1 className="text-4xl mb-2 text-white font-weight-300">
+          <h1 className="text-3xl mb-4 text-white font-weight-300">
             Inventario
           </h1>
-          <h2 className="text-gray-500 mb-4">
-            Informá sobre movimientos de inventario <br />
-            <span className="text-xs underline">
-              Lo usamos para arreglar el stock de las cosas que contamos y nos
-              dan mal
-            </span>
-          </h2>
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
@@ -90,35 +95,51 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="productCode"
+                htmlFor="codigoInt"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Código de Producto:
               </label>
               <input
                 type="text"
-                id="productCode"
-                name="productCode"
+                id="codigoInt"
+                name="codigoInt"
                 // value={selectedProduct?.Codigo || ""}
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
-                  const productCode = e.target.value;
+                  const codigoInt = e.target.value;
                   const product = products.find(
-                    (product) => product.Codigo === productCode
+                    (product) => product.Codigo === codigoInt
                   );
                   product && setSelectedProduct(product);
                   product || setSelectedProduct(null);
 
-                  formik.setFieldValue("productCode", productCode);
+                  formik.setFieldValue("codigoInt", codigoInt);
                 }}
                 onBlur={formik.handleBlur}
-                // value={formik.values.productCode}
+                // value={formik.values.codigoInt}
               />
-              {formik.touched.productCode && formik.errors.productCode ? (
+              {formik.touched.codigoInt && formik.errors.codigoInt ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.productCode}
+                  {formik.errors.codigoInt}
                 </div>
               ) : null}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="codOEM"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Código OEM
+              </label>
+              <input
+                type="text"
+                id="codOEM"
+                name="codOEM"
+                value={selectedProduct?.CodOEM || "codOEM no encontrado"}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
+              />
             </div>
             <div className="mb-4">
               <label
@@ -153,50 +174,26 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
               />
             </div>
 
-            {/* Campo de Detalle */}
-            <div className="mb-4">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
-              >
-                Descripción:
-              </label>
-              <input
-                type="text"
-                id="description"
-                name="description"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.description}
-              />
-              {formik.touched.description && formik.errors.description ? (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.description}
-                </div>
-              ) : null}
-            </div>
-
             {/* Campo de Cantidad */}
             <div className="mb-4">
               <label
-                htmlFor="fixedStock"
+                htmlFor="stockAct"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Stock Arreglado:
               </label>
               <input
                 type="number"
-                id="fixedStock"
-                name="fixedStock"
+                id="stockAct"
+                name="stockAct"
                 className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.fixedStock || ""}
+                value={formik.values.stockAct || ""}
               />
-              {formik.touched.fixedStock && formik.errors.fixedStock ? (
+              {formik.touched.stockAct && formik.errors.stockAct ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.fixedStock}
+                  {formik.errors.stockAct}
                 </div>
               ) : null}
             </div>
@@ -204,23 +201,24 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
             {/* Campo de OEM Producto */}
             <div className="mb-4">
               <label
-                htmlFor="appliedFix"
+                htmlFor="arreglo"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
                 Arreglo realizado (-1, +5, -3…):
               </label>
               <input
                 type="number"
-                id="appliedFix"
-                name="appliedFix"
-                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                id="arreglo"
+                name="arreglo"
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-700 disabled:text-white"
+                disabled
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.appliedFix || ""}
+                value={formik.values.arreglo || ""}
               />
-              {formik.touched.appliedFix && formik.errors.appliedFix ? (
+              {formik.touched.arreglo && formik.errors.arreglo ? (
                 <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.appliedFix}
+                  {formik.errors.arreglo}
                 </div>
               ) : null}
             </div>
