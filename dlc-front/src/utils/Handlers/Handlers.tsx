@@ -124,7 +124,10 @@ const fetchCosts = async () => {
 
 const createUser = async (userData: string) => {
   try {
+
     const response = await fetch(`${URL}/api/v1/users/register`, {
+
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -142,13 +145,27 @@ const createUser = async (userData: string) => {
     toast.success("creado");
     location.reload();
   } catch (error) {
-    console.error("Error creating user:", error);
+
+    console.error("Error creating product:", error);
+  }
+};
+
+const fetchProducts = async () => {
+  try {
+    const response = await fetch("https://crystal-dev.site/productos"); // Reemplaza con la ruta correcta
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error; // Puedes manejar el error aquí o dejar que el componente principal lo maneje
+
   }
 };
 
 const createProduct = async (productData: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/products`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +185,6 @@ const createProduct = async (productData: any) => {
     console.error("Error creating product:");
   }
 };
-
 const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0]; // Verifica si target y files están definidos
   if (!file) {
@@ -197,6 +213,7 @@ const handleAddMassive = async (event: React.ChangeEvent<HTMLInputElement>) => {
 const createError = async (errorData: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/productErrors`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -219,6 +236,7 @@ const createError = async (errorData: any) => {
 const createReturns = async (returnData: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/returns`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -240,7 +258,9 @@ const createReturns = async (returnData: any) => {
   }
 };
 
-const createMovement = async (movementData: any) => {
+
+const LoginUser = async (values: any) => {
+  const url = "https://crystal-dev.site/usuarios/login";
   try {
     const response = await fetch(`${URL}/api/v1/movements`, {
       method: "POST",
@@ -250,13 +270,30 @@ const createMovement = async (movementData: any) => {
       body: JSON.stringify(movementData),
     });
 
+
+    return response; // Devuelve la respuesta para que pueda ser manejada en el código que llama a LoginUser
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error; // Re-lanza el error para que pueda ser manejado en el código que llama a LoginUser
+  }
+};
+
+const fetchHistorial = async () => {
+  try {
+    const response = await fetch("https://crystal-dev.site/historial");
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error);
     }
 
-    const responseData = await response.json();
-    console.log("Movimientosss created successfully:", responseData);
+
+const fetchMoves = async () => {
+  try{
+    const response = await fetch("https://crystal-dev.site/moves")
+    if (!response.ok) {
+      throw new Error("Error al obtener el historial de acciones");
+    }
+    return await response.json();  // Retorna los datos
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -265,6 +302,7 @@ const createMovement = async (movementData: any) => {
 const createDelivery = async (deliveryData: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/delivery`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -337,6 +375,7 @@ const LoginUser = async (values: any) => {
 const logoutUser = async () => {
   try {
     const response = await fetch(`${URL}/api/v1/logout`, {
+
       method: "POST",
     });
   } catch (error) {
