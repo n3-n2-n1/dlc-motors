@@ -5,7 +5,7 @@ import { OutcomeObservations } from "../../routes/routes";
 import { useUser } from "../../contexts/UserContext";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 import Navbar from "../../components/Navbar/Navbar";
-interface Notification {
+export interface Notification {
   name: string;
   message: string;
   image?: string;
@@ -14,7 +14,7 @@ interface Notification {
   rubro?: string;
   oem?: string;
   origen?: string;
-  stock?: number;
+  stock?: string;
 }
 
 

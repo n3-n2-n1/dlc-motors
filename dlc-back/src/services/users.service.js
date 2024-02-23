@@ -1,21 +1,52 @@
 import jwt from "jsonwebtoken";
-
 import db from "../database/db.js";
+import config from "../config/config.js";
 
-import { isValidPassword } from "../utils/bcrypt.js";
+import UserDTO from "../dao/dtos/user.dto.js";
 
-const secretKey = "12233"; // Debes cambiar esto y utilizar una clave segura
+import { isValidPassword, createHash } from "../utils/bcrypt.js";
+
+const {
+  jwt: { JWT_SECRET },
+} = config;
 
 export default class UserService {
   constructor() {}
 
   // Función para generar un token de sesión (deberías implementar esta función)
-  generateSessionToken(userId) {
-    const token = jwt.sign({ userId }, secretKey, { expiresIn: "1h" });
+  async generateSessionToken(jwtUser) {
+    const token = jwt.sign(jwtUser, JWT_SECRET);
     return token;
   }
 
-  // Función para comparar contraseñas
+  // Funcion para decodificar el JWT
+  async decodeUser(token) {
+    try {
+      const decodedToken = jwt.verify(token, JWT_SECRET, {
+        ignoreExpiration: true,
+      });
+      return decodedToken;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Función para loguear al usuario generando un JWT
+  loginUser(user) {
+    try {
+      const userDTO = new UserDTO(user);
+      const jwtUser = JSON.parse(JSON.stringify(userDTO));
+
+      const token = jwt.sign(jwtUser, JWT_SECRET);
+      if (!token) throw new Error("Error al generar token de autenticación");
+
+      return token;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Función para comparar contraseñas y ver si la ingresada es correcta
   passwordValidate(user, password) {
     return isValidPassword(user, password);
   }
@@ -27,23 +58,28 @@ export default class UserService {
           console.error("Error al obtener los usuarios", error);
           reject(new Error("Error al obtener los usuarios."));
         } else {
-          resolve(results);
+          const usersDTO = results.map((user) => {
+            const userDTO = new UserDTO(user);
+            return JSON.parse(JSON.stringify(userDTO));
+          });
+
+          resolve(usersDTO);
         }
       });
     });
   }
 
-  async getUserByEmail(email) {
+  async getUserByUsername(username) {
     return new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM usuarios WHERE Email = ?",
-        [email],
+        "SELECT * FROM usuarios WHERE username = ?",
+        [username],
         (err, results) => {
           if (err) {
-            console.error(err.message);
-            reject(new Error(`Error al obtener el usuario ${email}.`));
+            console.error(err);
+            reject(new Error(`Error al obtener el usuario ${username}.`));
           } else {
-            resolve(results);
+            resolve(results[0]);
           }
         }
       );
@@ -51,16 +87,10 @@ export default class UserService {
   }
 
   async registerUser(newUser) {
-    // Verificar que el usuario no exista
-    // const result = await this.getUserByEmail(newUser.email);
-    // if (result.length > 0) {
-    //     throw new Error(`El usuario ${newUser.email} ya existe.`);
-    // }
-    console.log(newUser);
     return new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO usuarios (name, password, role) VALUES (?, ?, ?)",
-        [newUser.name, newUser.password, newUser.role],
+        "INSERT INTO usuarios (name, password, role, username) VALUES (?, ?, ?, ?)",
+        [newUser.name, newUser.password, newUser.role, newUser.username],
         (error, results) => {
           if (error) {
             console.error(error);
@@ -73,14 +103,38 @@ export default class UserService {
     });
   }
 
-  async createDelivery() {
+  async editUser(userToUpdate) {
+    userToUpdate.password = createHash(userToUpdate.password);
+
     return new Promise((resolve, reject) => {
+      // db.query(
+      //   `UPDATE usuarios
+      //   SET
+      //     password = COALESCE(?, password),
+      //     role = COALESCE(?, role),
+      //     name = COALESCE(?, name)
+      //   WHERE
+      //     (password IS NOT NULL OR ? IS NOT NULL)
+      //     AND (role IS NOT NULL OR ? IS NOT NULL)
+      //     AND (name IS NOT NULL OR ? IS NOT NULL); `,
+      //   [userToUpdate.name, userToUpdate.password, userToUpdate.role],
       db.query(
-        "INSERT INTO delivery (fecha, observacion, numImpo, cantidad, codInt, descripcion, oem, productos, stockDeposito, stockAcumulados) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [historialData.accion, historialData.descripcion, historialData.fecha],
+        `UPDATE usuarios
+        SET 
+          password = ?,
+          role = ?,
+          name = ?
+        WHERE username = ?;`,
+        [
+          userToUpdate.password,
+          userToUpdate.role,
+          userToUpdate.name,
+          userToUpdate.username,
+        ],
         (error, results) => {
           if (error) {
-            reject(new Error("Error al crear los pedidos/delivery"));
+            console.error(error);
+            reject(new Error("Error al editar el usuario"));
           } else {
             resolve(results);
           }

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
+import { editUser } from "../../utils/Handlers/Handlers";
 
 const UserCard = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editFormData, setEditFormData] = useState({
+  const [userToUpdate, setUserToUpdate] = useState({
     name: user.name,
     role: user.role,
     password: user.password,
+    username: user.username,
   });
 
   const handleEditUser = () => {
@@ -18,7 +21,8 @@ const UserCard = ({ user }) => {
 
   const handleSubmitEdit = (e) => {
     e.preventDefault();
-    console.log(editFormData);
+    console.log(userToUpdate);
+    editUser(userToUpdate);
     setIsEditing(false);
   };
 
@@ -31,24 +35,24 @@ const UserCard = ({ user }) => {
         >
           <input
             type="text"
-            value={editFormData.name}
+            value={userToUpdate.name}
             onChange={(e) =>
-              setEditFormData({ ...editFormData, name: e.target.value })
+              setUserToUpdate({ ...userToUpdate, name: e.target.value })
             }
             className="mt-1 block w-full p-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white text-black"
           />
           <input
             type="password"
-            value={editFormData.password}
+            value={userToUpdate.password}
             onChange={(e) =>
-              setEditFormData({ ...editFormData, password: e.target.value })
+              setUserToUpdate({ ...userToUpdate, password: e.target.value })
             }
             className="mt-1 block w-full p-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white text-black"
           />
           <select
-            value={editFormData.role}
+            value={userToUpdate.role}
             onChange={(e) =>
-              setEditFormData({ ...editFormData, role: e.target.value })
+              setUserToUpdate({ ...userToUpdate, role: e.target.value })
             }
             className="mt-1 block w-full p-1 border border-gray-300 text-black dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white *:text-black"
           >
@@ -83,7 +87,7 @@ const UserCard = ({ user }) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="rounded-full w-4 h-4 border border-purple-500"></div>
-                <div className="text-xl font-bold">{user.name}</div>
+                <div className="text-xl font-bold">{user.username}</div>
               </div>
               <div className="flex items-center space-x-4">
                 <button
@@ -96,8 +100,8 @@ const UserCard = ({ user }) => {
                 </button>
               </div>
             </div>
+            <div className="mt-4 text-gray-400 font-bold text-sm">Nombre: {user.name}</div>
             <div className="mt-4 text-gray-400 font-bold text-sm">Rol: {user.role}</div>
-            <div className="mt-2 text-gray-300 font-bold text-sm">Contraseña: {user.password}</div>
           </div>
         </div>
       )}

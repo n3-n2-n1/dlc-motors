@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Login from "./pages/login/login";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { NotificationsProvider } from "./contexts/NotificactionsContext";
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -26,12 +27,14 @@ const App = () => {
 
   return (
     <SearchProvider {...(props as any)}>
+      <NotificationsProvider>
       <FilterValuesProvider>
       <Suspense fallback={<Loader />}>
       <ToastContainer />
         {authenticated ? <AppRoutes /> : <Login />}
       </Suspense>
       </FilterValuesProvider>
+      </NotificationsProvider>
     </SearchProvider>
   );
 };

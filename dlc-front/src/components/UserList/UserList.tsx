@@ -1,5 +1,4 @@
 import { useUser } from "../../contexts/UserContext";
-
 import UserForm from "../../pages/users/UserForm";
 import Navbar from "../Navbar/Navbar";
 import UserCard from "./UserCard";

@@ -1,36 +1,21 @@
-import {userService}  from "../services/services.js";
+import { userService } from "../services/services.js";
+import config from "../config/config.js";
 
-// export const createUser = async (newUser, res) => {
-//   const { name, password, role } = newUser;
-
-//   // console.log(newUser);
-
-//   db.query(
-//     "INSERT INTO usuarios (name, password, role) VALUES (?, ?, ?, ?)",
-//     [name, password, role],
-//     (err, results) => {
-//       if (err) {
-//         console.error(err.message);
-//         res.status(500).json({ error: "Error al crear el usuario" });
-//         return;
-//       }
-//     }
-//   );
-// };
+const {
+  jwt: { JWT_COOKIE },
+} = config;
 
 export const registerUser = async (req, res) => {
   try {
-    console.log("user registrado")
-    // return res
-    //   .status(201)
-    //   .send({ status: 'success', message: 'User registered' })
+    return res
+      .status(201)
+      .send({ status: "success", message: "User registered" });
   } catch (error) {
-    console.trace(`Failed to register user: ${error}`)
-    // return res
-    //   .status(500)
-    //   .send({ status: 'error', error: 'Failed to register user' })
+    return res
+      .status(500)
+      .send({ status: "error", error: `Failed to register user: ${error}` });
   }
-}
+};
 
 export const getUsers = async (req, res) => {
   try {
@@ -56,22 +41,22 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const getUserByEmail = async (req, res) => {
-  const { email } = req.params;
+export const getUserByUsername = async (req, res) => {
+  const { username } = req.params;
 
-  if (!email) {
+  if (!username) {
     return res.status(400).send({
       status: "error",
       error: "Incomplete values",
     });
   }
 
-  const user = await userService.getUserByEmail(email);
+  const user = await userService.getUserByUsername(username);
 
   if (!user || user.length === 0) {
     return res.status(404).send({
       status: "error",
-      error: `User with email '${email}' was not found`,
+      error: `User with username '${username}' was not found`,
     });
   }
 
@@ -81,74 +66,93 @@ export const getUserByEmail = async (req, res) => {
   });
 };
 
-export const getUserByEmailAlt = (email) => {
-  return new Promise((resolve, reject) => {
-    db.query("SELECT * FROM usuarios WHERE Email = ?", [email], (err, results) => {
-      if (err) {
-        console.error(`Error al obtener el usuario ${email}: ${err}`);
-        reject(err);
-      } else if (results.length === 0) {
-        console.error(`No se encontró el usuario ${email}.`);
-        resolve(null);
-      } else {
-        resolve(results[0]);
-      }
-    });
-  });
-};
-
 //Loguearse
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password) {
+    if (!username || !password) {
       return res
         .status(400)
-        .send({ status: 'error', error: 'Datos incompletos.' })
+        .send({ status: "error", error: "Datos incompletos." });
     }
 
-    // Obtener usuario por correo electrónico desde la base de datos
-    // Esto vuela cuando se refactoriza a MVC piola
-    const user = await getUserByEmailAlt(email);
+    const user = await userService.getUserByUsername(username);
 
-    if (!user) {
-      return res.status(401).json({ error: "Usuario incorrecto", email });
-    }
-
-    if (!passwordValidate(user, password)) {
+    if (!user || user.length === 0) {
       return res
         .status(401)
-        .send({ status: 'error', error: 'Contraseña incorrecta.' })
-        // generalizar este mensaje luego
+        .json({ error: "Usuario incorrecto o inexistente" });
     }
-s
-    // // Verificar si la contraseña coincide (en texto plano)
-    // if (password !== user.password) {
-    //   return res.status(401).json({ error: "Contraseña incorrecta" });
-    // }
 
-    const token = generateSessionToken(user.email);
-    // Verificar si la respuesta ya ha sido enviada antes de enviarla nuevamente
-    if (!res.headersSent) {
-      res.json({ token });
+    if (!userService.passwordValidate(user, password)) {
+      return res
+        .status(401)
+        .send({ status: "error", error: "Contraseña incorrecta." });
     }
+
+    const token = userService.loginUser(user);
+
+    if (!token) {
+      return res
+        .status(500)
+        .send({
+          status: "error",
+          error: "Error al generar token de autenticación",
+        });
+    }
+
+    return res
+      .cookie(JWT_COOKIE, token, { httpOnly: true })
+      .send({ status: "success", message: "Logueado exitosamente" });
   } catch (error) {
     console.error("Error al intentar iniciar sesión:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ error: "Error interno del servidor", error });
   }
-}
+};
 
+export const updateUser = async (req, res) => {
+  try {
+    const username = req.params.username;
 
-// export const errorFatal = async (req, res) =>{
-//   return res
-//   .status(401)
-//   .send({ status: 'error', error: 'Contraseña incorrecta.' })
-// }
+    if (!username) {
+      return res.status(400).send({
+        status: "error",
+        error: "Falta el nombre de usuario",
+      });
+    }
 
+    const userToUpdate = req.body;
+
+    if (!userToUpdate) {
+      return res.status(400).send({
+        status: "error",
+        error: "Faltan los datos del usuario a editar",
+      });
+    }
+
+    const userUpdated = await userService.editUser(userToUpdate);
+
+    if (!userUpdated) {
+      return res.status(404).send({
+        status: "error",
+        error: `Error al editar el usuario ${username}`,
+      });
+    }
+
+    res.status(200).send({
+      status: "success",
+      payload: userUpdated,
+    });
+  } catch (error) {
+    console.error("Error al intentar editar usuario", error);
+    res.status(500).send({
+      status: "error",
+      error: `Error interno del servidor: ${error}`,
+    });
+  }
+};
 
 export const logoutUser = async (req, res) => {
-  return sessionStorage.removeItem('miTokenJWT').then(
-    location.reload()
-  )
-}
+  return sessionStorage.removeItem("miTokenJWT").then(location.reload());
+};

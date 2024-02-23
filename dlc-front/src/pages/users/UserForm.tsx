@@ -10,6 +10,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("Campo requerido"),
   password: Yup.string().required("Campo requerido"),
   role: Yup.string().required("Campo requerido"),
+  username: Yup.string().required("Campo requerido"),
 });
 
 /** Administrador
@@ -35,6 +36,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     name: "",
     password: "",
     role: "",
+    username: "",
   };
 
   const formik = useFormik({
@@ -77,7 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
-                Nombre completo:
+                Nombre completo
               </label>
               <input
                 type="text"
@@ -94,8 +96,28 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 </div>
               ) : null}
             </div>
-
-
+            <div className="mb-4">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+              >
+                Nombre de Usuario
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.username}
+              />
+              {formik.touched.username && formik.errors.username ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.username}
+                </div>
+              ) : null}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="password"
@@ -118,7 +140,6 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
                 </div>
               ) : null}
             </div>
-
             <div className="mb-4">
               <label
                 htmlFor="role"

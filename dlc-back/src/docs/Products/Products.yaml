@@ -1,0 +1,281 @@
+paths:
+  /api/v1/products:
+    get:
+      summary: Get the first 10 products, the default response will be paginated with 10 products each page. This endpoint can be accessed publicly.
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          description: Products to return per page, default is 10.
+          schema:
+            type: number
+        - name: page
+          in: query
+          description: Page number for which the query will begin, default is 1.
+          schema:
+            type: number
+        - name: category
+          in: query
+          description: Request products that have the stated category, default is null.
+          schema:
+            type: string
+        - name: available
+          in: query
+          description: Request products according to availability, default is null.
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          description: Request products sorted by price, default is 1, which means ascending order.
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Products were successfully obtained.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      docs:
+                        type: array
+                        items:
+                          $ref: "#components/schemas/Product"
+        "400":
+          description: One or more parameters in the request are missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 400
+                  error:
+                    type: string
+                    example: Page XXX is not a valid value
+        "404":
+          description: No products found for established query.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  error:
+                    type: string
+                    example: No products found
+        "500":
+          description: Internal server error, usually caused by a defective query or a database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  error:
+                    type: string
+                    example: Failed to get products
+    post:
+      summary: Create a new product in the database, only "admin" and "premium" roles can access this endpoint.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addProduct"
+      responses:
+        "201":
+          description: Product successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: One or more parameters in the request are missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 400
+                  error:
+                    type: string
+                    example: Incomplete values
+        "401":
+          description: Authentication error, usually because the user is not logged in.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  error:
+                    type: string
+                    example: Unauthorized
+        "403":
+          description: Authorization error, usually because the user doesn't have the required permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 403
+                  error:
+                    type: string
+                    example: Forbidden
+        "404":
+          description: There was a problem creating the product, usually caused by a database or token validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  error:
+                    type: string
+                    example: Error trying to create new product
+        "500":
+          description: Internal server error, usually caused by a defective query or a database error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  error:
+                    type: string
+                    example: Failed to add new product
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Mongo auto-generated ID
+        status:
+          type: boolean
+          description: Wether the product is in stock or not
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        code:
+          type: string
+          description: Product code (It's an unique field)
+        price:
+          type: number
+          description: Product price
+        stock:
+          type: number
+          description: Product available stock
+        category:
+          type: string
+          description: Product Category
+        owner:
+          type: string
+          description: The user that created the product, it's "admin" by default
+        thumbnails:
+          type: array
+          description: Product images
+      example:
+        _id: 642c8adb6dbaaa8e907e0140
+        status: true
+        title: Nvidia Geforce GTX 1660 6GB
+        description: Low-end Gaming GPU
+        code: GTX1660-ASUS
+        price: 125000
+        stock: 24
+        category: GPU
+        owner: mypremiumuser@mymail.com
+        thumbnails:
+          ["thumbnails/1680640731988-1660-1.jpg", "thumbnails/1680640731989-1660-2.jpg"]
+    FakeProduct:
+      allOf:
+        - $ref: "#/components/schemas/Product"
+      example:
+        _id: d1ffa50fab3a4ddda6fedffc
+        status: true
+        title: Practical Plastic Keyboard
+        description: The Apollotech B340 is an affordable wireless mouse with reliable connectivity
+        code: 3USxyzohE3uV8KB6
+        price: 1066928
+        stock: 66
+        category: Sports
+        thumbnails:
+          ["https://loremflickr.com/640/480?lock=1640608940687360", "https://loremflickr.com/640/480?lock=7744375645798400"]
+  requestBodies:
+    addProduct:
+      type: object
+      properties:
+        status:
+          type: boolean
+          description: Wether the product is in stock or not
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        code:
+          type: string
+          description: Product code (It's an unique field)
+        price:
+          type: number
+          description: Product price
+        stock:
+          type: number
+          description: Product available stock
+        category:
+          type: string
+          description: Product Category
+        owner:
+          type: string
+          description: The user that created the product, it's "admin" by default
+        thumbnails:
+          type: array
+          description: Product images
+      example:
+        status: true
+        title: Nvidia Geforce GTX 1660 6GB
+        description: Low-end Gaming GPU
+        code: GTX1660-ASUS
+        price: 125000
+        stock: 24
+        category: GPU
+        owner: mypremiumuser@mymail.com
+        thumbnails:
+          ["thumbnails/1680640731988-1660-1.jpg", "thumbnails/1680640731989-1660-2.jpg"]

@@ -120,9 +120,9 @@ function TableList({ category }) {
     <>
       <div className="overflow-x-auto max-h-[calc(90vh-3rem)]">
         <table className="w-full h-[80vh] text-left">
-          <thead className="sticky top-0 bg-gray-600 text-gray-100 ">
+          <thead className="sticky top-0  text-gray-100 ">
             <tr className="text-gray-100">
-              <th className="font-bold text-gray-100 bg-gray-600 px-4 pt-2 pb-3  dark:border-gray-800 rounded-3xl">
+              <th className="font-bold text-gray-100 px-4 pt-2 pb-3  rounded-3xl">
                <div>
                 Acciones
                </div>

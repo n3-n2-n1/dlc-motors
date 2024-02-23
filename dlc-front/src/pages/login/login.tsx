@@ -11,37 +11,45 @@ const validationSchema = Yup.object({
   email: Yup.string().email("Mail inválido").required("Requerido"),
   password: Yup.string().required("Requerido"),
 });
-
-
 function Login() {
   const navigate = useNavigate();
-  const [token, setToken] = useState<string | null>(null);
 
+  // useFormik hook para manejar los formularios
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "", 
+      password: "",
     },
-    validationSchema,
-    onSubmit: async values => {
+    validationSchema, // Asegúrate de definir tu esquema de validación de Yup aquí
+    onSubmit: async (values) => {
       try {
-        // Simular la llamada al backend
-        // En un entorno de producción, aquí llamarías a LoginUser(values)
-        console.log('Simulando login...');
-        
-        // Simular una respuesta exitosa después de 2 segundos
-        setTimeout(() => {
-          const fakeToken = 'fakeToken123'; // Simula un token
-          sessionStorage.setItem('miTokenJWT', fakeToken);
-          console.log('logueado exitosamente');
-          toast.success('Sesión iniciada correctamente.')
-          location.reload(); // Recargar la página (esto se puede cambiar según tu flujo)
-        }, 2000);
+        // Aquí realizas la llamada al backend con las credenciales
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
 
+        if (!response.ok) {
+          // Si la respuesta del servidor no es exitosa, maneja el error
+          throw new Error('Error de inicio de sesión');
+        }
+
+        const data = await response.json();
+        const token = data.token; // Asegúrate de que tu backend devuelva el token con esta clave
+
+        // Almacenar el token en sessionStorage o localStorage
+        sessionStorage.setItem('miTokenJWT', token);
+
+        // Mostrar mensaje de éxito y redireccionar al usuario
+        toast.success('Sesión iniciada correctamente.');
+        navigate('/home'); // Asegúrate de reemplazar esto con la ruta correcta
 
       } catch (error) {
         console.error('Error en la solicitud:', error);
-        toast.error('Error al iniciar sesión.')
+        toast.error('Error al iniciar sesión.');
       }
     },
   });

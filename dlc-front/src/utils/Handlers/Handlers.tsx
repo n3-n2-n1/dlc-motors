@@ -335,14 +335,41 @@ const LoginUser = async (values: any) => {
 };
 
 const logoutUser = async () => {
+  
+  sessionStorage.removeItem('userJWT');
+
   try {
     const response = await fetch(`${URL}/api/v1/logout`, {
       method: "POST",
-    });
+    }).then(response => {
+      if (response.ok){
+        window.location.href = '/login'
+      }
+      else {
+        console.error('Logout failed')
+      }
+    })
   } catch (error) {
     console.error("Error creating loogout");
   }
 };
+
+const editUser = async (userToUpdate: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/users/${userToUpdate.username}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userToUpdate),
+    });
+
+    const updatedUser = await response.json();
+    console.log("Edited user successfully:", updatedUser);
+  } catch (error) {
+    console.error(`Error editing user ${error}`);
+  }
+}
 
 export {
   fetchUser,
@@ -359,6 +386,7 @@ export {
   createMovement,
   createDelivery,
   logoutUser,
+  editUser,
   fetchReturns,
   fetchDelivery,
   fetchCosts,

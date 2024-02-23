@@ -8,8 +8,10 @@ import colors from "colors";
 import routerAPI from "./src/routes/routes.js";
 import initializePassport from "./src/auth/passport.js";
 
+import config from "./src/config/config.js";
+
 const app = express();
-const PORT = process.env.PORT || 3000
+const { PORT } = config;
 
 const corsOptions = {
   origin: "*",

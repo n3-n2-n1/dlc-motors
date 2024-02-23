@@ -1,8 +1,9 @@
 import { Router } from "express";
-
+import passport from "passport";
+import { verifyRole } from '../middlewares/auth.js';
 import {
   getMovements,
-  createMovement,
+  createMovementInventory
 } from "../controllers/movements.controller.js";
 
 const movementsRouter = Router();
@@ -12,7 +13,11 @@ movementsRouter.get("/", (req, res) => {
 });
 
 movementsRouter.post("/", (req, res) => {
-  createMovement(req, res);
+  createIncomeOutcome(req, res);
+});
+
+movementsRouter.post("/inventario", (req, res) => {
+  createMovementInventory(req, res);
 });
 
 export default movementsRouter;

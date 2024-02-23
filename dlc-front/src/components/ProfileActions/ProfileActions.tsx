@@ -1,6 +1,8 @@
 
 import { logoutUser } from "../../utils/Handlers/Handlers";
 import { useState } from "react";
+import NotificationIcon from "../NotificationIcon/NotificationIcon";
+
 function ProfileActions() {
   const [flyerTwo, setFlyerTwo] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState([]);
@@ -126,6 +128,7 @@ function ProfileActions() {
     
     
   </div>
+  <NotificationIcon />
 </div>
 
   );

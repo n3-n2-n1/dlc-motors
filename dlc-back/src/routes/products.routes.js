@@ -1,4 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
+import { verifyRole } from '../middlewares/auth.js';
 
 import {
   getProducts,

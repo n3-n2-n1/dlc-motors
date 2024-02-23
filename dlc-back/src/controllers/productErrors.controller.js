@@ -1,61 +1,84 @@
-import db from "../database/db.js";
+import { errorService } from "../services/services.js";
 
-export const getProductErrors = (req, res) => {
-  db.query("SELECT * FROM errores", (queryErr, rows) => {
-    if (queryErr) {
-      console.error(queryErr.message);
-      res
-        .status(500)
-        .json({ error: "Error en la consulta a la base de datos." });
-      return;
+export const getProductErrors = async (req, res) => {
+  try {
+    const errors = await errorService.getProductErrors();
+    if (!errors || errors.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: "No error found",
+      });
     }
-    
-    res.json(rows);
-  });
+
+    res.status(200).send({
+      status: "success",
+      payload: errors,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to get errors",
+    });
+
+
+  }
 };
 
-export const createProductError = (req, res) => {
-  const { fecha, observaciones, codigoInt, codOEM, descripcion, stock, detalle, stockReal, imagen  } = req.body;
-
-
-  // Realizar la lógica para insertar un nuevo producto en la base de datos
-  db.query(
-    "INSERT INTO errores (fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [fecha, observaciones, codigoInt, codOEM, descripcion, stock, detalle, stockReal, imagen],
-    function (error) {
-      if (error) {
-        console.error("An error occurred while executing the query", error);
-        res.status(500).json({ error: "Error al insertar el error." });
-        return;
-      }
+export const createProductError = async (req, res) => {
+  try {
+    const { fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img } = req.body;
+    if (!fecha) {
+      return res.status(400).send({ status: "error", error: "Incomplete values" })
     }
-  );
+    res.status(200).send({
+      status: "success",
+      payload: createdError,
+    });
+    const createdError = await ErrorService.createProductError(fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img)
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create error",
+    });
+  }
 };
 
-export const deleteProductError = (req, res) => {
+export const deleteProductError = async (req, res) => {
   const errorId = req.params.pid;
+  const deletedError = await ErrorService.deleteProductError(errorId)
 
   if (!errorId) {
     res.status(400).json({ error: "ID del producto no proporcionado." });
     return;
   }
-
-  db.query(
-    "DELETE FROM errores WHERE codInterno = ?",
-    [errorId],
-    (error, results, fields) => {
-      if (error) {
-        console.error("An error occurred while executing the query", error);
-        res.status(500).json({ error: "Error al abrir la base de datos." });
-        return;
-      }
-
-      if (results.affectedRows === 0) {
-        res.status(404).json({ error: "Error no encontrado." });
-        return;
-      }
-
-      res.status(204).json({ message: "Error eliminado correctamente." });
-    }
-  );
+  else {
+    res.status(200).json({ message: "Eliminado correctamente", payload: deletedError })
+  }
 };
+
+
+
+export const updateProductError = async (req, res) => {
+  try {
+    const { fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img } = req.body;
+    const updatedError = await ErrorService.updateProductError(fecha, observaciones, codInterno, codOEM, desc, stock, det, stockReal, img)
+
+    res.status(200).send({
+      status: "success",
+      payload: updatedError,
+    });
+
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to update error",
+    });
+  }
+
+}
