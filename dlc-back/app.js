@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 
 import cowsay from "cowsay";
 import colors from "colors";
@@ -8,8 +8,10 @@ import colors from "colors";
 import routerAPI from "./src/routes/routes.js";
 import initializePassport from "./src/auth/passport.js";
 
+import config from "./src/config/config.js";
+
 const app = express();
-const PORT = process.env.PORT || 3000
+const { PORT } = config;
 
 const corsOptions = {
   origin: "*",
@@ -21,7 +23,7 @@ const env = async () => {
   app.use(cors(corsOptions));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(cookieParser());
+  // app.use(cookieParser());
   initializePassport();
 
   routerAPI(app);

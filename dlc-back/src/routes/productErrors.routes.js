@@ -1,9 +1,12 @@
 import { Router } from "express";
+import passport from "passport";
+import { verifyRole } from '../middlewares/auth.js';
 
 import {
   getProductErrors,
   createProductError,
   deleteProductError,
+  updateProductError,
 } from "../controllers/productErrors.controller.js";
 
 const productErrorsRouter = Router();
@@ -19,5 +22,10 @@ productErrorsRouter.post("/", (req, res) => {
 productErrorsRouter.delete("/", (req, res) => {
   deleteProductError(req, res);
 });
+
+productErrorsRouter.delete("/update/", (req, res) => {
+  updateProductError(req, res);
+});
+
 
 export default productErrorsRouter;

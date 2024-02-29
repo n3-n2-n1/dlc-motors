@@ -1,53 +1,49 @@
 import { useState } from "react";
-import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { LoginUser } from "../../utils/Handlers/Handlers";
-import { Link } from "react-router-dom";
+
 import { paths } from "../../routes/paths";
-import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Mail inválido").required("Requerido"),
+  username: Yup.string().required("Requerido"),
   password: Yup.string().required("Requerido"),
 });
-
-
 function Login() {
   const navigate = useNavigate();
-  const [token, setToken] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "", 
+      username: "",
+      password: "",
     },
     validationSchema,
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       try {
-        // Simular la llamada al backend
-        // En un entorno de producción, aquí llamarías a LoginUser(values)
-        console.log('Simulando login...');
-        
-        // Simular una respuesta exitosa después de 2 segundos
-        setTimeout(() => {
-          const fakeToken = 'fakeToken123'; // Simula un token
-          sessionStorage.setItem('miTokenJWT', fakeToken);
-          console.log('logueado exitosamente');
-          toast.success('Sesión iniciada correctamente.')
-          location.reload(); // Recargar la página (esto se puede cambiar según tu flujo)
-        }, 2000);
-
-
+        await toast.promise(login(values), {
+          pending: "Iniciando sesión... 🕒",
+          success: {
+            render: "Sesión iniciada correctamente 👌",
+            autoClose: 1000,
+            onClose: () => {
+              navigate("/");
+            },
+          },
+          error: "Error al iniciar sesión, verifica las credenciales 🤯",
+        });
       } catch (error) {
-        console.error('Error en la solicitud:', error);
-        toast.error('Error al iniciar sesión.')
+        console.error("Error en la solicitud:", error);
       }
     },
   });
 
   return (
-    <div className="font-sans text-gray-700 bg-gray-800 text-white flex justify-center items-center h-screen">
+    <div className="font-sans bg-gray-800 text-white flex justify-center items-center h-screen">
       <div className="container mx-auto p-8">
         <div className="max-w-md w-full mx-auto">
           <h1 className="text-4xl text-center mb-12 font-bold">DLC Motors</h1>
@@ -61,14 +57,14 @@ function Login() {
                   </label>
                   <input
                     type="text"
-                    name="email"
+                    name="username"
                     className="block w-full p-3 rounded bg-gray-700 border border-transparent focus:outline-none"
                     onChange={formik.handleChange}
-                    value={formik.values.email}
+                    value={formik.values.username}
                   ></input>
-                  {formik.errors.email && formik.touched.email && (
+                  {formik.errors.username && formik.touched.username && (
                     <div className="absolute font-medium text-red-500/90">
-                      {formik.errors.email}
+                      {formik.errors.username}
                     </div>
                   )}
                 </div>
@@ -94,7 +90,7 @@ function Login() {
                 <button
                   type="submit"
                   className="w-full p-3 mt-4 bg-blue-600 text-gray-100 shadow rounded-full"
-                  onClick={()=> navigate('/')}
+                  // onClick={()=> navigate('/')}
                 >
                   Ingresar
                 </button>

@@ -4,23 +4,21 @@ import jwt from "passport-jwt";
 
 import { createHash } from "../utils/bcrypt.js";
 
+import config from "../config/config.js";
+
 import { userService } from "../services/services.js";
+
+const {
+  jwt: { JWT_SECRET },
+} = config
 
 const LocalStrategy = local.Strategy;
 const JwtStrategy = jwt.Strategy;
 const extractJwt = jwt.ExtractJwt;
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
-
-const cookieExtractor = (req) => {
-  let token = null
-  req && req.cookies ? (token = req.cookies[COOKIE_NAME]) : null
-  return token
-}
-
 const jwtOptions = {
   secretOrKey: JWT_SECRET,
-  jwtFromRequest: extractJwt.fromExtractors([cookieExtractor])
+  jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken()
 };
 
 const initializePassport = () => {
@@ -29,14 +27,15 @@ const initializePassport = () => {
     new LocalStrategy(
       {
         passReqToCallback: true,
-        usernameField: "name",
+        usernameField: "username",
       },
       async (req, username, password, done) => {
         try {
-          let { role } = req.body;
+          let { name, role } = req.body;
           
           const newUser = {
-            name: username,
+            username: username,
+            name: name,
             password: createHash(password),
             role: role || "user",
           };

@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 
 const URL = "http://localhost:3000";
 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
-//----------------------READING HANDLERS-------------------------// 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//----------------------READING HANDLERS-------------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
 
 const fetchUser = async (): Promise<User[]> => {
   try {
@@ -53,7 +53,7 @@ const fetchErrors = async () => {
 
     const errorData = await response.json();
     console.log(errorData);
-    return errorData;
+    return errorData.payload;
   } catch (error) {
     console.error("error", error);
     throw error;
@@ -116,11 +116,11 @@ const fetchCosts = async () => {
   }
 };
 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
-//---------------------CREATION HANDLERS-------------------------// 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//---------------------CREATION HANDLERS-------------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
 
 const createUser = async (userData: string) => {
   try {
@@ -281,15 +281,46 @@ const createDelivery = async (deliveryData: any) => {
     console.log("Delivery created successfully:", responseData);
   } catch (error) {
     console.error("Error creating product:");
-    console.log(deliveryData)
+    console.log(deliveryData);
   }
 };
 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
-//---------------------DELETION HANDLERS-------------------------// 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//-------------------------EDIT HANDLERS-------------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+
+const modifyProduct = async (productToEdit: any) => {
+  try {
+    const response = await fetch(
+      `${URL}/api/v1/products/${productToEdit.codigoInt}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productToEdit),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Product edited successfully:", responseData);
+  } catch (error) {
+    console.error("Error editing product:", error);
+  }
+};
+
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//---------------------DELETION HANDLERS-------------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
 
 const deleteProducts = async (productData: any) => {
   try {
@@ -309,38 +340,29 @@ const deleteProducts = async (productData: any) => {
   }
 };
 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
-//-----------------------USERS HANDLERS--------------------------// 
-//---------------------------------------------------------------// 
-//---------------------------------------------------------------// 
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//-----------------------USERS HANDLERS--------------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
 
-const LoginUser = async (values: any) => {
-  const url = `${URL}/api/v1/usuarios/login`;
-
+const editUser = async (userToUpdate: any) => {
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    const response = await fetch(
+      `${URL}/api/v1/users/${userToUpdate.username}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userToUpdate),
+      }
+    );
 
-    return response; // Devuelve la respuesta para que pueda ser manejada en el código que llama a LoginUser
+    const updatedUser = await response.json();
+    console.log("Edited user successfully:", updatedUser);
   } catch (error) {
-    console.error("Error en la solicitud:", error);
-    throw error; // Re-lanza el error para que pueda ser manejado en el código que llama a LoginUser
-  }
-};
-
-const logoutUser = async () => {
-  try {
-    const response = await fetch(`${URL}/api/v1/logout`, {
-      method: "POST",
-    });
-  } catch (error) {
-    console.error("Error creating loogout");
+    console.error(`Error editing user ${error}`);
   }
 };
 
@@ -350,15 +372,15 @@ export {
   createError,
   fetchProducts,
   createProduct,
+  modifyProduct,
   deleteProducts,
   createUser,
-  LoginUser,
   createReturns,
   fetchMoves,
   handleAddMassive,
   createMovement,
   createDelivery,
-  logoutUser,
+  editUser,
   fetchReturns,
   fetchDelivery,
   fetchCosts,

@@ -1,21 +1,16 @@
-import mysql from 'mysql'
+import mysql from "mysql";
+import config from "../config/config.js";
 
-// Configuración de la conexión a la base de datos CON SSH
-// const dbConfig = {
-//   host: "127.0.0.1" || "localhost", // Host local debido al túnel SSH
-//   user: "crysiupm_dlc-back" || "crystal", // Tu usuario de la base de datos
-//   password: "S4nrZ2vDZhw8U@N" || "crystal", // Tu contraseña de la base de datos
-//   database: "crysiupm_dlc-back" || "crystal", // El nombre de tu base de datos
-//   port: 5522 || 3306, // El puerto local del túnel SSH
-// };
-
+const {
+  db: { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT },
+} = config;
 
 const dbConfig = {
-  host:  "localhost", // Host local debido al túnel SSHs
-  user:  "crystal", // Tu usuario de la base de datos
-  password:"crystal", // Tu contraseña de la base de datos
-  database:"crystal", // El nombre de tu base de datos
-  port:3306, // El puerto local del túnel SSH
+  host: DB_HOST, // Host local debido al túnel SSHs
+  user: DB_USER, // Tu usuario de la base de datos
+  password: DB_PASSWORD, // Tu contraseña de la base de datos
+  database: DB_NAME, // El nombre de tu base de datos
+  port: DB_PORT, // El puerto local del túnel SSH
 };
 
 const db = mysql.createConnection(dbConfig);
@@ -23,9 +18,9 @@ const db = mysql.createConnection(dbConfig);
 // Conectar a la base de datos
 db.connect((err) => {
   if (err) {
-    console.error('Error al conectar a la base de datos:', err);
+    console.error("Error al conectar a la base de datos:", err);
   } else {
-    console.log('Conexión exitosa a la base de datos');
+    console.log("Conexión exitosa a la base de datos");
   }
 });
 

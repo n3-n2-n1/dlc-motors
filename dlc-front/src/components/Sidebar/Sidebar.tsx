@@ -1,24 +1,26 @@
-import SidebarButton from "../SidebarButton/SidebarButton";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import { paths } from "../../routes/paths";
-// import HomeIcon from "../icon/HomeIcon/HomeIcon";
+
+import { useAuth } from "../../contexts/AuthContext";
+
+import SidebarButton from "../SidebarButton/SidebarButton";
+
 import ProductsIcon from "../icon/ProductsIcon/ProductsIcon";
 import MovementsIcon from "../icon/MovementsIcon/MovementsIcon";
 import SearchIcon from "../icon/SearchIcon/SearchIcon";
 import CategoriesIcon from "../icon/CategoriesIcon/CategoriesIcon";
-// import ErrorsIcon from "../icon/ErrorsIcon/ErrorsIcon";
 import UsersIcon from "../icon/UsersIcon/UsersIcon";
-import { Link } from "react-router-dom";
-// import OutcomesIcon from "../icon/OutcomesIcon/OutcomesIcon";
-// import InventoryIcon from "../icon/InventoryIcon/InventoryIcon";
-// import ReturnsIcon from "../icon/ReturnsIcon/ReturnsIcon";
 import CostsIcon from "../icon/CostsIcon/CostsIcon";
-// import IncomesIcon from "../icon/IncomesIcon/IncomesIcon";
-import { useState } from "react";
-// import { Notifications } from "../../pages/Notifications/Notifications";
 import NotificationsIcon from "../icon/NotificationsIcon/NotificationsIcon";
+import LogoutIcon from "../icon/LogoutIcon/LogoutIcon";
 
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
@@ -26,8 +28,26 @@ export default function Sidebar() {
     setIsSidebarVisible(!isSidebarVisible);
   };
 
+  const handleLogout = async () => {
+    try {
+      await toast.promise(logout(), {
+        pending: "Cerrando sesión... 🕒",
+        success: {
+          render: "Sesión cerrada correctamente, adios! 👋",
+          autoClose: 1000,
+          onClose: () => {
+            navigate("/login");
+          },
+        },
+        error: "Error al cerrar la sesión, intenta nuevamente 🤯",
+      });
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
+  }
+
  // Clases base del sidebar
- let sidebarClasses = "bg-gray-900 border-gray-800 flex-shrink-0 border-r border-gray-200 flex-col sm:flex";
+ let sidebarClasses = "bg-[#030511] border-gray-800 flex-shrink-0 border-r border-gray-200 flex-col sm:flex";
 
  // Ajustar clases basadas en la visibilidad
  if (!isSidebarVisible) {
@@ -39,14 +59,14 @@ export default function Sidebar() {
     <>
     <div className={sidebarClasses}>
       <Link to={paths.home}>
-      <div className="h-16 text-[#A9DFD8] flex items-center justify-center mt-2">
-        <img src="/logo.svg" alt="DLC logo" className="w-16" />
+      <div className="h-16 text-[#A9DFD8] bg-[#030511] flex items-center justify-center p-12 hover:bg-[slate-400]">
+        <img src="/logo.png" alt="DLC logo" className="w-32 p-1" />
 
       </div>
       </Link>
 
       {/* //Botones */}
-      <div className="flex mx-auto flex-grow mt-2 flex-col text-gray-400 space-y-4 align-lefts">
+      <div className="flex flex-col text-gray-400">
         <SidebarButton to={paths.products} text={"Productos"}>
           <ProductsIcon />
           <div className="ml-3 font-bold">
@@ -84,12 +104,25 @@ export default function Sidebar() {
           Movimientos
         </div>
         </SidebarButton>
+        <SidebarButton to={paths.delivery} text={"Pedidos"}>
+        <MovementsIcon /> 
+        <div className="ml-3 font-bold">
+          Pedidos
+        </div>
+        </SidebarButton>
         <SidebarButton to={paths.notifications} text={"Notificaciones"}>
           <NotificationsIcon />
           <div className="ml-3 font-bold">
           Notificaciones
         </div>
         </SidebarButton>
+        <button className="flex items-center px-8 h-[60px] w-full hover:bg-[#3496CB] dark:hover:bg-[#A9DFD8] hover:text-white dark:hover:text-white p-4"
+        onClick={() => handleLogout()}>
+          <LogoutIcon className={"w-5 h-5 text-white"}/>
+          <div className="ml-2 font-bold">
+            Salir
+          </div>
+        </button>
 
         {/* <SidebarButton to={paths.costs} text={"Ariana Argentati"}>
          <CostsIcon />
@@ -101,7 +134,7 @@ export default function Sidebar() {
       </div>
 
       
-      <div>
+      <div className="flex pt-12">
 
       <button onClick={toggleSidebar} className="">
         <div className="mb-6 hover:bg-blue-60 ml-8 ">

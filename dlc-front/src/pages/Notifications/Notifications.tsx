@@ -5,7 +5,7 @@ import { OutcomeObservations } from "../../routes/routes";
 import { useUser } from "../../contexts/UserContext";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 import Navbar from "../../components/Navbar/Navbar";
-interface Notification {
+export interface Notification {
   name: string;
   message: string;
   image?: string;
@@ -14,7 +14,7 @@ interface Notification {
   rubro?: string;
   oem?: string;
   origen?: string;
-  stock?: number;
+  stock?: string;
 }
 
 
@@ -32,6 +32,7 @@ const Notifications = () => {
 
   const { users } = useUser();
   const userNames = users?.map((user) => user.name);
+  console.log(userNames)
 
 
   const NotificationsFilterConfig: FilterConfig[] = [
@@ -135,9 +136,7 @@ const Notifications = () => {
         <table className="min-w-full divide-y divide-gray-700">
           <thead className="bg-gray-700">
             <tr>
-              <th className="px-4 py-2 text-left text-xs leading-4 font-medium uppercase tracking-wider">
-                Producto
-              </th>
+             
               <th className="px-4 py-2 text-left text-xs leading-4 font-medium uppercase tracking-wider">
                 Fecha
               </th>
@@ -174,9 +173,6 @@ const Notifications = () => {
             {notifications.map((notification, index) => (
               
               <tr key={index} className="align-top">
-                <td className="px-4 py-2 max-w-xs truncate">
-                  {displayValue(notification.name)}
-                </td>
                 <td className="px-4 py-2 max-w-xs">Fecha</td>
                 <td className="px-4 py-2">
                   {displayValue(notification.message)}

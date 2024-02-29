@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createMovement } from "../../utils/Handlers/Handlers";
-
+import { Link } from "react-router-dom";
 // Define la interfaz para los props del componente
 interface InventoryFormProps {
   products: any[]; // Reemplaza 'any' con el tipo de tus productos
@@ -73,6 +73,15 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
           <h1 className="text-3xl mb-4 text-white font-weight-300">
             Inventario
           </h1>
+          <div className="bg-white rounded rounded-full justify-center hover:bg-blue-700">
+          <div className="">
+            <Link to="/historyView">
+              <button className="p-3 text-md text-gray-800 font-bold hover:text-white">
+                Historial
+              </button>
+            </Link>
+          </div>
+        </div>
           <form
             onSubmit={formik.handleSubmit}
             className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"

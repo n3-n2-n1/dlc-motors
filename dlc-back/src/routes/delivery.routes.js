@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getDeliveries, createDelivery } from "../controllers/delivery.controller.js";
+import passport from "passport";
+import { verifyRole } from "../middlewares/auth.js";
+import {
+  getDeliveries,
+  createDelivery,
+} from "../controllers/delivery.controller.js";
 
 const deliveryRouter = Router();
 

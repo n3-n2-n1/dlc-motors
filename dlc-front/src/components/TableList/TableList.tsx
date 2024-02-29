@@ -60,7 +60,6 @@ function TableList({ category }) {
     "Rubro",
     "Origen",
     "MarcasCompat",
-    "Precio",
     "Kit",
     "Stock",
     "¿Stock?",
@@ -89,14 +88,13 @@ function TableList({ category }) {
     borderRight: "0px solid #aaa",
   });
 
-  const handleEdit = (index: string) => {
-    const productToEdit = itemsToDisplay[index];
+  const handleEdit = (pageIndex: string) => {
+    const indexInOriginalArray = (currentPage - 1) * itemsPerPage + pageIndex;
+    const productToEdit = itemsToDisplay[indexInOriginalArray];
     console.log(productToEdit);
     if (productToEdit) {
       const prodCod = productToEdit.codigoInt;
-      // deleteProducts(prodCod);
-      // setOpenIndex(-1);
-      // setConfirmationIndex(-1);
+      navigate(`/productos/editar/${prodCod}`);
     }
   };
 
@@ -118,48 +116,44 @@ function TableList({ category }) {
 
   return (
     <>
-      <div className="overflow-x-auto max-h-[calc(90vh-3rem)]">
-        <table className="w-full h-[80vh] text-left">
-          <thead className="sticky top-0 bg-gray-600 text-gray-100 ">
-            <tr className="text-gray-100">
-              <th className="font-bold text-gray-100 bg-gray-600 px-4 pt-2 pb-3  dark:border-gray-800 rounded-3xl">
-               <div>
-                Acciones
-               </div>
-              </th>
-              {columns.map((column, index) => (
-                <th
-                  key={index}
-                  onClick={() => toggleColumnWidth(index)}
-                  className="cursor-pointer text-gray-100 bg-gray-900 px-3 pb-3 items-center border-b pt-2 items-center justify-center"
-                  style={columnStyles(shrunkColumns[index])}
-                >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
+<div className="overflow-x-auto max-h-[calc(100vh-4rem)]">
+  <table className="w-full text-left">
+    <thead className="sticky top-0 bg-gray-900 text-gray-100">
+      <tr>
+        <th className="font-bold px-4 pt-2 pb-3 rounded-3xl">Acciones</th>
+        {columns.map((column, index) => (
+          <th
+            key={index}
+            onClick={() => toggleColumnWidth(index)}
+            className="cursor-pointer bg-gray-900 px-3 pb-3 items-center border-b pt-2 justify-center"
+            style={columnStyles(shrunkColumns[index])}
+          >
+            {column}
+          </th>
+        ))}
+      </tr>
+    </thead>
 
-          <tbody className="text-gray-100">
-            {itemsToDisplay
-              .slice(
-                (currentPage - 1) * itemsPerPage,
-                currentPage * itemsPerPage
-              )
-              .map((product, index) => (
-                <tr key={index}>
-                  <td className="relative flex items-center justify-center h-full hover:bg-slate-600">
-                    <button
-                      onClick={() =>
-                        setOpenDropdown(openDropdown === index ? null : index)
-                      }
-                      className="h-full "
-                    >
-                      <OptionsIcon color="white" />
-                    </button>
-                    {openDropdown === index && (
-                      <div className="z-50 absolute -right-[120px] w-32 rounded-md shadow-lg bg-gray-700">
-                        <div className="py-1">
+    <tbody className="text-gray-100">
+      {itemsToDisplay
+        .slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+        .map((product, index) => (
+          <tr key={index}>
+            <td className="flex items-center justify-center h-full hover:bg-slate-600">
+              <button
+                onClick={() =>
+                  setOpenDropdown(openDropdown === index ? null : index)
+                }
+                className="h-full"
+              >
+                <OptionsIcon color="white" />
+              </button>
+              {openDropdown === index && (
+                <div className="z-50 absolute -right-[120px] w-32 rounded-md shadow-lg bg-gray-700">
+                  <div className="py-1">
                           <a
                             href="#"
                             className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
@@ -201,9 +195,6 @@ function TableList({ category }) {
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.marcasCompatibles || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.precio || "-"}
-                  </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-80  md:table-cell hidden0">
                     {product.hasStock ? "Sí" : "No"}
                   </td>
@@ -238,7 +229,7 @@ function TableList({ category }) {
           </div>
         </div>
       )}
-      <div className="mt-4">
+      <div className="px-10">
         <Pagination />
       </div>
     </>

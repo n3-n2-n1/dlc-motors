@@ -191,7 +191,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 htmlFor="rubro"
                 className="block text-sm font-medium text-gray-100 dark:text-gray-300"
               >
-                Categoria
+                Rubro
               </label>
               <select
                 id="rubro"

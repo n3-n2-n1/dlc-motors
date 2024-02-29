@@ -1,99 +1,66 @@
-import db from "../database/db.js";
+import { movementService } from "../services/services.js";
 
-export const getMovements = (req, res) => {
-  db.query("SELECT * FROM movimientos", (error, results, fields) => {
-    if (error) {
-      console.error("An error occurred while executing the query", error);
-      res.status(500).json({ error: "Error al abrir la base de datos." });
-      return;
+export const getMovements = async (req, res) => {
+  try {
+    const moves = await movementService.getMovements();
+
+    if (!moves || moves.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: "No moves found",
+      });
     }
-    res.json(results);
-  });
+
+    res.status(200).send({
+      status: "success",
+      payload: moves,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to get moves",
+    });
+  }
 };
 
-export const createMovement = (req, res) => {
-  const {fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos,observaciones, det, cantidad,kit
-  } = req.body;
+export const createMovementInventory = async (req, res) => {
+  try {
+    const moves = await movementService.createMovementInventory();
 
-  if (desc === "Inventario") {
-    // Query Inventario
-    console.log("QUERY INVENTARIO")
-    db.query(
-      "INSERT INTO movimientos (fecha, codInterno, codOEM, ` desc` , stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
-      [fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo],
-      function (error) {
-        if (error) {
-          console.error("An error occurred while executing the query", error);
-          res
-            .status(500)
-            .json({ error: "Error al insertar el movimiento de inventario." });
-          return;
-        }
+    if (!moves || moves.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: "No moves found",
+      });
+    }
 
-        // Get the inserted product
-        db.query(
-          "SELECT * FROM movimientos WHERE fecha = ?",
-          [fecha],
-          function (error, results) {
-            if (error) {
-              console.error(
-                "An error occurred while executing the query",
-                error
-              );
-              res.status(500).json({
-                error:
-                  "Error al obtener el movimiento de inventario insertado.",
-              });
-              return;
-            }
+    res.status(200).send({
+      status: "success",
+      payload: moves,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create move",
+    });
+  }
+};
 
-            res.status(200).json({
-              message: "Movimiento de inventario insertado correctamente.",
-              product: results[0],
-            });
+export const createIncomeOutcome = async (req, res) => {
+  try {
+    const moves = await movementService.createIncomeOutcome();
 
-          }
-        );
-      }
-    );
-  } else {
-    console.log("QUERY INGRESO/EGRESO")
-    db.query(
-      "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, `desc` , stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?,?,?,?)",
-      [
-        fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct
-      ],
-      function (error) {
-        if (error) {
-          console.error("An error occurred while executing the query", error);
-          res.status(500).json({ error: "Error al insertar el producto." });
-          return;
-        }
-
-        // Get the inserted product
-        db.query(
-          "SELECT * FROM movimientos WHERE fecha = ?",
-          [fecha],
-          function (error, results, fields) {
-            if (error) {
-              console.error(
-                "An error occurred while executing the query",
-                error
-              );
-              res
-                .status(500)
-                .json({ error: "Error al obtener el producto insertado." });
-              return;
-            }
-
-            res.status(200).json({
-              message: "Producto insertado correctamente.",
-              product: results[0],
-            });
-
-          }
-        );
-      }
-    );
+    res.status(200).send({
+      status: "success",
+      payload: moves,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create move",
+    });
   }
 };

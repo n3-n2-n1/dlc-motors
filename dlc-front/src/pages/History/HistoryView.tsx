@@ -249,7 +249,7 @@ const HistoryView = () => {
       <section className="py-2">
         <FiltroFloat filtersConfig={filterConfig} />
       </section>
-      <div className="border-t border-gray-200 mt-4">{currentComponent}</div>
+      <div className="border-t border-gray-200 ">{currentComponent}</div>
     </div>
   );
 };

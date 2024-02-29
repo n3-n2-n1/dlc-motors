@@ -65,7 +65,7 @@ const Actions = () => {
         {/* Botón para descarga */}
         <button
           onClick={handleDownload}
-          className="bg-blue-700 inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200"
+          className="bg-[#3496CB] inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200 hover:bg-slate-800"
         >
           Descargar
         </button>
@@ -77,7 +77,7 @@ const Actions = () => {
         <Link to={paths.scanner}>
         <button
           
-          className="bg-blue-700 inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200"
+          className="bg-[#3496CB] inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200 hover:bg-slate-800"
           >
           Escanear QR
         </button>
@@ -88,7 +88,7 @@ const Actions = () => {
       <div className="flex items-center gap-3 ">
         {/* Botón para agregar uno solo */}
         <Link to={paths.addProduct}>
-          <button className="px-4 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-white dark:border-gray-800 leading-none py-0 gap-3 bg-blue-700 hover:text-gray-100 hover:bg-blue-800">
+          <button className="px-4 inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-white dark:border-gray-800 leading-none py-0 gap-3 bg-[#3496CB] hover:text-gray-100 hover:bg-slate-800">
             <svg
               width="16"
               height="16"
@@ -133,7 +133,7 @@ const Actions = () => {
           />
           <button
             onClick={handleSearch}
-            className="ml-2 bg-blue-700 text-white px-4 py-1 rounded-3xl hover:bg-blue-900"
+            className="ml-2 bg-[#3496CB] text-white px-4 py-1 rounded-3xl hover:bg-slate-800"
           >
             <SearchIcon color="white" />
           </button>
