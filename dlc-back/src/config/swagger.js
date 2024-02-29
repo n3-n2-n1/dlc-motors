@@ -10,7 +10,7 @@ export const swaggerUi = () => {
       info: {
         title: "DLC Motors V4 API Documentation",
         description:
-          "Hello there! In this document you will find the API definitions for the various modules of this project, with all their routes, responses, schemas and possible inputs. All endpoints that require certain user roles must be tried with a valid cookie stored.",
+          "Hello there! In this document you will find the API definitions for the various modules of this project, with all their routes, responses, schemas and possible inputs. All endpoints that require certain user roles must be tried with a valid token.",
       },
     },
     apis: [`${__dirname}/docs/**/*.yaml`],

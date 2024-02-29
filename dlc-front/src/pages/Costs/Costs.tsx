@@ -40,12 +40,6 @@ const Costs = () => {
       options: []
     }, 
 
-    {
-      key: "origen",
-      label: "Origen",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-      options: ['Fabrica','Importado','Reventa'],
-    }, 
   
   ]
 

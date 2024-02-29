@@ -3,7 +3,7 @@ import passport from "passport";
 import { verifyRole } from '../middlewares/auth.js';
 import {
   getUsers,
-  getUserByUsername,
+  getUserWithToken,
   registerUser,
   loginUser,
   logoutUser,
@@ -25,21 +25,23 @@ usersRouter.post(
 usersRouter.get(
   "/",
   passport.authenticate('jwt', { session: false }),
-  (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
+  // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
   getUsers
 );
 
-usersRouter.get("/:username", (req, res) => {
+usersRouter.get(
+  "/check",
   passport.authenticate('jwt', { session: false }),
-  getUserByUsername(req, res);
-});
+  // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
+  getUserWithToken
+);
 
 usersRouter.put("/:username", (req, res) => {
-  passport.authenticate('jwt', { session: false }),
+    // passport.authenticate('jwt', { session: false }),
   updateUser(req, res);
 });
 
-usersRouter.post("/logout", logoutUser);
+usersRouter.get("/logout", logoutUser);
 
 
 export default usersRouter;

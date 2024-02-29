@@ -6,6 +6,7 @@ import {
   getProducts,
   getProductsBySearchTerm,
   createProduct,
+  editProduct,
   deleteProduct,
 } from "../controllers/products.controller.js";
 
@@ -24,6 +25,10 @@ productsRouter.get("/:query", (req, res) => {
 // Crear un producto nuevo
 productsRouter.post("/", (req, res) => {
   createProduct(req, res);
+});
+
+productsRouter.put("/:username", (req, res) => {
+  editProduct(req, res);
 });
 
 // Eliminar un producto existente

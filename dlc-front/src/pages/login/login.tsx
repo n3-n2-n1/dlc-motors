@@ -1,61 +1,49 @@
 import { useState } from "react";
-import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { LoginUser } from "../../utils/Handlers/Handlers";
-import { Link } from "react-router-dom";
+
 import { paths } from "../../routes/paths";
-import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Mail inválido").required("Requerido"),
+  username: Yup.string().required("Requerido"),
   password: Yup.string().required("Requerido"),
 });
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  // useFormik hook para manejar los formularios
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
-    validationSchema, // Asegúrate de definir tu esquema de validación de Yup aquí
+    validationSchema,
     onSubmit: async (values) => {
       try {
-        // Aquí realizas la llamada al backend con las credenciales
-        const response = await fetch('/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        await toast.promise(login(values), {
+          pending: "Iniciando sesión... 🕒",
+          success: {
+            render: "Sesión iniciada correctamente 👌",
+            autoClose: 1000,
+            onClose: () => {
+              navigate("/");
+            },
           },
-          body: JSON.stringify(values),
+          error: "Error al iniciar sesión, verifica las credenciales 🤯",
         });
-
-        if (!response.ok) {
-          // Si la respuesta del servidor no es exitosa, maneja el error
-          throw new Error('Error de inicio de sesión');
-        }
-
-        const data = await response.json();
-        const token = data.token; // Asegúrate de que tu backend devuelva el token con esta clave
-
-        // Almacenar el token en sessionStorage o localStorage
-        sessionStorage.setItem('miTokenJWT', token);
-
-        // Mostrar mensaje de éxito y redireccionar al usuario
-        toast.success('Sesión iniciada correctamente.');
-        navigate('/home'); // Asegúrate de reemplazar esto con la ruta correcta
-
       } catch (error) {
-        console.error('Error en la solicitud:', error);
-        toast.error('Error al iniciar sesión.');
+        console.error("Error en la solicitud:", error);
       }
     },
   });
 
   return (
-    <div className="font-sans text-gray-700 bg-gray-800 text-white flex justify-center items-center h-screen">
+    <div className="font-sans bg-gray-800 text-white flex justify-center items-center h-screen">
       <div className="container mx-auto p-8">
         <div className="max-w-md w-full mx-auto">
           <h1 className="text-4xl text-center mb-12 font-bold">DLC Motors</h1>
@@ -69,14 +57,14 @@ function Login() {
                   </label>
                   <input
                     type="text"
-                    name="email"
+                    name="username"
                     className="block w-full p-3 rounded bg-gray-700 border border-transparent focus:outline-none"
                     onChange={formik.handleChange}
-                    value={formik.values.email}
+                    value={formik.values.username}
                   ></input>
-                  {formik.errors.email && formik.touched.email && (
+                  {formik.errors.username && formik.touched.username && (
                     <div className="absolute font-medium text-red-500/90">
-                      {formik.errors.email}
+                      {formik.errors.username}
                     </div>
                   )}
                 </div>
@@ -102,7 +90,7 @@ function Login() {
                 <button
                   type="submit"
                   className="w-full p-3 mt-4 bg-blue-600 text-gray-100 shadow rounded-full"
-                  onClick={()=> navigate('/')}
+                  // onClick={()=> navigate('/')}
                 >
                   Ingresar
                 </button>

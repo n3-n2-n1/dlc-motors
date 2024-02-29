@@ -101,6 +101,15 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
           <h1 className="text-3xl mb-2 text-white font-weight-300 pb-4">
             {formName}s
           </h1>
+          <div className="bg-white rounded rounded-full justify-center hover:bg-blue-700">
+          <div className="">
+            <Link to="/historyView">
+              <button className="p-3 text-md text-gray-800 font-bold hover:text-white">
+                Historial
+              </button>
+            </Link>
+          </div>
+        </div>
           
 
           <form

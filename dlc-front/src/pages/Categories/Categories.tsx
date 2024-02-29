@@ -5,19 +5,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useSearchContext } from "../../contexts/SearchContext";
 
 const Categories = () => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const { products } = useSearchContext();
-
-  useEffect(() => {
-    try {
-      const uniqueCategories = [
-        ...new Set(products.map((product) => product.rubro)),
-      ];
-      setCategories(uniqueCategories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }, [products]);
+  // const [categories, setCategories] = useState<string[]>([]);
+  const { categories } = useSearchContext();
 
   return (
     
@@ -33,7 +22,7 @@ const Categories = () => {
           >
             <li className="text-lg md:text-xl mb-2 md:mb-0">{category}</li>
             <Link to={`${paths.products}/${category}`}>
-              <button className="bg-blue-700 hover:bg-gray-700 text-white font-bold py-2 px-4 md:px-8 rounded-2xl">
+              <button className="bg-[#3496CB] hover:bg-gray-700 text-white font-bold py-2 px-4 md:px-8 rounded-2xl">
                 Ir
               </button>
             </Link>

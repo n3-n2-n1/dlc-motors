@@ -97,16 +97,6 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    // Esto se va a usar para validar que el usuario tenga el rol necesario para realizar esta acción
-    // const { jwtCookie: token } = req.cookies;
-
-    // if (!token) {
-    //   return res.status(400).send({
-    //     status: "error",
-    //     error: "Failed to get token",
-    //   });
-    // }
-
     const createdProduct = productService.createProduct(
       codigoInt,
       codOEM,
@@ -139,6 +129,80 @@ export const createProduct = async (req, res) => {
     return res.status(500).send({
       status: "error",
       error: "Failed to create product",
+    });
+  }
+};
+
+//Crear productitos
+export const editProduct = async (req, res) => {
+  try {
+    const {
+      codigoInt,
+      codOEM,
+      codTango,
+      descripcion,
+      rubro,
+      origen,
+      marcasCompatibles,
+      stock,
+      hasStock,
+      imagen,
+      contadorDevoluciones,
+      kit,
+      tag,
+      precio,
+    } = req.body;
+
+    if (
+      !codigoInt ||
+      !codOEM ||
+      !codTango ||
+      !descripcion ||
+      !rubro ||
+      !origen ||
+      !marcasCompatibles ||
+      !stock ||
+      !tag ||
+      !precio
+    ) {
+      return res.status(400).send({
+        status: "error",
+        error: "Incomplete values",
+      });
+    }
+
+    const updatedProduct = productService.editProduct(
+      codigoInt,
+      codOEM,
+      codTango,
+      descripcion,
+      rubro,
+      origen,
+      marcasCompatibles,
+      stock,
+      hasStock,
+      imagen,
+      contadorDevoluciones,
+      kit,
+      tag,
+      precio,
+    );
+
+    if (!updatedProduct || updatedProduct.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: `Failed to edit product with code ${codigoInt}`,
+      });
+    }
+
+    res.status(200).send({
+      status: "success",
+      payload: updatedProduct,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to edit product",
     });
   }
 };

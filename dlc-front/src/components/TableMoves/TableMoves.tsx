@@ -130,45 +130,50 @@ export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
   console.log("filtro ERRORS", filteredData); // ! Ver si filtra la response OK. => SI
 
   return (
-    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen w-full flex overflow-auto text-sm">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-screen w-full flex overflow-hidden text-sm">
       <div className=" bg-gray-900">
         <div className="py-1 pt-4">
           <div className="overflow-x-auto">
             <div className="shadow-md rounded-lg">
               <table className="leading-normal bg-gray-900">
-                <thead className="w-screen">
-                  <tr>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <thead className="w-screen rounded-lg">
+                  <tr className="rounded-lg">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Usuario
+                    </th><th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                      SKU
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Fecha/Hora
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Observacion
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Detalle
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Codigo Interno
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       OEM
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Descripcion
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Stock Actual
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Stock Real
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                      Stock
+                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Ficha
                     </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-700 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Revision
                     </th>
                   </tr>
@@ -189,17 +194,17 @@ export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {move.observacion}
+                            {move.observaciones}
                           </p>
                         </td>{" "}
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {move.detalle}
+                            {move.det}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {move.codigoInt}
+                            {move.codInterno}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -209,7 +214,7 @@ export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {move.descripcion}
+                            {move.desc}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -229,10 +234,20 @@ export const HistorialErrorTable: React.FC<HistorialErrorTableProps> = () => {
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {move.estado}
                           </p>
                           {/* // ! Acá iria un select (¿según el rol?) para cambiar el estado de la revisión // Hacer un update a la DB */}
                         </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                          </p>
+                          {/* // ! Acá iria un select (¿según el rol?) para cambiar el estado de la revisión // Hacer un update a la DB */}
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                          </p>
+                          {/* // ! Acá iria un select (¿según el rol?) para cambiar el estado de la revisión // Hacer un update a la DB */}
+                        </td>
+                        
                       </tr>
                     ))
                   ) : (
@@ -630,9 +645,6 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                       Fecha/Hora
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Usuario
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Numero Importacion
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -646,9 +658,6 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       OEM
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Productos
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Stock en Depósito
@@ -669,11 +678,6 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.usuario}
-                          </p>
-                        </td>
-                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <p className="text-gray-900 whitespace-no-wrap">
                             {hist.movementType}
                           </p>
                         </td>
@@ -685,11 +689,6 @@ export const HistorialDeliveryTable: React.FC<HistorialDeliveryTableProps> = () 
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {hist.courier}
-                          </p>
-                        </td>
-                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            {hist.desc}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

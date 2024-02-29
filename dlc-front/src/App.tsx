@@ -1,13 +1,18 @@
+import { useState, useEffect } from "react";
 import { Suspense } from "react";
-import Loader from "./components/Loader/Loader";
+import { ToastContainer } from "react-toastify";
+
 import AppRoutes from "./routes/routes";
+
+import { AuthProvider } from "./contexts/AuthContext";
 import { SearchProvider } from "./contexts/SearchContext";
 import { FilterValuesProvider } from "./contexts/FilterContext";
-import { useState, useEffect } from "react";
-import Login from "./pages/login/login";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import { NotificationsProvider } from "./contexts/NotificactionsContext";
+
+import Loader from "./components/Loader/Loader";
+
+import Login from "./pages/login/login";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -26,16 +31,18 @@ const App = () => {
   const props = {};
 
   return (
-    <SearchProvider {...(props as any)}>
-      <NotificationsProvider>
-      <FilterValuesProvider>
-      <Suspense fallback={<Loader />}>
-      <ToastContainer />
-        {authenticated ? <AppRoutes /> : <Login />}
-      </Suspense>
-      </FilterValuesProvider>
-      </NotificationsProvider>
-    </SearchProvider>
+    <AuthProvider>
+      <SearchProvider {...(props as any)}>
+        <NotificationsProvider>
+          <FilterValuesProvider>
+            <Suspense fallback={<Loader />}>
+              <ToastContainer />
+              {authenticated ? <AppRoutes /> : <Login />}
+            </Suspense>
+          </FilterValuesProvider>
+        </NotificationsProvider>
+      </SearchProvider>
+    </AuthProvider>
   );
 };
 

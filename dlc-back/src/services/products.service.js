@@ -101,6 +101,74 @@ export default class ProductService {
     }
   }
 
+  async editProduct(
+    codigoInt,
+    codOEM,
+    codTango,
+    descripcion,
+    rubro,
+    origen,
+    marcasCompatibles,
+    stock,
+    hasStock,
+    imagen,
+    contadorDevoluciones,
+    kit,
+    tag,
+    precio,
+  ) {
+    try {
+      const marcasCompatiblesString = marcasCompatibles.join(", ");
+  
+      return new Promise((resolve, reject) => {
+        db.query(
+          `UPDATE productos
+          SET 
+            codOEM = ?,
+            codTango = ?,
+            descripcion = ?,
+            rubro = ?,
+            origen = ?,
+            marcasCompatibles = ?,
+            stock = ?,
+            hasStock = ?,
+            imagen = ?,
+            contadorDevoluciones = ?,
+            kit = ?,
+            tag = ?,
+            precio = ?
+          WHERE codigoInt = ?;`,
+          [
+            codOEM,
+            codTango,
+            descripcion,
+            rubro,
+            origen,
+            marcasCompatiblesString,
+            stock,
+            hasStock,
+            imagen,
+            contadorDevoluciones,
+            kit,
+            tag,
+            precio,
+            codigoInt,
+          ],
+          (error, results) => {
+            if (error) {
+              console.error(error);
+              reject(new Error("Error al editar el producto"));
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async deleteProduct(productId) {
     try {
       db.query(

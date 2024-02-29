@@ -1,9 +1,4 @@
 import { userService } from "../services/services.js";
-import config from "../config/config.js";
-
-const {
-  jwt: { JWT_COOKIE },
-} = config;
 
 export const registerUser = async (req, res) => {
   try {
@@ -41,30 +36,35 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const getUserByUsername = async (req, res) => {
-  const { username } = req.params;
+export const getUserWithToken = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1]
 
-  if (!username) {
-    return res.status(400).send({
-      status: "error",
-      error: "Incomplete values",
-    });
+    if (!token) {
+      return res.status(400).send({
+        status: 'error',
+        error: 'Incomplete values'
+      })
+    }
+
+    const user = await userService.decodeUser(token)
+
+    if (!user) {
+      return res.status(404).send({
+        status: 'error',
+        error: 'Error obteniendo datos de usuario'
+      })
+    }
+
+    return res.status(200).send({
+      status: 'success',
+      payload: user
+    })
+  } catch (error) {
+    console.error(`${error}`)
+    return res.status(500).send({ status: 'error', error: `${error}` })
   }
-
-  const user = await userService.getUserByUsername(username);
-
-  if (!user || user.length === 0) {
-    return res.status(404).send({
-      status: "error",
-      error: `User with username '${username}' was not found`,
-    });
-  }
-
-  res.status(200).send({
-    status: "success",
-    payload: user,
-  });
-};
+}
 
 //Loguearse
 export const loginUser = async (req, res) => {
@@ -102,9 +102,11 @@ export const loginUser = async (req, res) => {
         });
     }
 
-    return res
-      .cookie(JWT_COOKIE, token, { httpOnly: true })
-      .send({ status: "success", message: "Logueado exitosamente" });
+    return res.send({
+      status: "success",
+      message: "Logueado exitosamente",
+      token
+    });
   } catch (error) {
     console.error("Error al intentar iniciar sesión:", error);
     res.status(500).json({ error: "Error interno del servidor", error });
@@ -154,5 +156,14 @@ export const updateUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  return sessionStorage.removeItem("miTokenJWT").then(location.reload());
-};
+  const token = req.headers.authorization.split(' ')[1]
+  const { username } = await userService.decodeUser(token)
+
+  if (!username) {
+    return res.status(500).send({
+      status: 'error',
+      error: 'Error al buscar el usuario a desloguear'
+    })
+  }
+  return res.send({ status: 'success', message: 'Deslogueo correcto' })
+}

@@ -13,7 +13,6 @@ const config = {
   },
   jwt: {
     JWT_SECRET: process.env.JWT_SECRET,
-    JWT_COOKIE: process.env.JWT_COOKIE,
   },
 };
 

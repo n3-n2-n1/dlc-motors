@@ -12,6 +12,8 @@ interface SearchContextProps {
   products: any[]; // ! TYPE
   setProducts: (results: any[]) => void; // ! TYPE
   itemsPerPage: number;
+  categories: string[];
+  setCategories: (categories: string[]) => void;
 }
 
 export const SearchContext = createContext<SearchContextProps | undefined>(
@@ -28,6 +30,7 @@ export const SearchProvider: React.FC = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const itemsPerPage = 17;
   // useEffect para obtener productos desde el backend
@@ -45,6 +48,17 @@ export const SearchProvider: React.FC = ({
 
     fetchData();
   }, []);
+
+    useEffect(() => {
+    try {
+      const uniqueCategories = [
+        ...new Set(products.map((product) => product.rubro)),
+      ];
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, [products]);
 
   // Resetea paginación cuando se cambia el término de búsqueda
   useEffect(() => {
@@ -69,6 +83,8 @@ export const SearchProvider: React.FC = ({
         itemsPerPage,
         products,
         setProducts,
+        categories,
+        setCategories,
       }}
     >
       {children}

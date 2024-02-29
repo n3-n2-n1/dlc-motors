@@ -22,12 +22,13 @@ const Moves: React.FC = () => {
   const changeToInventory = () => setCurrentComponent(<InventoryForm products={products} />);
   const changeToOutcomes = () => setCurrentComponent(<IncomesOutcomesForm formName="Egreso" observationsList={OutcomeObservations} products={products} />);
   const changeToReturns = () => setCurrentComponent(<Returns products={products}/>);
-  const changeToDelivery = () => setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations}/>);
+  const changeToDelivery = () => setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations} />);
 
   return (
     <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 h-full w-full overflow-auto text-sm p-6 overflow-y-hidden">
-      <Navbar title='Movimientos' subtitle="Generá movimientos" />
-      <section className="flex flex-row gap-6"> 
+      <div className="flex flex-row gap-2 justify-between">
+      <Navbar title='Movimientos' subtitle="" />
+      <div className="flex flex-row gap-x-3">
 
       <Dashcards buttons={[{ text: "Errores", action: changeToErrors, link:'' }]} />
       <Dashcards buttons={[{ text: "Ingresos", action: changeToIncomes, link:'' }]} />
@@ -35,6 +36,10 @@ const Moves: React.FC = () => {
       <Dashcards buttons={[{ text: "Egresos", action: changeToOutcomes, link:'' }]} />
       <Dashcards buttons={[{ text: "Devoluciones", action: changeToReturns, link:'' }]} />
       <Dashcards buttons={[{ text: "Pedidos", action: changeToDelivery, link:'' }]} />
+      </div>
+      </div>
+      <section className="flex flex-row gap-6"> 
+
 
       </section>
       <div className="border-t border-gray-200 mt-4 h-screen">

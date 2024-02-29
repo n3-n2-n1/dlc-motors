@@ -33,7 +33,7 @@ const RubroChart2 = () => {
   useEffect(() => {
     if (products && products.length > 0) {
       const rubroCounts = products.reduce((acc, product) => {
-        acc[product.Rubro] = (acc[product.Rubro] || 0) + 1;
+        acc[product.rubro] = (acc[product.rubro] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
   
@@ -44,7 +44,7 @@ const RubroChart2 = () => {
   
       const rubros = sortedRubros.map(item => item[0]);
       const counts = sortedRubros.map(item => item[1]);
-      const backgroundColors = rubros.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`);
+      const backgroundColors = ["rgba(253, 158, 10, 0.7)", "rgba(220, 73, 14, 0.7)", "rgba(246, 1, 82, 0.9)", "rgba(21, 95, 199, 0.7)","rgba(1, 95, 29, 0.7)" ];
       const borderColors = rubros.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
   
       setChartData({
@@ -61,9 +61,14 @@ const RubroChart2 = () => {
   }, [products]);
   
   
-  return <div className= "h-[600px] w-[600px]">
-    <Doughnut data={chartData} />
-  </div>;
+  return <div className="flex justify-center items-center bg-slate-600 rounded-xl">
+  <div className="bg-white shadow-xl rounded-lg m-4 p-12">
+    <div className="h-[600px] w-[600px]">
+      <Doughnut data={chartData} />
+    </div>
+  </div>
+</div>
+
 };
 
 export default RubroChart2;

@@ -13,12 +13,6 @@ const {
 export default class UserService {
   constructor() {}
 
-  // Función para generar un token de sesión (deberías implementar esta función)
-  async generateSessionToken(jwtUser) {
-    const token = jwt.sign(jwtUser, JWT_SECRET);
-    return token;
-  }
-
   // Funcion para decodificar el JWT
   async decodeUser(token) {
     try {
@@ -37,7 +31,9 @@ export default class UserService {
       const userDTO = new UserDTO(user);
       const jwtUser = JSON.parse(JSON.stringify(userDTO));
 
-      const token = jwt.sign(jwtUser, JWT_SECRET);
+      const token = jwt.sign(jwtUser, JWT_SECRET, {
+        expiresIn: "7d",
+      });
       if (!token) throw new Error("Error al generar token de autenticación");
 
       return token;
@@ -107,17 +103,6 @@ export default class UserService {
     userToUpdate.password = createHash(userToUpdate.password);
 
     return new Promise((resolve, reject) => {
-      // db.query(
-      //   `UPDATE usuarios
-      //   SET
-      //     password = COALESCE(?, password),
-      //     role = COALESCE(?, role),
-      //     name = COALESCE(?, name)
-      //   WHERE
-      //     (password IS NOT NULL OR ? IS NOT NULL)
-      //     AND (role IS NOT NULL OR ? IS NOT NULL)
-      //     AND (name IS NOT NULL OR ? IS NOT NULL); `,
-      //   [userToUpdate.name, userToUpdate.password, userToUpdate.role],
       db.query(
         `UPDATE usuarios
         SET 

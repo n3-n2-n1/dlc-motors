@@ -29,7 +29,7 @@ const Pagination: React.FC = () => {
 
 
   return (
-    <div className="flex w-full items-center mb-7">
+    <div className="flex w-full items-center">
       <div className="flex w-full mt-5 space-x-2 justify-start">
         {totalPages > 10 && (
           <button onClick={handleLeftClick}>

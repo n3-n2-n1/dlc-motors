@@ -86,8 +86,8 @@ const UserCard = ({ user }) => {
           <div className="bg-gray-800 text-white max-w-md flex flex-col rounded-xl shadow-lg p-4 w-full">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="rounded-full w-4 h-4 border border-purple-500"></div>
-                <div className="text-xl font-bold">{user.username}</div>
+                <div className="rounded-full w-4 h-4 border border-[#3496CB]"></div>
+                <div className="text-xl font-bold">{user.name}</div>
               </div>
               <div className="flex items-center space-x-4">
                 <button
@@ -100,7 +100,6 @@ const UserCard = ({ user }) => {
                 </button>
               </div>
             </div>
-            <div className="mt-4 text-gray-400 font-bold text-sm">Nombre: {user.name}</div>
             <div className="mt-4 text-gray-400 font-bold text-sm">Rol: {user.role}</div>
           </div>
         </div>
