@@ -34,9 +34,7 @@ export const AuthProvider: React.FC = ({
 
   useEffect(() => {
     const checkTokenValidity = async () => {
-      console.log("EL TOKEN EN EL USEFFECT", token);
       if (token && token !== "null") {
-        console.log("entró");
         const { status, payload } = await checkUser(token);
         if (status === "success") {
           const now = Math.floor(Date.now() / 1000);

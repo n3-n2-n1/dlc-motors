@@ -5,15 +5,23 @@ import { toast } from "react-toastify";
 
 const URL = "http://localhost:3000";
 
+const token = localStorage.getItem("userJWT");
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //----------------------READING HANDLERS-------------------------//
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 
-const fetchUser = async (): Promise<User[]> => {
+const fetchUser = async (token: string): Promise<User[]> => {
   try {
-    const response = await fetch(`${URL}/api/v1/users`);
+    const response = await fetch(`${URL}/api/v1/users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -51,14 +59,30 @@ const fetchErrors = async () => {
       throw new Error("Error status");
     }
 
-    const errorData = await response.json();
-    console.log(errorData);
-    return errorData.payload;
+    const returnsData = await response.json();
+    console.log(returnsData.payload);
+    return returnsData;
   } catch (error) {
     console.error("error", error);
     throw error;
   }
 };
+// const fetchErrors = async () => {
+//   try {
+//     const response = await fetch(`${URL}/api/v1/productErrors`);
+
+//     if (!response.ok) {
+//       throw new Error("Error status");
+//     }
+
+//     const errorData = await response.json();
+//     console.log(errorData);
+//     return return await response.json();
+//   } catch (error) {
+//     console.error("error", error);
+//     throw error;
+//   }
+// };
 
 const fetchReturns = async () => {
   try {
@@ -69,7 +93,7 @@ const fetchReturns = async () => {
     }
 
     const returnsData = await response.json();
-    console.log(returnsData);
+    console.log(returnsData.payload);
     return returnsData;
   } catch (error) {
     console.error("error", error);
@@ -83,7 +107,8 @@ const fetchMoves = async () => {
     if (!response.ok) {
       throw new Error("Error al obtener el historial de acciones");
     }
-    return await response.json(); // Retorna los datos
+    const responseData = await response.json(); // Retorna los datos
+    return responseData;
   } catch (error) {
     console.error("Error:", error);
     throw error; // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
@@ -105,7 +130,7 @@ const fetchDelivery = async () => {
 
 const fetchCosts = async () => {
   try {
-    const response = await fetch(`${URL}/api/v1/costos`);
+    const response = await fetch(`${URL}/api/v1/costs`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -316,6 +341,32 @@ const modifyProduct = async (productToEdit: any) => {
   }
 };
 
+
+const updateError = async (errorUpdates: any) => {
+  try {
+    const response = await fetch(
+      `${URL}/api/v1/productErrors/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(errorUpdates),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    console.log("Error target edited successfully:", responseData);
+  } catch (error) {
+    console.error("Error editing errors data:", error);
+  }
+}
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //---------------------DELETION HANDLERS-------------------------//
@@ -353,6 +404,7 @@ const editUser = async (userToUpdate: any) => {
       {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userToUpdate),
@@ -366,10 +418,128 @@ const editUser = async (userToUpdate: any) => {
   }
 };
 
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//-------------OBSERVATIONS/BRANDS HANDLERS----------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+
+const fetchBrands = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/brands`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    throw error;
+  }
+};
+
+const fetchErrorObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/errors`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Errors Observations:", error);
+    throw error;
+  }
+};
+
+const fetchOutcomeObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/outcomes`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Outcomes Observations:", error);
+    throw error;
+  }
+};
+
+const fetchReturnObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/returns`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Returns Observations:", error);
+    throw error;
+  }
+};
+
+const fetchIncomeObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/incomes`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Incomes Observations:", error);
+    throw error;
+  }
+};
+
+
+const createMultipleProducts = async (data: any) => {
+  try {
+    console.log('iiiiiiiiiiiii', data)
+    const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    console.log('Productos cargados exitosamente');
+  } catch (error) {
+    console.error('Error al enviar datos al servidor', error);
+  }
+};
+
+
 export {
   fetchUser,
   fetchErrors,
   createError,
+  updateError,
   fetchProducts,
   createProduct,
   modifyProduct,
@@ -384,4 +554,10 @@ export {
   fetchReturns,
   fetchDelivery,
   fetchCosts,
+  fetchBrands,
+  fetchErrorObservations,
+  fetchOutcomeObservations,
+  fetchReturnObservations,
+  fetchIncomeObservations,
+  createMultipleProducts
 };

@@ -1,5 +1,67 @@
 import { productService } from "../services/services.js";
 
+
+export const createMultipleProducts = async (req, res) => {
+  try {
+    const productList = req.body;
+
+    // Validar que productList no esté vacío y cada producto tenga los campos necesarios
+    if (!Array.isArray(productList)) {
+      return res.status(400).send({
+        status: "error",
+        error: "No products provided",
+      });
+    }
+
+    for (const product of productList) {
+      const {
+        codigoInt,
+        codOEM,
+        SKU,
+        descripcion,
+        rubro,
+        origen,
+        marcasCompatibles,
+        stock,
+        check,
+        contadorDevoluciones,
+        kit
+      } = product;
+
+      if (
+        !codigoInt
+      ) {
+        return res.status(400).send({
+          status: "error",
+          error: "Incomplete values in one or more products",
+        });
+      }
+    }
+
+    // Llama a un método que procesa la inserción masiva de los productos
+    const createdProducts = await productService.createMultipleProducts(productList);
+
+    if (!createdProducts) {
+      return res.status(404).send({
+        status: "error",
+        error: "Failed to create products",
+      });
+    }
+
+    
+
+    res.status(200).send({
+      status: "success",
+      payload: createdProducts,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to create products",
+    });
+  }
+};
+
 //Obtener los productitos
 export const getProducts = async (req, res) => {
   try {
@@ -64,32 +126,27 @@ export const createProduct = async (req, res) => {
     const {
       codigoInt,
       codOEM,
-      codTango,
+      SKU,
       descripcion,
       rubro,
       origen,
       marcasCompatibles,
       stock,
-      hasStock,
       imagen,
       contadorDevoluciones,
       kit,
-      tag,
-      precio,
     } = req.body;
 
     if (
 
       !codigoInt ||
       !codOEM ||
-      !codTango ||
+      !SKU ||
       !descripcion ||
       !rubro ||
       !origen ||
       !marcasCompatibles ||
-      !stock ||
-      !tag ||
-      !precio
+      !stock
     ) {
       return res.status(400).send({
         status: "error",
@@ -100,18 +157,15 @@ export const createProduct = async (req, res) => {
     const createdProduct = productService.createProduct(
       codigoInt,
       codOEM,
-      codTango,
+      SKU,
       descripcion,
       rubro,
       origen,
       marcasCompatibles,
       stock,
-      hasStock,
       imagen,
       contadorDevoluciones,
       kit,
-      tag,
-      precio,
     );
 
     if (!createdProduct || createdProduct.length === 0) {
@@ -139,31 +193,26 @@ export const editProduct = async (req, res) => {
     const {
       codigoInt,
       codOEM,
-      codTango,
+      SKU,
       descripcion,
       rubro,
       origen,
       marcasCompatibles,
       stock,
-      hasStock,
       imagen,
       contadorDevoluciones,
       kit,
-      tag,
-      precio,
     } = req.body;
 
     if (
       !codigoInt ||
       !codOEM ||
-      !codTango ||
+      !SKU ||
       !descripcion ||
       !rubro ||
       !origen ||
       !marcasCompatibles ||
-      !stock ||
-      !tag ||
-      !precio
+      !stock
     ) {
       return res.status(400).send({
         status: "error",
@@ -174,18 +223,15 @@ export const editProduct = async (req, res) => {
     const updatedProduct = productService.editProduct(
       codigoInt,
       codOEM,
-      codTango,
+      SKU,
       descripcion,
       rubro,
       origen,
       marcasCompatibles,
       stock,
-      hasStock,
       imagen,
       contadorDevoluciones,
       kit,
-      tag,
-      precio,
     );
 
     if (!updatedProduct || updatedProduct.length === 0) {

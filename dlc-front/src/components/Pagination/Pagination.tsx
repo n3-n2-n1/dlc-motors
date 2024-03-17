@@ -30,7 +30,7 @@ const Pagination: React.FC = () => {
 
   return (
     <div className="flex w-full items-center">
-      <div className="flex w-full mt-5 space-x-2 justify-start">
+      <div className="flex w-full ml-6 mt-5 space-x-2 justify-start">
         {totalPages > 10 && (
           <button onClick={handleLeftClick}>
             <ArrowIcon className="rotate-180" color="white" />

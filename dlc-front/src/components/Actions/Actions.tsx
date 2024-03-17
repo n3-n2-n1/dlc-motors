@@ -13,7 +13,6 @@ export interface IProduct {
   Producto: string;
   Rubro: string;
   CodBarras: string;
-  Precio: string;
   Stock: string;
 }
 
@@ -69,19 +68,6 @@ const Actions = () => {
         >
           Descargar
         </button>
-      </div>
-
-      <div className="flex items-center gap-3 mr-4">
-        {/* Botón para descarga */}
-
-        <Link to={paths.scanner}>
-        <button
-          
-          className="bg-[#3496CB] inline-flex font-bold items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-100 dark:text-gray-400 leading-none hover:text-gray-200 hover:bg-slate-800"
-          >
-          Escanear QR
-        </button>
-          </Link>
       </div>
 
       {/* DEL OTRO COSTADO */}

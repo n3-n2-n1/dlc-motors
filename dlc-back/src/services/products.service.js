@@ -1,194 +1,104 @@
-import db from "../database/db.js";
+import { ProductDAO } from "../dao/product.dao.js";
 
 export default class ProductService {
-  constructor() {}
+  constructor() {
+    this.productDAO = new ProductDAO();
+  }
+  
+
+  async createMultipleProducts(productList) {
+    try {
+      return await this.productDAO.createMultipleProducts(productList);
+    } catch (error) {
+      throw new Error("Error en el servicio" + error.message);
+    }
+  }
 
   async getProducts() {
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM productos", (error, results) => {
-        if (error) {
-          console.error("An error occurred while executing the query", error);
-          reject(new Error("Error al obtener los productos."));
-        } else {
-          resolve(results);
-        }
-      });
-    });
+    try {
+      return await this.productDAO.getProducts();
+    } catch (error) {
+      throw new Error("Error en el servicio:" + error.message);
+    }
   }
 
   async getProductsBySearchTerm(searchTerm) {
-    return new Promise((resolve, reject) => {
-      db.query(
-        "SELECT * FROM productos WHERE descripcion LIKE ?",
-        [`%${searchTerm}%`],
-        (error, results) => {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            reject(new Error("Error al abrir la base de datos."));
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
+    try {
+      return await this.productDAO.getProductsBySearchTerm(searchTerm);
+    } catch (error) {
+      throw new Error("Error en el servicio" + error.message);
+    }
   }
-  
 
   async createProduct(
     codigoInt,
     codOEM,
-    codTango,
+    SKU,
     descripcion,
     rubro,
     origen,
     marcasCompatibles,
     stock,
-    hasStock,
     imagen,
     contadorDevoluciones,
-    kit,
-    tag,
-    precio,
+    kit
   ) {
     try {
-      const marcasCompatiblesString = marcasCompatibles.join(", ");
-
-      // Realizar la lógica para insertar un nuevo producto en la base de datos
-      db.query(
-        "INSERT INTO productos (codigoInt, codOEM, codTango, descripcion, rubro, origen, marcasCompatibles, stock, hasStock, imagen, contadorDevoluciones, kit, tag, precio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          codigoInt,
-          codOEM,
-          codTango,
-          descripcion,
-          rubro,
-          origen,
-          marcasCompatiblesString,
-          stock,
-          hasStock,
-          imagen,
-          contadorDevoluciones,
-          kit,
-          tag,
-          precio,
-        ],
-        function (error) {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            throw new Error("Error al insertar el producto.");
-          }
-
-          // Get the inserted product
-          db.query(
-            "SELECT * FROM productos WHERE codigoInt = ?",
-            [codigoInt],
-            function (error, results) {
-              if (error) {
-                console.error(
-                  "An error occurred while executing the query",
-                  error
-                );
-                throw new Error("Error al obtener el producto insertado.");
-              }
-
-              return results;
-            }
-          );
-        }
+      return await this.productDAO.createProduct(
+        codigoInt,
+        codOEM,
+        SKU,
+        descripcion,
+        rubro,
+        origen,
+        marcasCompatibles,
+        stock,
+        imagen,
+        contadorDevoluciones,
+        kit
       );
     } catch (error) {
-      throw error;
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 
   async editProduct(
     codigoInt,
     codOEM,
-    codTango,
+    SKU,
     descripcion,
     rubro,
     origen,
     marcasCompatibles,
     stock,
-    hasStock,
     imagen,
     contadorDevoluciones,
-    kit,
-    tag,
-    precio,
+    kit
   ) {
     try {
-      const marcasCompatiblesString = marcasCompatibles.join(", ");
-  
-      return new Promise((resolve, reject) => {
-        db.query(
-          `UPDATE productos
-          SET 
-            codOEM = ?,
-            codTango = ?,
-            descripcion = ?,
-            rubro = ?,
-            origen = ?,
-            marcasCompatibles = ?,
-            stock = ?,
-            hasStock = ?,
-            imagen = ?,
-            contadorDevoluciones = ?,
-            kit = ?,
-            tag = ?,
-            precio = ?
-          WHERE codigoInt = ?;`,
-          [
-            codOEM,
-            codTango,
-            descripcion,
-            rubro,
-            origen,
-            marcasCompatiblesString,
-            stock,
-            hasStock,
-            imagen,
-            contadorDevoluciones,
-            kit,
-            tag,
-            precio,
-            codigoInt,
-          ],
-          (error, results) => {
-            if (error) {
-              console.error(error);
-              reject(new Error("Error al editar el producto"));
-            } else {
-              resolve(results);
-            }
-          }
-        );
-      });
+      return await this.productDAO.editProduct(
+        codigoInt,
+        codOEM,
+        SKU,
+        descripcion,
+        rubro,
+        origen,
+        marcasCompatibles,
+        stock,
+        imagen,
+        contadorDevoluciones,
+        kit
+      );
     } catch (error) {
-      throw error;
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 
   async deleteProduct(productId) {
     try {
-      db.query(
-        "DELETE FROM productos WHERE codigoInt = ?",
-        [productId],
-        (error, results) => {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            throw new Error("Error al abrir la base de datos.");
-          }
-
-          if (results.affectedRows === 0) {
-            throw new Error("Producto no encontrado.");
-          }
-
-          return results;
-        }
-      );
+      return await this.productDAO.deleteProduct(productId);
     } catch (error) {
-      throw error;
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 }

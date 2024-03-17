@@ -1,40 +1,23 @@
-import db from "../database/db.js";
+import HistoryServiceDAO from "../dao/history.dao.js";
 
 export default class HistoryService {
-  constructor() {}
+  constructor(db) {
+    this.HistoryServiceDAO = new HistoryServiceDAO(db);
+  }
 
   async getHistory() {
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM historial", (error, results) => {
-        if (error) {
-          console.error("An error occurred while executing the query", error);
-          reject(new Error("Error al obtener el historial."));
-        } else {
-          resolve(results);
-        }
-      });
-    });
+    try {
+      return await this.HistoryServiceDAO.getHistory();
+    } catch (error) {
+      throw new Error("Error en el servicio" + error.message)
+    }
   }
 
   async createHistory() {
     try {
-      db.query(
-        "INSERT INTO historial (accion, descripcion, fecha) VALUES (?, ?, ?)",
-        [historialData.accion, historialData.descripcion, historialData.fecha],
-        (error, results) => {
-          if (error) {
-            console.error(
-              "Error al registrar la acción en el historial:",
-              error
-            );
-            throw new Error("Error al registrar la acción en el historial");
-          }
-
-          return results;
-        }
-      );
+      return await this.HistoryServiceDAO.createHistory();
     } catch (error) {
-      throw error;
+      throw new Error("Error en el servicio" + error.message)
     }
   }
 }

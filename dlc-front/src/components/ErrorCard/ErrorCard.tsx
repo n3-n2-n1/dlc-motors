@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchErrors } from "../../utils/Handlers/Handlers";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Actions from "../Actions/Actions";
 import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
 import FiltroFloat from "../SearchFloat/SearchFloat";
-import { OutcomeObservations } from "../../routes/routes";
 import { User } from "../../Interfaces/User";
 import { fetchUser } from "../../utils/Handlers/Handlers";
+import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
+
 export interface Errors {
   cantidad: string;
   detalle: string;
@@ -17,11 +16,12 @@ export interface Errors {
 }
 
 const ErrorCard = () => {
+  const { errorsObservations } = useBrandsObservations();
+
   const [errorData, setErrorData] = useState<Errors[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [userData, setUserData] =useState<User[]>([])
-
+  const [userData, setUserData] = useState<User[]>([]);
 
   const [isEditing, setIsEditing] = useState<boolean[]>(
     new Array(errorData.length).fill(false)
@@ -46,11 +46,8 @@ const ErrorCard = () => {
       try {
         const usersData = await fetchUser();
         setUserData(usersData);
-        
-      } catch (error) {
-        
-      }
-    }
+      } catch (error) {}
+    };
 
     getUsersData();
     fetchData();
@@ -89,31 +86,28 @@ const ErrorCard = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 flex overflow-auto text-sm pt-6">
+    <div className="flex flex-col bg-gray-900 dark:text-white text-gray-600 overflow-auto text-sm pt-6">
       <div className="">
         <div className="">
-          
-        <h1 className="text-3xl mb-2 text-white font-weight-300 mb-4">
-          Historial de Errores
-        </h1>
-        <div className="flex flex-row">
-
-        <FiltroFloat
-          filtersConfig={[
-            { key: "search", label: "Buscar", type: "text", users: [] },
-            {
-              key: "observation",
-              label: "Observación",
-              type: "dropdown",
-              options: OutcomeObservations,
-              users: [],
-            },
-            // Añadir más configuraciones aquí
-          ]}
-        />
+          <h1 className="text-3xl text-white font-weight-300 mb-4">
+            Historial de Errores
+          </h1>
+          <div className="flex flex-row">
+            <FiltroFloat
+              filtersConfig={[
+                { key: "search", label: "Buscar", type: "text", users: [] },
+                {
+                  key: "observation",
+                  label: "Observación",
+                  type: "dropdown",
+                  options: errorsObservations,
+                  users: [],
+                },
+                // Añadir más configuraciones aquí
+              ]}
+            />
+          </div>
         </div>
-
-      </div>
       </div>
 
       {errorData.map((error, index) => (
@@ -162,7 +156,7 @@ const ErrorCard = () => {
                 />
                 <div className="pt-4 pb-6">
                   <button
-                    className="rounded rounded-full bg-blue-800 p-2 text-white"
+                    className="rounded-full bg-blue-800 p-2 text-white"
                     onClick={() => handleSave(index)}
                   >
                     Guardar

@@ -47,7 +47,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
         createUser(values as any);
         // location.reload();
         console.log(values);
-        toast.success('Usuario correctamente.')
+        toast.success('Usuario creado correctamente.')
+        formik.resetForm();
       } catch (error) {
         console.log(error)
         toast.error( `Error al crear el usuario. ${error}`)
@@ -64,7 +65,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   // const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden pt-4 pb-4">
+    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block pt-4 pb-4">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="flex-row">
           <p className="text-2xl mb-2 text-white font-weight-300">

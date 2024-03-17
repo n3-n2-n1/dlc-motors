@@ -1,8 +1,9 @@
 interface OptionsIconProps {
   color?: string;
+  className?: string;
 }
 
-const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "gray" }) => (
+const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "gray", className = "" }) => (
   
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -10,6 +11,7 @@ const OptionsIcon: React.FC<OptionsIconProps> = ({ color = "gray" }) => (
     height="24"
     viewBox="0 0 24 24"
     fill="none"
+    className={className}
   >
     <mask
       id="mask0_4_4402"

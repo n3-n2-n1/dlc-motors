@@ -10,6 +10,8 @@ import OptionsIcon from "../icon/OptionsIcon/OptionsIcon";
 // import { Link } from "react-router-dom";
 // import { paths } from "../../routes/paths.ts";
 
+
+
 function TableList({ category }) {
   const navigate = useNavigate();
 
@@ -62,7 +64,6 @@ function TableList({ category }) {
     "MarcasCompat",
     "Kit",
     "Stock",
-    "¿Stock?",
     "Devoluciones",
     "Check",
   ];
@@ -116,44 +117,44 @@ function TableList({ category }) {
 
   return (
     <>
-<div className="overflow-x-auto max-h-[calc(100vh-4rem)]">
-  <table className="w-full text-left">
-    <thead className="sticky top-0 bg-gray-900 text-gray-100">
-      <tr>
-        <th className="font-bold px-4 pt-2 pb-3 rounded-3xl">Acciones</th>
-        {columns.map((column, index) => (
-          <th
-            key={index}
-            onClick={() => toggleColumnWidth(index)}
-            className="cursor-pointer bg-gray-900 px-3 pb-3 items-center border-b pt-2 justify-center"
-            style={columnStyles(shrunkColumns[index])}
-          >
-            {column}
-          </th>
-        ))}
-      </tr>
-    </thead>
+      <div className="overflow-x-auto h-auto">
+        <table className="w-full text-left">
+          <thead className="sticky top-0 bg-gray-900 text-gray-100">
+            <tr>
+              <th className="cursor-pointer bg-gray-900 px-3 pb-3 items-center border-b pt-2 justify-center text-center">⚙️</th>
+              {columns.map((column, index) => (
+                <th
+                  key={index}
+                  onClick={() => toggleColumnWidth(index)}
+                  className="cursor-pointer bg-gray-900 px-3 pb-3 items-center border-b pt-2 justify-center"
+                  style={columnStyles(shrunkColumns[index])}
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-    <tbody className="text-gray-100">
-      {itemsToDisplay
-        .slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )
-        .map((product, index) => (
-          <tr key={index}>
-            <td className="flex items-center justify-center h-full hover:bg-slate-600">
-              <button
-                onClick={() =>
-                  setOpenDropdown(openDropdown === index ? null : index)
-                }
-                className="h-full"
-              >
-                <OptionsIcon color="white" />
-              </button>
-              {openDropdown === index && (
-                <div className="z-50 absolute -right-[120px] w-32 rounded-md shadow-lg bg-gray-700">
-                  <div className="py-1">
+          <tbody className="text-gray-100">
+            {itemsToDisplay
+              .slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage
+              )
+              .map((product, index) => (
+                <tr key={index} className="h-full">
+                  <td className="relative h-full flex items-center justify-center hover:bg-slate-600">
+                    <button
+                      onClick={() =>
+                        setOpenDropdown(openDropdown === index ? null : index)
+                      }
+                      className="flex items-center justify-center px-4 p-2 h-full"
+                    >
+                      <OptionsIcon color="white" className="h-full" />
+                    </button>
+                    {openDropdown === index && (
+                      <div className="z-50 absolute top-8 left-8 w-32 rounded-md shadow-lg bg-gray-700">
+                        <div className="py-1">
                           <a
                             href="#"
                             className="block px-4 py-2 text-sm text-white hover:bg-gray-600"
@@ -173,17 +174,18 @@ function TableList({ category }) {
                         </div>
                       </div>
                     )}
+                    
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.codigoInt || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    {product.codigoTango || "-"}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800 ">
+                    {product.SKU || "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.codOEM || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                  <td className="sm:px-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     <div className="">{product.descripcion || "-"}</div>
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
@@ -195,18 +197,11 @@ function TableList({ category }) {
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
                     {product.marcasCompatibles || "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-80  md:table-cell hidden0">
-                    {product.hasStock ? "Sí" : "No"}
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  ">
+                    {product.kit ? product.kit : "-"}
                   </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
-                    {product.kit ? "Sí" : "No"}
-                  </td>
-
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  md:table-cell hidden">
+                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800  ">
                     {product.contadorDevoluciones || "-"}
-                  </td>
-                  <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800">
-                    {product.CodBarras ? "-" : "-"}
                   </td>
                   <td className="sm:p-3 py-2 px-1 border-b border-gray-600 dark:border-gray-800"></td>
                 </tr>
@@ -229,7 +224,7 @@ function TableList({ category }) {
           </div>
         </div>
       )}
-      <div className="px-10">
+      <div className="px-20">
         <Pagination />
       </div>
     </>

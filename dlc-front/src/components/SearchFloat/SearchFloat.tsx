@@ -74,6 +74,7 @@ const FiltroFloat: React.FC<FiltroProps> = ({ filtersConfig }) => {
 
   const defaultOptionTexts = {
     observacion: "Observación",
+    movimiento: "Tipo movimiento",
     user: "Usuario",
     marca: "Marca",
     origen: "Origen",

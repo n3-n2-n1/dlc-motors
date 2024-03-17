@@ -1,18 +1,27 @@
-import db from "../database/db.js";
+import { costsService } from "../services/services.js";
 
-const getCosts = (req, res) => {
-  db.query("SELECT * FROM costos", (error, results) => {
-    if (error) {
-      console.error("An error occurred while executing the query", error);
-      res.status(500).json({ error: "Error al abrir la base de datos." });
-      return;
+export const getCosts = async (req, res) => {
+  try {
+    const costs = await costsService.getCosts();
+    if(!costs){
+      return res.status(404).send({
+        status: "error",
+        error: "No cost found",
+      })
     }
 
-    res.json(results);
-  });
+    res.status(200).send({
+      status: "success",
+      payload: costs
+
+    })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      status: "error",
+      error: "Failed to get costs"
+    })
+  }
 };
 
 
-
-
-export default {getCosts}

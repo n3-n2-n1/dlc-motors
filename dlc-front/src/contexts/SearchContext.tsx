@@ -7,10 +7,10 @@ interface SearchContextProps {
   setTotalPages: (pages: number) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  searchResults: any[]; // ! TYPE
-  setSearchResults: (results: any[]) => void; // ! TYPE
-  products: any[]; // ! TYPE
-  setProducts: (results: any[]) => void; // ! TYPE
+  searchResults: any[];
+  setSearchResults: (results: any[]) => void;
+  products: any[];
+  setProducts: (results: any[]) => void;
   itemsPerPage: number;
   categories: string[];
   setCategories: (categories: string[]) => void;
@@ -37,7 +37,14 @@ export const SearchProvider: React.FC = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchProducts();
+        let data = await fetchProducts();
+        data = data.map((item: any) => ({
+          ...item,
+          kit: item.kit === "No" ? null : item.kit.split(",").map(Number),
+          marcasCompatibles: item.marcasCompatibles
+            .split(",")
+            .map((s: any) => s.trim()),
+        }));
         setProducts(data);
         setSearchResults(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
@@ -49,7 +56,7 @@ export const SearchProvider: React.FC = ({
     fetchData();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     try {
       const uniqueCategories = [
         ...new Set(products.map((product) => product.rubro)),

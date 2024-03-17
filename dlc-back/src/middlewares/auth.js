@@ -6,9 +6,6 @@ const {
 } = config;
 
 export const verifyRole = (req, res, next, rolesToVerify) => {
-  // const token = req.cookies.userJWT;
-  // ! VER DE DONDE MIERDA SACO EL PUTO TOKEN
-
   if (!token) {
     return res.status(401).send({
       status: "error",

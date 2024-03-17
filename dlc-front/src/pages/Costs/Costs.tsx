@@ -1,94 +1,66 @@
-import Dashcards from "../../components/Dashcards/Dashcards";
-import { useState } from "react";
+
 import { useSearchContext } from "../../contexts/SearchContext";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 import { useFilterValues } from "../../contexts/FilterContext";
-import { OutcomeObservations } from "../../routes/routes";
-import FiltroFloat from "../../components/SearchFloat/SearchFloat";
-import { CostFabricTable, CostImportedTable, CostResaleTable } from "../../components/TableMoves/TableMoves";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
+import Dashcards from "../../components/Dashcards/Dashcards";
+import { COLUMNSFABRIC, DELIVERYCOLUMNS, ERRORCOLUMNS, IMPORTEDCOLUMNS, MOVESCOLUMNS, RESALECOLUMNS, RETURNCOLUMNS } from "../../components/columns/Columns";
+import { ErrorFetchNodes, MovesFetchNodes, DeliveryFetchNodes, ReturnsFetchNodes, FabricCost, ImportedCost, ResaleCost } from "../../nodes/productNodes";
+import ErrorTableChart from "../../components/Tables/ErrorTableChart";
+import ReturnTableChart from "../../components/Tables/ReturnTableChart";
+import MoveTableChart from "../../components/Tables/MoveTableChart";
+import DeliveryTableChart from "../../components/Tables/DeliveryTableChart";
+import ImportedTableChart from "../../components/Tables/ImportedTableChart";
+import ResaleTableChart from "../../components/Tables/ResaleTableChart";
+import FabricTableChart from "../../components/Tables/FabricTableChart";
 
-
+enum TableType {
+  Imported,
+  Resale,
+  Fabric
+}
 
 const Costs = () => {
 
   const { products } = useSearchContext();
-  const [currentComponent, setCurrentComponent] =useState<React.ReactNode>(null);
-  const [filterConfig, setFilterConfig] = useState<FilterConfig[]>([]);
-  const { filterValues, setFilterValues } = useFilterValues();
+  const [currentTable, setCurrentTable] = useState<TableType | null>(null);
+  const { categories } = useSearchContext();
 
 
-  const costFilterConfig: FilterConfig[] = [
-    {
-      key: "rubro",
-      label: "Rubros",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-      options: [],
-      
-    }, 
+  const changeTable = (tableType: TableType) => {
+    setCurrentTable(tableType);
+  };
 
-    {
-      key: "texto",
-      label: "Ingrese texto...",
-      type: "text", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-    }, 
-
-    {
-      key: "marcas",
-      label: "Marcas Compatibles",
-      type: "dropdown",
-      options: []
-    }, 
-
-  
-  ]
-
-
+  const fabricNodes = FabricCost();
+  const importedNodes = ImportedCost();
+  const resaleNodes = ResaleCost()
     
-  const changeToImported = () => {
-    setCurrentComponent(<CostImportedTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
+  const renderTable = () => {
+    switch (currentTable) {
+      case TableType.Imported:
+        return <ImportedTableChart columns={IMPORTEDCOLUMNS} data={fabricNodes} category={categories}/>;
+      case TableType.Resale:
+        return <ResaleTableChart columns={RESALECOLUMNS} data={importedNodes}  category={categories}/>;
+      case TableType.Fabric:
+        return <FabricTableChart columns={COLUMNSFABRIC} data={fabricNodes} category={categories} />;
+      default:
+        return <div></div>;
+    }
   };
 
-  const changeToResale = () => {
-    setCurrentComponent(<CostResaleTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
-  };
-
-  const changeToFabric = () => {
-    setCurrentComponent(<CostFabricTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
-  };
 
   return (
-    <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6">
-
-      <Navbar title="Costos" subtitle="Costos de producto y demás" />
-
-      <section className="flex flex-row gap-6">
-        <Dashcards buttons={[
-            { text: "Importado", action: changeToImported, link: "" },
-          ]}
-        />
-        <Dashcards buttons={[
-            {
-              text: "Reventa", action: changeToResale, link: "",
-            },
-          ]}
-        />
-        <Dashcards buttons={[
-            {
-              text: "Fabrica", action: changeToFabric, link: "",
-            },
-          ]}
-        />
-        <FiltroFloat filtersConfig={filterConfig} />
-
+    <div className="flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6">
+      <Navbar title="Costos" subtitle="" />
+      <section className="flex flex-row gap-6 pb-4 pt-4">
+        <Dashcards buttons={[{ text: "Importados", action: () => changeTable(TableType.Imported), link: "" }]}/>
+        <Dashcards buttons={[{ text: "Reventa", action: () => changeTable(TableType.Resale), link: ""}]}/>
+        <Dashcards buttons={[{ text: "Fábrica", action: () => changeTable(TableType.Fabric), link: ""}]}/>
       </section>
-      <div className="border-t border-gray-200 mt-4">{currentComponent}</div>
+      <div className="border-t border-gray-200 ">
+        {renderTable()}
+      </div>
     </div>
   );
 };
