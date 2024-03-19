@@ -18,10 +18,29 @@ enum TableType {
 const HistoryView = () => {
   const [currentTable, setCurrentTable] = useState<TableType | null>(null);
   
+  const [selectedButton, setSelectedButton] = useState<string>("");
+  
 
   const changeTable = (tableType: TableType) => {
     setCurrentTable(tableType);
+    switch (tableType) {
+      case TableType.Error:
+        setSelectedButton("Errores");
+        break;
+      case TableType.Return:
+        setSelectedButton("Devoluciones");
+        break;
+      case TableType.Inventory:
+        setSelectedButton("Movimientos");
+        break;
+      case TableType.Delivery:
+        setSelectedButton("Pedidos");
+        break;
+      default:
+        setSelectedButton("");
+    }
   };
+
   const errorNodes = ErrorFetchNodes();
   const movesNodes = MovesFetchNodes();
   const returnNodes = ReturnsFetchNodes();
@@ -30,7 +49,7 @@ const HistoryView = () => {
   const renderTable = () => {
     switch (currentTable) {
       case TableType.Error:
-        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} />;
+        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} />; 
       case TableType.Return:
         return <ReturnTableChart columns={RETURNCOLUMNS} data={returnNodes}  />;
       case TableType.Inventory:
@@ -44,13 +63,13 @@ const HistoryView = () => {
 
   
   return (
-    <div className="flex flex-col bg-gray-100 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 dark:bg-gray-900">
+    <div className="flex flex-col bg-gray-100 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 dark:bg-gray-900 transition-colors duration-300 select-none">
       <Navbar title="Historial" subtitle="" />
       <section className="flex flex-row gap-6 pb-4 pt-4">
-        <Dashcards buttons={[{ text: "Revisión de Errores", action: () => changeTable(TableType.Error), link: "" }]}/>
-        <Dashcards buttons={[{ text: "Historial de Devoluciones", action: () => changeTable(TableType.Return), link: ""}]}/>
-        <Dashcards buttons={[{ text: "Historial de Movimientos", action: () => changeTable(TableType.Inventory), link: ""}]}/>
-        <Dashcards buttons={[{ text: "Pedidos", action: () => changeTable(TableType.Delivery), link: "" }]} />
+        <Dashcards buttons={[{ text: "Revisión de Errores", action: () => changeTable(TableType.Error), link: "", isActive: selectedButton==="Errores" }]}/>
+        <Dashcards buttons={[{ text: "Historial de Devoluciones", action: () => changeTable(TableType.Return), link: "", isActive: selectedButton==="Devoluciones"}]}/>
+        <Dashcards buttons={[{ text: "Pedidos", action: () => changeTable(TableType.Delivery), link: "", isActive: selectedButton==="Pedidos"}]} />
+        <Dashcards buttons={[{ text: "Historial de Movimientos", action: () => changeTable(TableType.Inventory), link: "", isActive: selectedButton==="Movimientos"}]}/>
       </section>
       <div className="border-t border-gray-200 ">
         {renderTable()}

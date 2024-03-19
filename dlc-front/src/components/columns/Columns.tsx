@@ -2,7 +2,7 @@ import { Button } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
 
-const resize = { resizerHighlight: "#dee2e6", minWidth: 25 };
+const resize = { resizerHighlight: "#dee2e6", minWidth: 100, innerWidth: 200 };
 const hiddenColumns = [""];
 
 const ActionCell = ({ codigoInt }: any) => {
@@ -11,12 +11,10 @@ const ActionCell = ({ codigoInt }: any) => {
   return (
     <div className="flex flex-row gap-2 w-full">
       <Link to={`/productos/editar/${codigoInt}`}>
-        <button className={`w-7 p-1 hover:bg-gray-500 rounded-3xl`}>
-          🖋️
-        </button>
+        <button className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}>🖋️</button>
       </Link>
       <button
-        className={`w-7 p-1 hover:bg-gray-500 rounded-3xl`}
+        className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}
         onClick={() => handleDeleteModal(codigoInt)}
       >
         ❌
@@ -24,6 +22,7 @@ const ActionCell = ({ codigoInt }: any) => {
     </div>
   );
 };
+
 
 export const PRODUCTCOLUMNS = [
   {
@@ -33,52 +32,52 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "Código Interno",
-    renderCell: (item: any) => item.codigoInt,
+    renderCell: (item: any) => <div style={{ textAlign: 'center' }}>{item.codigoInt.toLocaleString()}</div>,
     resize,
     hide: hiddenColumns.includes("Código Interno"),
   },
   {
     label: "SKU",
-    renderCell: (item: any) => item.SKU,
+    renderCell: (item: any) => item.SKU || '-',
     resize,
     hide: hiddenColumns.includes("SKU"),
     sort: { sortKey: "SKU" },
   },
   {
     label: "Rubro",
-    renderCell: (item: any) => item.rubro,
+    renderCell: (item: any) => item.rubro || '-',
     resize,
     hide: hiddenColumns.includes("Rubro"),
   },
   {
     label: "Descripción",
-    renderCell: (item: any) => item.descripcion,
+    renderCell: (item: any) => item.descripcion || '-',
     resize,
     hide: hiddenColumns.includes("Descripción"),
     sort: { sortKey: "DESCRIPCION" },
   },
   {
     label: "Origen",
-    renderCell: (item: any) => item.origen,
+    renderCell: (item: any) => item.origen || '-',
     resize,
     hide: hiddenColumns.includes("Origen"),
     sort: { sortKey: "ORIGEN" },
   },
   {
     label: "Marcas",
-    renderCell: (item: any) => item.marcasCompatibles,
+    renderCell: (item: any) => item.marcasCompatibles || '-',
     resize,
     hide: hiddenColumns.includes("Marcas Compatibles"),
   },
   {
     label: "Kit",
-    renderCell: (item: any) => item.kit,
+    renderCell: (item: any) => item.kit || '-',
     resize,
     hide: hiddenColumns.includes("Kit"),
   },
   {
     label: "Dev",
-    renderCell: (item: any) => item.contadorDevoluciones,
+    renderCell: (item: any) => item.contadorDevoluciones || '-',
     resize,
     hide: hiddenColumns.includes("Contador Devoluciones"),
   },
@@ -90,7 +89,7 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock || '-',
     resize,
     hide: hiddenColumns.includes("Stock"),
     sort: { sortKey: "STOCK" },
@@ -100,53 +99,62 @@ export const PRODUCTCOLUMNS = [
 //Fecha/hora	Aviso	Imagen	Código interno	Descripción		OEM	Marca	Rubro	Origen	Stock
 export const NOTIFCOLUMNS = [
   {
-    label: "Fecha",
-    renderCell: (item: any) => item.fecha,
-    resize,
-  },
-  {
-    label: "Aviso",
-    renderCell: (item: any) => item.message,
+    label: <div className="">Aviso</div>,
+    renderCell: (item: any) => (
+      <div className="p-2 break-words text-sm text-gray-700 dark:text-gray-200">
+        {item.message || '-'}
+      </div>
+    ),
     resize,
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.image,
+    renderCell: (item: any) => item.imagen || '-',
     resize,
   },
   {
     label: "Codigo Interno",
-    renderCell: (item: any) => item.codInterno,
+    renderCell: (item: any) => item.codigoInt || '-',
     resize,
   },
   {
     label: "Descripción",
-    renderCell: (item: any) => item.name,
+    renderCell: (item: any) => item.name || '-',
     resize,
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.oem,
+    renderCell: (item: any) => item.codOEM || '-',
     resize,
   },
   {
     label: "Marca",
-    renderCell: (item: any) => item.marca,
+    renderCell: (item: any) => item.marca || '-',
     resize,
   },
   {
     label: "Rubro",
-    renderCell: (item: any) => item.rubro,
+    renderCell: (item: any) => item.rubro || '-',
     resize,
   },
   {
     label: "Origen",
-    renderCell: (item: any) => item.origen,
+    renderCell: (item: any) => item.origen || '-',
     resize,
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock || '-',
+    resize,
+  },
+
+  {
+    label: "",
+    renderCell: (item: any) => '',
+    resize,
+  },  {
+    label: "",
+    renderCell: (item: any) => '',
     resize,
   },
 ];
@@ -155,52 +163,59 @@ export const NOTIFCOLUMNS = [
 export const DELIVERYCOLUMNS = [
   {
     label: "Fecha",
-    renderCell: (item: any) => item.fecha,
+    renderCell: (item: any) => <div className="p-2">
+      {item.fecha}
+    </div> || '-',
     resize,
   },
   {
     label: "Observacion",
-    renderCell: (item: any) => item.observaciones,
+    renderCell: (item: any) => item.observaciones || "-",
     resize,
   },
   {
     label: "Num. Impo.",
-    renderCell: (item: any) => item.numImpo,
+    renderCell: (item: any) => item.numImpo || "-",
     resize,
   },
   {
     label: "Cantidad",
-    renderCell: (item: any) => item.cantidad,
+    renderCell: (item: any) => item.cantidad || "-",
     resize,
   },
   {
     label: "Codigo Interno",
-    renderCell: (item: any) => item.codigoInt,
+    renderCell: (item: any) => item.codigoInt || "-",
     resize,
   },
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.desc,
+    renderCell: (item: any) => item.desc || "-",
     resize,
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.codOEM,
+    renderCell: (item: any) => item.codOEM || "-",
     resize,
   },
   {
     label: "Productos",
-    renderCell: (item: any) => item.productos,
+    renderCell: (item: any) => item.productos || "-",
     resize,
   },
   {
     label: "Stock deposito",
-    renderCell: (item: any) => item.stockDeposito,
+    renderCell: (item: any) => item.stockDeposito || "-",
     resize,
   },
   {
     label: "Stock Acumulado",
-    renderCell: (item: any) => item.stockAcumulado,
+    renderCell: (item: any) => item.stockAcumulado || "-",
+    resize,
+  },
+  {
+    label: " ",
+    renderCell: (item: any) => '',
     resize,
   },
 ];
@@ -209,58 +224,69 @@ export const DELIVERYCOLUMNS = [
 export const ERRORCOLUMNS = [
   {
     label: "Usuario",
-    renderCell: (item: any) => item.user,
+    renderCell: (item: any) => <div className="p-2">
+      {item.user}
+    </div> || "-",
     resize,
   },
   {
     label: "Fecha",
-    renderCell: (item: any) => item.fecha,
+    renderCell: (item: any) => item.fecha || "-",
     resize,
   },
   {
     label: "Observación",
-    renderCell: (item: any) => item.observaciones,
+    renderCell: (item: any) => item.observaciones || "-",
     resize,
   },
   {
     label: "Detalle",
-    renderCell: (item: any) => item.det,
+    renderCell: (item: any) => item.det || "-",
     resize,
   },
   {
     label: "Código Interno",
-    renderCell: (item: any) => item.codInterno,
+    renderCell: (item: any) => item.codInterno || "-",
     resize,
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.codOEM,
+    renderCell: (item: any) => item.codOEM || "-",
     resize,
   },
   {
     label: "Descripción",
-    renderCell: (item: any) => item.desc,
+    renderCell: (item: any) => item.desc || "-",
     resize,
   },
   {
     label: "Stock Actual",
-    renderCell: (item: any) => item.stockActual,
+    renderCell: (item: any) => item.stockActual || "-",
     resize,
   },
   {
     label: "Stock Real",
-    renderCell: (item: any) => item.stockReal,
+    renderCell: (item: any) => item.stockReal || "-",
     resize,
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.img,
+    renderCell: (item: any) => item.img || "-",
     resize,
   },
   {
-    label: "Revisión",
-    renderCell: (item: any) => item.estado,
-    resize,
+    label: 'Estado',
+    
+    renderCell: (item) => (
+      <select
+        style={{ width: '100%', border: '1px', fontSize: '1rem', padding: 1, margin: 0 }}
+        value={item.estado}
+        onChange={(event) => console.log(event.target.value, item.id, 'type')}
+      >
+        <option value="SETUP">Corregido</option>
+        <option value="LEARN">En revisión</option>
+      </select>
+    ),
   },
 ];
 
@@ -268,37 +294,41 @@ export const ERRORCOLUMNS = [
 export const MOVESCOLUMNS = [
   {
     label: "Fecha",
-    renderCell: (item: any) => item.fecha,
+    renderCell: (item: any) => <div className="p-2">
+
+      {item.fecha} 
+    </div>
+      || '-',
     resize,
   },
   {
     label: "Movimiento",
-    renderCell: (item: any) => item.tipoMov,
+    renderCell: (item: any) => item.tipoMov || '-',
     resize,
   },
   {
     label: "Observacion",
-    renderCell: (item: any) => item.observaciones,
+    renderCell: (item: any) => item.observaciones || '-',
     resize,
   },
   {
     label: "Courier",
-    renderCell: (item: any) => item.det,
+    renderCell: (item: any) => item.det || '-',
     resize,
   },
   {
     label: "Detalle",
-    renderCell: (item: any) => item.det,
+    renderCell: (item: any) => item.det || '-',
     resize,
   },
   {
     label: "Cantidad",
-    renderCell: (item: any) => item.cantidad,
+    renderCell: (item: any) => item.cantidad || '-',
     resize,
   },
   {
     label: "Kit",
-    renderCell: (item: any) => item.kit,
+    renderCell: (item: any) => item.kit || '-',
     resize,
   },
   {
@@ -308,123 +338,145 @@ export const MOVESCOLUMNS = [
   },
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.desc,
+    renderCell: (item: any) => item.desc || '-',
     resize,
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.codOEM,
+    renderCell: (item: any) => item.codOEM || '-',
     resize,
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock || '-',
     resize,
   },
 ];
 
 export const HOMECOLUMNS = [
   {
-    label: "Ultimos Movimientos",
-    renderCell: (item: any) => item.codigoInt,
     resize,
-    
+    label: "Ultimos Movimientos",
+    renderCell: (item: any) => (
+      <div className="p-4 text-black">{item.observaciones}</div>
+    ),
   },
-   
 ];
-
-
-
 
 // Usuario	Fecha/hora	Observcación	Detalle	Código interno	OEM	Descripción	Cantidad	Kit	Stock actual	Contador de dev
 export const RETURNCOLUMNS = [
   {
     label: "Usuario",
-    renderCell: (item: any) => item.usuario,
+    renderCell: (item: any) => <div className="p-2">
+      {item.user}
+    </div> || '-',
     resize,
   },
   {
     label: "Fecha",
-    renderCell: (item: any) => item.fecha,
+    renderCell: (item: any) => item.fecha || '-',
     resize,
   },
   {
     label: "Observacion",
-    renderCell: (item: any) => item.observaciones,
+    renderCell: (item: any) => item.observaciones || '-',
     resize,
   },
   {
     label: "Detalle",
-    renderCell: (item: any) => item.detalle,
+    renderCell: (item: any) => item.detalle || '-',
     resize,
   },
   {
     label: "Codigo Interno",
-    renderCell: (item: any) => item.codIntermp,
+    renderCell: (item: any) => item.codIntermp || '-',
     resize,
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.codOEM,
+    renderCell: (item: any) => item.codOEM || '-',
     resize,
   },
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.desc,
+    renderCell: (item: any) => item.desc || '-',
     resize,
   },
   {
     label: "Cantidad",
-    renderCell: (item: any) => item.cantidad,
+    renderCell: (item: any) => item.cantidad || '-',
     resize,
   },
   {
     label: "Kit",
-    renderCell: (item: any) => item.kit,
+    renderCell: (item: any) => item.kit || '-',
     resize,
   },
   {
     label: "Contador Dev",
-    renderCell: (item: any) => item.contador,
+    renderCell: (item: any) => item.contador || '-',
     resize,
   },
 ];
 
-
 export const IMPORTEDCOLUMNS = [
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.descripcion,
+    innerWidth: 120,
+    renderCell: (item: any) => <div className="p-2">
+      {item.descripcion}
+    </div>
+        || '-',
     resize,
   },
   {
     label: "Código",
-    renderCell: (item: any) => item.codigo,
+    renderCell: (item: any) => item.codigo  || '-',
     resize,
   },
   {
     label: "Marca",
-    renderCell: (item: any) => item.marca,
+    renderCell: (item: any) => item.marcas  || '-',
     resize,
   },
   {
     label: "SKU",
-    renderCell: (item: any) => item.SKU,
+    renderCell: (item: any) => item.sku  || '-',
     resize,
   },
   {
     label: "Proveedores",
-    renderCell: (item: any) => item.proveedores,
+    renderCell: (item: any) => item.proveedores  || '-',
     resize,
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock  || '-',
     resize,
   },
   {
     label: "Rubro",
-    renderCell: (item: any) => item.rubro,
+    renderCell: (item: any) => item.rubro  || '-',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
     resize,
   },
 ];
@@ -432,75 +484,120 @@ export const IMPORTEDCOLUMNS = [
 export const RESALECOLUMNS = [
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.descripcion,
+    renderCell: (item: any) => <div className="p-2">
+      {item.descripcion}
+    </div> || '-',
     resize,
   },
   {
     label: "Código",
-    renderCell: (item: any) => item.codigo,
+    renderCell: (item: any) => item.codigo || '-',
     resize,
   },
   {
     label: "Marca",
-    renderCell: (item: any) => item.marca,
+    renderCell: (item: any) => item.marca || '-',
     resize,
   },
   {
     label: "SKU",
-    renderCell: (item: any) => item.SKU,
+    renderCell: (item: any) => item.SKU || '-',
     resize,
   },
   {
     label: "Proveedores",
-    renderCell: (item: any) => item.proveedores,
+    renderCell: (item: any) => item.proveedores || '-',
     resize,
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock || '-',
     resize,
   },
   {
     label: "Rubro",
-    renderCell: (item: any) => item.rubro,
+    renderCell: (item: any) => item.rubro || '-',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
     resize,
   },
 ];
 
-export const COLUMNSFABRIC =[
+export const COLUMNSFABRIC = [
   {
     label: "Descripcion",
-    renderCell: (item: any) => item.descripcion,
+    renderCell: (item: any) => <div className="p-2">
+      {item.descripcion}
+    </div> || '-',
     resize,
   },
   {
     label: "Código",
-    renderCell: (item: any) => item.codigo,
+    renderCell: (item: any) => item.codigo || '-',
     resize,
   },
   {
     label: "Marca",
-    renderCell: (item: any) => item.marca,
+    renderCell: (item: any) => item.marca || '-',
     resize,
   },
   {
     label: "SKU",
-    renderCell: (item: any) => item.SKU,
+    renderCell: (item: any) => item.SKU || '-',
     resize,
   },
   {
     label: "Proveedores",
-    renderCell: (item: any) => item.proveedores,
+    renderCell: (item: any) => item.proveedores || '-',
     resize,
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock,
+    renderCell: (item: any) => item.stock || '-',
     resize,
   },
   {
     label: "Rubro",
-    renderCell: (item: any) => item.rubro,
+    renderCell: (item: any) => item.rubro || '-',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
+    resize,
+  },
+  {
+    label: "",
+    renderCell: (item: any) => item.null  || '',
     resize,
   },
 ];
+

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import '@mantine/core/styles.css';
 import AppRoutes from "./routes/routes";
-
+import './App.css'
 import { AuthProvider } from "./contexts/AuthContext";
 import { UserProvider } from "./contexts/UserContext";
 import { SearchProvider } from "./contexts/SearchContext";

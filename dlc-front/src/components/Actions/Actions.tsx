@@ -22,18 +22,12 @@ const Actions = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // const handleEditMassive = () => {
-  //   // Lógica para la edición masiva
-  //   console.log("Editar masivamente");
-  // };
 
   const handleDownload = () => {
     exportToExcel();
   };
 
-  // const handleAddMassiveData = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   handleAddMassive(event as any);
-  // };
+
 
   const handleSearch = async () => {
     try {

@@ -59,7 +59,7 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
 
   const customTheme = {
     Table:  `
-    --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(10, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -259,7 +259,9 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     (node: any) =>
 
       node.codigoInt?.toLowerCase().includes(codeSearch.toLowerCase()) ||
-      node.numImpo?.toLowerCase().includes(impoSearch.toLowerCase())
+      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+      node.det?.toLowerCase().includes(search.toLowerCase()) ||
+      node.desc?.toLowerCase().includes(search.toLowerCase()) 
   );
 
   // // Hide columns
@@ -294,8 +296,19 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   }
 
   const [selectedImpo, setSelectedImpo] = React.useState(false);
+  useCustom("impo", errorData, {
+    state: { isHide },
+    onChange: onImpoChange,
+  });
+
+  function onImpoChange(action: any, state: any) {
+    console.log(action, state);
+    pagination.fns.onSetPage(0);
+  }
+
+
   const [impoSearch, setImpoSearch] = React.useState("");
-  if(selectedImpo) {
+  if(impoSearch) {
     errorNodes = errorNodes.filter((node: any) =>
     node.numImpo?.toLowerCase().includes(impoSearch.toLowerCase()));
   }
@@ -305,6 +318,16 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
       node.codigoInt?.toLowerCase().includes(selectedCode.toLowerCase())
     );
   }
+  if (search) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+      node.det?.toLowerCase().includes(search.toLowerCase())
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
 
   return (
     <>
@@ -380,7 +403,7 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
           hover:[&>div>*]:text-white
           [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
           [&>div>.active]:text-white
-          rounded-full
+          rounded-full select-none
         "
         />
       </Group>

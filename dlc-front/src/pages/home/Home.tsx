@@ -5,27 +5,29 @@ import { useAuth } from "../../contexts/AuthContext";
 import ScrollNot from "../../components/Chart/ScrollNot";
 import Stats from "../../components/Chart/Stats";
 import { useState, useEffect } from "react";
-import { fetchDelivery, fetchErrors, fetchReturns } from "../../utils/Handlers/Handlers";
+import {
+  fetchDelivery,
+  fetchErrors,
+  fetchMoves,
+  fetchReturns,
+} from "../../utils/Handlers/Handlers";
 import { HOMECOLUMNS, MOVESCOLUMNS } from "../../components/columns/Columns";
-import { DeliveryFetchNodes, MovesFetchNodes } from "../../nodes/productNodes";
-import { MantineTheme } from "@mantine/core";
+import Loader from "../../components/Loader/Loader";
+import { paths } from "../../routes/paths";
+
 function Home() {
   const [saleStats, setSaleStats] = useState([]);
   const [returnStats, setReturnStats] = useState([]);
   const [errorStats, setErrorStats] = useState([]);
   const [deliveryStats, setDeliveryStats] = useState([]);
-  const handle = () => { };
+  const handle = () => {};
   const { user } = useAuth();
-
-
 
   useEffect(() => {
     // Función asíncrona para obtener los datos
     const fetchReturnData = async () => {
       try {
         const response = await fetchReturns();
-        // Aquí asumimos que 'data' es un arreglo con valores y porcentajes
-        console.log(response.payload)
         setReturnStats(response.payload); // Actualizar el estado con los datos obtenidos
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -34,37 +36,30 @@ function Home() {
 
     const fetchDeliveryData = async () => {
       try {
-        const response = await fetchDelivery()
-        setDeliveryStats(response.payload)
+        const response = await fetchDelivery();
+        setDeliveryStats(response.payload);
       } catch (error) {
-        console.error("Error fetching", error)
+        console.error("Error fetching", error);
       }
     };
 
     const fetchErrorData = async () => {
       try {
         const response = await fetchErrors();
-        console.log(response);
-        console.log("LO DE ARRIBA");
-
-        setErrorStats(response.payload)
-        console.log(errorStats?.length);
-
+        setErrorStats(response.payload);
       } catch (error) {
-        console.error("Error fetching", error)
+        console.error("Error fetching", error);
       }
     };
 
     const fetchSaleData = async () => {
       try {
         const response = await fetchErrors();
-        setSaleStats(response.payload)
+        setSaleStats(response.payload);
       } catch (error) {
-        console.error("Error fetching", error)
+        console.error("Error fetching", error);
       }
-    }
-
-
+    };
 
     fetchReturnData();
     fetchDeliveryData();
@@ -72,28 +67,147 @@ function Home() {
     fetchSaleData();
   }, []); // El array vacío asegura que el efecto se ejecute una sola vez
 
-
-
-
   const baseStats = [
-    { title: "Ventas Totales", icon: <CostsIcon />, percentage: 5, value: saleStats?.length },
-    { title: "Devoluciones", icon: <CostsIcon />, percentage: 5, value: returnStats?.length },
-    { title: "Errores", icon: <CostsIcon />, percentage: 5, value: errorStats.length },
-    { title: "En camino:", icon: <CostsIcon />, percentage: 5, value: deliveryStats?.length }
-  ]
-  const deliveryNodes = MovesFetchNodes();
-  console.log('NODOESS', deliveryNodes)
+    {
+      title: "Ventas Totales",
+      icon: <CostsIcon />,
+      percentage: 95,
+      value: saleStats?.length,
+      path: paths.costs,
+    },
+    {
+      title: "Devoluciones",
+      icon: <CostsIcon />,
+      percentage: 51,
+      value: returnStats?.length,
+      path: paths.historyView,
+    },
+    {
+      title: "Errores",
+      icon: <CostsIcon />,
+      percentage: 25,
+      value: errorStats.length,
+      path: paths.historyView,
+    },
+    {
+      title: "En camino:",
+      icon: <CostsIcon />,
+      percentage: 65,
+      value: deliveryStats?.length,
+      path: paths.historyView,
+    },
+  ];
 
-  console.log(baseStats)
+  const [moveNodes, setMoveNodes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Nuevo estado para el control de carga
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const fetchMovesData = async () => {
+      try {
+        const result = await fetchMoves();
+        console.log("Payload data:", result.payload); // Confirma que los datos son correctos
+
+        if (result.status === "success") {
+          // Suponiendo que el 'rubro' viene dentro de cada objeto en el payload
+          setMoveNodes(result.payload);
+          setIsLoading(false);
+        } else {
+          throw new Error("La respuesta del servidor no fue de éxito.");
+        }
+      } catch (error) {
+        console.error("Hubo un error al recuperar los datos:", error);
+      }
+    };
+
+    fetchMovesData();
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    ); // Muestra esto mientras isLoading sea true
+  }
+
+  console.log("hola" + moveNodes);
+
   return (
-    <main className="bg-gray-100 dark:bg-gray-900 sm:p-6 space-y-6 xl:w-768 w-full flex-shrink-0 border-r dark:border-gray-800 h-screen overflow-y-auto lg:block">
-      <div className="text-gray-900 dark:text-white text-2xl">
-        <span>Bienvenido, {user?.name} | Vista General</span>
+    <main className="transition-colors duration-300 bg-gray-100 dark:bg-gray-900 sm:p-6 space-y-6 xl:w-768 w-full flex-shrink-0 border-r dark:border-gray-800 h-screen overflow-y-auto lg:block select-none">
+      <div className="text-gray-900 font-semibold dark:text-white text-xl flex items-center flex-grow gap-3">
+        <svg
+          width="20"
+          className="blink-svg"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9.99609 1.68262C8.99275 1.68262 7.99509 1.81147 7.05535 2.07806"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M1.51724 18.5897V9.44779C1.51724 7.21419 2.23179 5.50116 3.37305 4.25977"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M18.4728 18.5899V10.9135M9.99414 1.68457C13.6398 1.68457 17.2104 3.38524 18.2023 7.21218"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M6.39471 18.5905C6.39471 18.5905 5.9401 17.1579 5.59913 15.0844M13.5979 18.5905C13.5979 18.5905 14.7617 14.923 14.7617 10.8305C14.7617 10.0302 14.6584 9.35033 14.4767 8.77441"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M9.99414 16.1357V17.4908"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M5.23208 10.8304C5.23208 6.73788 7.9344 5.79492 9.99752 5.79492C10.6092 5.79492 11.2771 5.87781 11.9141 6.10111"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M8.40281 12.1914C8.40281 10.9194 9.11625 10.2272 9.99633 10.2272C10.8764 10.2272 11.5898 10.9194 11.5898 12.1914"
+            stroke="#6A707A"
+            stroke-width="2.03488"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span>Bienvenido, {user?.name}</span>
       </div>
       <section>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {baseStats.map((data, index) => (
-            <Stats key={index} title={data.title} value={data.value} percentage={data.percentage} icon={data.icon} />
+            <Stats
+              key={index}
+              title={data.title}
+              value={data.value}
+              percentage={data.percentage}
+              icon={data.icon}
+              link={data.path}
+            />
           ))}
         </div>
       </section>
@@ -106,13 +220,6 @@ function Home() {
         <section className="flex flex-row p-4 gap-5 text-gray-700 bg-gray-100 dark:bg-gray-700 rounded-xl">
           <Horizontal />
         </section>
-      </section>
-      <section>
-        <div className="overflow-hidden rounded-xl">
-          <div className="">
-            <ScrollNot columns={HOMECOLUMNS} data={deliveryNodes} />
-          </div>
-        </div>
       </section>
       {/* <Footer /> */}
     </main>

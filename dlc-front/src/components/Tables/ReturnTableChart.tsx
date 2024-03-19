@@ -61,7 +61,7 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
 
   const customTheme = {
     Table:  `
-    --data-table-library_grid-template-columns:  70px repeat(9, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(9, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -258,20 +258,19 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   let errorNodes = errorData.nodes;
 
   // search
-
   errorNodes = errorNodes.filter(
     (node: any) =>
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      (node.codInterno &&
-        node.codInterno.toLowerCase().includes(codeSearch.toLowerCase())) || // Asegúrate de que este filtro esté correcto
-      node.desc?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.user?.toLowerCase().includes(detailSearch.toLowerCase()) ||
+      node.detalle?.toLowerCase().includes(detailSearch.toLowerCase()) || 
+      node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase()) ||
+      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+      node.estado?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.det?.toLowerCase().includes(detailSearch.toLowerCase())
+      node.estado.toLowerCase().includes(detailSearch.toLowerCase()) || 
+      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+      node.desc?.toLowerCase().includes(search.toLowerCase()) 
   );
-
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
 
@@ -300,12 +299,7 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
     );
   }
 
-  const [selectedUser, setSelectedUser] = React.useState("");
-  if (selectedUser) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.name?.toLowerCase().includes(selectedUser.toLowerCase())
-    );
-  }
+
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
@@ -318,6 +312,13 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   if (selectedBrand) {
     errorNodes = errorNodes.filter((node: any) =>
       node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
+    );
+  }
+
+  const [selectedUser, setSelectedUser] = React.useState("");
+  if (selectedUser) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.user?.toLowerCase().includes(selectedUser.toLowerCase())
     );
   }
 
@@ -416,7 +417,7 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
           hover:[&>div>*]:text-white
           [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
           [&>div>.active]:text-white
-          rounded-full
+          rounded-full select-none
         "
         />
       </Group>

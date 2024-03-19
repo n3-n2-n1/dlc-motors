@@ -112,11 +112,6 @@ export const BrandsObservationsProvider: React.FC = ({
     selectedCodigoInt,
   };
 
-  console.log(brands);
-  console.log(errorsObservations);
-  console.log(outcomesObservations);
-  console.log(returnsObservations);
-  console.log(incomesObservations);
 
   return (
     <BrandsObservationsContext.Provider value={value}>

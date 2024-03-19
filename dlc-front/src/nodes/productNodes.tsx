@@ -14,7 +14,7 @@ export const useFetchNodes = () => {
   const { products } = useSearchContext();
   const [productNodes, setProductNodes] = useState([]);
 
-  console.log(products);
+
 
   useEffect(() => {
     // Asegúrate de que 'products' sea un array antes de intentar mapearlo
@@ -61,7 +61,6 @@ export const NotifFetchNodes = () => {
     }
   }, [notifications]);
 
-  console.log("OO POR DIOS", notiNodes);
 
   return notiNodes;
 };
@@ -70,7 +69,6 @@ export const ReturnsFetchNodes = () => {
   const { products } = useSearchContext();
   const [returnNodes, setReturnNodes] = useState([]);
 
-  console.log(products);
 
   useEffect(() => {
     // Asegúrate de que 'products' sea un array antes de intentar mapearlo
@@ -88,7 +86,7 @@ export const ReturnsFetchNodes = () => {
           cantidad: product.cantidad,
           kit: product.kit,
           contador: product.contador,
-          usuario: product.usuario,
+          user: product.user,
         }));
         setReturnNodes(transformedNodes);
       } catch (error) {
@@ -109,7 +107,7 @@ export const MovesFetchNodes = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchMoves();
 
-        console.log("Data:", result);
+        console.log("Data:", result.payload);
 
         if (result.status === "success") {
           const transformedNodes = result.payload.map((product) => ({
@@ -246,24 +244,15 @@ export const ImportedCost = () => {
         if (result.status === "success") {
           const transformedNodes = result.payload.map((delivery) => ({
             // Mapea tus datos como necesites
-            id: delivery.id,
-            fecha: delivery.fecha,
-            observaciones: delivery.observaciones,
+
             codigo: delivery.codigo,
-            codOEM: delivery.codOEM,
-            kit: delivery.kit,
-            desc: delivery.desc,
-            img: delivery.img,
+            descripcion: delivery.desc,
+            marcas: delivery.marcas,
+            proveedores: delivery.stockAcumulado,
             stock: delivery.stock,
-            user: delivery.user,
-            estado: delivery.estado,
-            det: delivery.det,
-            numImpo: delivery.numImpo,
-            cantidad: delivery.cantidad,
-            stockDeposito: delivery.stockDeposito,
-            stockAcumulado: delivery.stockAcumulado,
-            productos: delivery.productos
-            // ...otros campos
+            rubro: delivery.rubro,
+            sku:delivery.sku
+            // skuotros campos
           }));
           setImportedNodes(transformedNodes);
         } else {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QrReader } from "react-qr-reader";
-
+import { toast } from "react-toastify";
 export const useQRCodeScanner = () => {
   const [qrCode, setQrCode] = useState<string>("");
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
@@ -8,7 +8,7 @@ export const useQRCodeScanner = () => {
   const handleScan = (result: any, error: any) => {
     if (!!result) {
       setQrCode(result.text);
-      console.log("Código QR escaneado:", result.text);
+      
       return;
     }
     if (!!error) {

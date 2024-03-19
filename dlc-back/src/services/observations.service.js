@@ -35,7 +35,6 @@ export default class ObservationService {
           reject(new Error("Error al obtener Income Obs."));
 
         } else {
-          console.log(results)
           resolve(results);
         }
       });

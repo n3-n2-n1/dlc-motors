@@ -5,18 +5,25 @@ const ThemeToggleButton: React.FC = () => {
 
   useEffect(() => {
     const root = window.document.documentElement;
-
-    if (darkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    root.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
+  const handleToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <button onClick={() => setDarkMode(!darkMode)} className='rounded-full bg-black dark:bg-gray-100 dark:text-gray-700 p-4 text-white text-sm pt-4 hover:bg-blue-700'>
-      {darkMode ? 'Go Light Mode' : 'Go Dark Mode'}
-    </button>
+    <div
+      className="relative inline-block w-14 h-8 cursor-pointer select-none"
+      onClick={handleToggle}
+    >
+      <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-full transition duration-300 ease-in-out"></div>
+      <div
+        className={`absolute left-1 top-1 bg-white dark:bg-gray-900 w-6 h-6 rounded-full transition transform duration-300 ease-in-out ${
+          darkMode ? 'translate-x-6' : ''
+        }`}
+      ></div>
+    </div>
   );
 };
 

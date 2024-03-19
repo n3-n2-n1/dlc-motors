@@ -64,7 +64,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-                --data-table-library_grid-template-columns:  44px repeat(10, minmax(0, 1fr));
+                --data-table-library_grid-template-columns:  200px repeat(10, minmax(0, 1fr));
           
                 margin: 16px 0px;
               `,
@@ -252,38 +252,15 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-      node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      (node.codInterno &&
-        node.codInterno.toLowerCase().includes(codeSearch.toLowerCase())) || // Asegúrate de que este filtro esté correcto
-      node.desc?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.user?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.det?.toLowerCase().includes(detailSearch.toLowerCase())
+      node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) 
   );
 
   // // Hide columns
-  const [hiddenColumns, setHiddenColumns] = React.useState([]);
 
   columns = columns.map((column) => ({
     ...column,
-    hide: hiddenColumns.includes(column.label),
   }));
 
-  const [selectedOrigin, setSelectedOrigin] = React.useState("");
-  if (selectedOrigin) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
-    );
-  }
-
-  const [selectedBrand, setSelectedBrand] = React.useState("");
-  if (selectedBrand) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
-    );
-  }
 
   return (
     <>
@@ -326,23 +303,6 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
             />
           )}
 
-          <Select
-            // value={search}
-            onChange={(event) => {
-              setSelectedOrigin(event);
-            }}
-            placeholder="Origen"
-            data={ProductOrigins}
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
-            clearable
-          />
 
           <Select
             // value={search}
@@ -384,7 +344,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
       <CompactTable
         columns={columns}
-        data={{ ...errorData, nodes: errorNodes }}
+        data={{ ...errorData }}
         theme={theme}
         layout={{ custom: true }}
         select={select}

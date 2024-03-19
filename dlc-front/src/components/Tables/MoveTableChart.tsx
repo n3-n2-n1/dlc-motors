@@ -65,7 +65,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  150px repeat(10, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -277,8 +277,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      (node.codInterno &&
-        node.codInterno.toLowerCase().includes(codeSearch.toLowerCase())) || // Asegúrate de que este filtro esté correcto
+      node.codInterno.toLowerCase().includes(codeSearch.toLowerCase()) || // Asegúrate de que este filtro esté correcto
       node.desc?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.user?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
@@ -331,6 +330,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
       node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
     );
   }
+  
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
@@ -367,9 +367,21 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     );
   }
 
+  
+  if (search) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+      node.det?.toLowerCase().includes(search.toLowerCase())
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
+
   return (
     <>
-      <div className="pt-4">
+      <div className="pt-4 transition-colors duration-300">
         <Group>
           <DateInput
             classNames={{
@@ -527,7 +539,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300">
 
         <CompactTable
           columns={columns}
@@ -557,7 +569,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
           hover:[&>div>*]:text-white
           [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
           [&>div>.active]:text-white
-          rounded-full
+          rounded-full select-none
         "
         />
       </Group>

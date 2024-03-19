@@ -84,21 +84,21 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
   }, [formik.values.marcasCompatibles, formik.setFieldValue, brands]);
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block p-6">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block p-6 transition-all duration-300">
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6 flex-row">
+        <div className="mr-6 flex-row transition-all du">
           <section className="pb-2">
           <Navbar title={"Agregar Producto"} subtitle={"Agrega productos con sus propiedades."} />
 
           </section>
           <form
             onSubmit={formik.handleSubmit}
-            className="dark:bg-gray-800 bg-gray-100 text-black dark:text-white p-4 rounded-md shadow-md"
+            className="dark:bg-gray-900 bg-white text-black dark:text-white p-4 rounded-md shadow-md transition-colors duration-300"
           >
             <div className="mb-4">
               <label
                 htmlFor="codigoInt"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Código Interno
               </label>
@@ -106,7 +106,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 id="codigoInt"
                 name="codigoInt"
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-white disabled:bg-gray-700 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 value={formik.values.codigoInt}
               />
@@ -120,7 +120,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="codOEM"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Código OEM
               </label>
@@ -128,7 +128,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 id="codOEM"
                 name="codOEM"
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-white disabled:bg-gray-700 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 value={formik.values.codOEM}
               />
@@ -142,7 +142,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="SKU"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Código Tango (SKU)
               </label>
@@ -150,7 +150,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 id="SKU"
                 name="SKU"
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-white disabled:bg-gray-700 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 value={formik.values.SKU}
               />
@@ -164,7 +164,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="descripcion"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Descripcion
               </label>
@@ -172,7 +172,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 id="descripcion"
                 name="descripcion"
                 type="text"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-white disabled:bg-gray-700 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 value={formik.values.descripcion}
               />
@@ -186,14 +186,14 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="rubro"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Rubro
               </label>
               <select
                 id="rubro"
                 name="rubro"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-100"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
@@ -214,14 +214,14 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="origen"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Origen
               </label>
               <select
                 id="origen"
                 name="origen"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-100"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
@@ -240,7 +240,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="marcasCompatibles"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Marcas Compatibles
               </label>
@@ -250,7 +250,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                   name="newCompatibleBrand"
                   value={formik.values.newCompatibleBrand}
                   onChange={formik.handleChange}
-                  className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-700 disable"
+                  className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                   disabled={remainingBrands.length === 0}
                 >
                   {remainingBrands.map((brand, index) => (
@@ -261,7 +261,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 </select>
                 <button
                   type="button"
-                  className="bg-blue-500 text-white w-full max-w-xs ml-2 py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
+                  className="w-full max-w-xs ml-2 rounded-full bg-black font-semibold font-m dark:bg-blue-500 hover:bg-gray-800 dark:text-gray-200 text-white py-2 px-4 dark:hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
                   onClick={() => {
                     if (formik.values.newCompatibleBrand) {
                       formik.setFieldValue("marcasCompatibles", [
@@ -277,7 +277,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
               </div>
               {formik.values.marcasCompatibles.map((marca, index) => (
                 <div key={index} className="flex gap-1 mb-1 ml-2">
-                  <p className="block text-sm font-medium text-gray-100 dark:text-gray-300 w-32">
+                  <p className="block text-sm font-semibold text-gray-100 dark:text-gray-300 w-32">
                     {index + 1} - {marca}
                   </p>
                   <button
@@ -304,7 +304,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="stock"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Stock
               </label>
@@ -312,7 +312,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 type="number"
                 id="stock"
                 name="stock"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
@@ -328,7 +328,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="contadorDevoluciones"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Rotas o Devueltas (No obligatorio)
               </label>
@@ -336,7 +336,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 type="number"
                 id="contadorDevoluciones"
                 name="contadorDevoluciones"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
@@ -351,7 +351,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4 flex flex-row items-center gap-3">
               <label
                 htmlFor="esKit"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 pt-1  "
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 pt-1  "
               >
                 ¿Es kit?
               </label>
@@ -374,7 +374,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
               <div className="mb-4">
                 <label
                   htmlFor="kit"
-                  className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                  className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
                 >
                   Unidades para kit
                 </label>
@@ -385,8 +385,8 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                     id="newKitNumber"
                     name="newKitNumber"
                     onChange={formik.handleChange}
-                    className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white disable"
-                  />
+                    className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                    />
                   <button
                     type="button"
                     className="bg-blue-500 text-white w-full max-w-xs ml-2 py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
@@ -406,7 +406,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 </div>
                 {formik.values.kit.map((number, index) => (
                   <div key={index} className="flex gap-1 mb-1 ml-2">
-                    <p className="block text-sm font-medium text-gray-100 dark:text-gray-300 w-8">
+                    <p className="block text-sm font-semibold text-gray-100 dark:text-gray-300 w-8">
                       {number}
                     </p>
                     <button
@@ -434,7 +434,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             <div className="mb-4">
               <label
                 htmlFor="imagen"
-                className="block text-sm font-medium text-gray-600 dark:text-gray-100"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-100"
               >
                 Imagen:
               </label>
@@ -460,7 +460,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
             {/* Previsualización de la imagen */}
             {imagePreview && (
               <div className="flex flex-col items-center mb-4 rounded-lg gap-1">
-                <h1 className="block text-lg font-medium text-gray-600 dark:text-gray-100">
+                <h1 className="block text-lg font-semibold text-gray-600 dark:text-gray-100">
                   Imagen a cargar:
                 </h1>
                 <img
@@ -473,7 +473,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
 
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              className="bg-black font-semibold font-m dark:bg-blue-500 hover:bg-gray-800 dark:text-gray-200 text-white py-2 px-4 rounded-full dark:hover:bg-blue-600"
             >
               Agregar Producto
             </button>

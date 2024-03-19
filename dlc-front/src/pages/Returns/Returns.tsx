@@ -49,9 +49,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(formik.errors);
-      console.log(values.cantidad);
-      console.log(values.kit);
+
       if (values.kit) {
         values.cantidad = parseInt(values.cantidad) * parseInt(values.kit);
       }
@@ -101,20 +99,20 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
   }, [qrCode]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-hidden lg:block pt-6">
+<div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
           {QrReaderButton}
         </div>
       )}
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6 flex-row">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
+        <div className=" flex-row">
           <div className="flex flex-row justify-between mb-4">
-            <h1 className="text-3xl mb-2 text-white font-weight-300">
+          <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
               Devoluciones
             </h1>
-            <div className="bg-gray-700 rounded-full justify-center hover:bg-gray-800">
+            <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
               <Link to="/historyView">
                 <button className="p-3 text-md font-bold text-white">
                   Historial
@@ -125,12 +123,12 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
 
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
+            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"     
           >
             <div className="mb-4">
               <label
                 htmlFor="fechaHora"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Fecha y Hora
               </label>
@@ -139,7 +137,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 id="fechaHora"
                 name="fechaHora"
                 value={new Date().toLocaleString()}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -147,14 +145,14 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
             <div className="mb-4">
               <label
                 htmlFor="observaciones"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Observaciones
               </label>
               <select
                 id="observaciones"
                 name="observaciones"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
@@ -175,7 +173,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
             <div className="mb-4">
               <label
                 htmlFor="codigoInt"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Código interno
               </label>
@@ -183,7 +181,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 type="text"
                 id="codigoInt"
                 name="codigoInt"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
                   handleInputChange(e.target.value);
                 }}
@@ -200,7 +198,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
             <div className="mb-4">
               <label
                 htmlFor="codOEM"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Código OEM
               </label>
@@ -209,14 +207,14 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 id="codOEM"
                 name="codOEM"
                 value={selectedProduct?.codOEM || "codOEM no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="desc"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Descripción
               </label>
@@ -225,14 +223,14 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 id="desc"
                 name="desc"
                 value={selectedProduct?.descripcion || "Producto no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="stockAnt"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Stock Actual
               </label>
@@ -241,7 +239,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 id="stockAnt"
                 name="stockAnt"
                 value={selectedProduct?.stock || 0}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -250,7 +248,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
             <div className="mb-4">
               <label
                 htmlFor="detalle"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Detalle
               </label>
@@ -258,7 +256,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 type="text"
                 id="detalle"
                 name="detalle"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.detalle}
@@ -273,7 +271,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
             <div className="mb-4">
               <label
                 htmlFor="cantidad"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Cantidad
               </label>
@@ -281,7 +279,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 type="number"
                 id="cantidad"
                 name="cantidad"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.cantidad || ""}
@@ -297,15 +295,15 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
               <div className="mb-4">
                 <label
                   htmlFor="kit"
-                  className="block text-sm font-medium text-gray-100 dark:text-gray-300"
-                >
+                  className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+                  >
                   Unidades en Kit
                 </label>
                 <select
                   required
                   id="kit"
                   name="kit"
-                  className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                  className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 >

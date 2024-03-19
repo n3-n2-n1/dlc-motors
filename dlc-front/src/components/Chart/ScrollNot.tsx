@@ -35,23 +35,19 @@ import {
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import { ProductOrigins } from "../../routes/routes";
-import { MovementTypes } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
+import { MantineProvider, useMantineTheme } from "@mantine/core";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
-import { DateInput } from "@mantine/dates";
-
-import { MantineTheme } from "@mantine/core";
-
+import { useEffect } from "react";
 
 const ScrollNot = ({ columns, data, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
-
   const { users } = useUser();
   const userNames = users.map((user) => user.name);
-
   const {
     brands,
     handleDeleteModal,
@@ -65,12 +61,13 @@ const ScrollNot = ({ columns, data, category }: any) => {
     striped: true,
     highlightOnHover: true,
   });
+
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
-
-    margin: 16px 0px;
-  `,
+                --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
+          
+                margin: 16px 0px;
+              `,
   };
 
   const theme = useTheme([mantineTheme, customTheme]);
@@ -136,27 +133,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
-  }
-
-
-  const [brandSearch, setBrandSearch] = React.useState("");
-  useCustom("marcas", errorData, {
-    state: { brandSearch },
-    onChange: onSearchBrands,
-  });
-  function onSearchBrands(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
-  }
-
-  const [originSearch, setOriginSearch] = React.useState("");
-  useCustom("origen", errorData, {
-    state: { brandSearch },
-    onChange: onSearchOrigin,
-  });
-  function onSearchOrigin(action: any, state: any) {
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
@@ -276,109 +252,58 @@ const ScrollNot = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-      node.descripcion?.toLowerCase().includes(codeSearch.toLowerCase())
+      node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) 
   );
 
   // // Hide columns
-  const [hiddenColumns, setHiddenColumns] = React.useState([]);
 
   columns = columns.map((column) => ({
     ...column,
-    hide: hiddenColumns.includes(column.label),
   }));
 
-  const [selectedDetail, setSelectedDetail] = React.useState(false);
-  if (detailSearch) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.det?.toLowerCase().includes(detailSearch.toLowerCase())
-    );
-  }
-
-  const [selectedCode, setSelectedCode] = React.useState(false);
-  if (codeSearch) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.codigoInt?.toLowerCase().includes(codeSearch.toLowerCase())
-    );
-  }
-
-  const [selectedUser, setSelectedUser] = React.useState("");
-  if (selectedUser) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.name?.toLowerCase().includes(selectedUser.toLowerCase())
-    );
-  }
-
-  const [selectedCategory, setSelectedCategory] = React.useState("");
-  if (selectedCategory) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
-    );
-  }
-
-  
-  const [selectedBrand, setSelectedBrand] = React.useState(false);
-  if (selectedBrand) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
-    );
-  }
-
-  const [selectedOrigin, setSelectedOrigin] = React.useState("");
-  if (selectedOrigin) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
-    );
-  }
-
-  const [observation, setObservation] = React.useState("");
-  useCustom("det", errorData, {
-    state: { observation },
-    onChange: onObsDetail,
-  });
-  function onObsDetail(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
-  }
-
-  if (selectedDetail) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.det?.toLowerCase().includes(selectedDetail.toLowerCase())
-    );
-  }
-
-  if (observation) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.observaciones?.toLowerCase().includes(observation.toLowerCase())
-    );
-  }
-
-  if (selectedCode) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.codigoInt?.toLowerCase().includes(selectedCode.toLowerCase())
-    );
-  }
 
   return (
     <>
-<div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+
+      <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
                 [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
-        <CompactTable
-          columns={columns}
-          data={{ ...errorData, nodes: errorNodes }}
-          theme={theme}
-          layout={{ custom: true }}
-          select={select}
-          tree={tree}
-          sort={sort}
-          onChange={(event) =>
-            handleUpdate(event.target.value, errorData, "Descripción")
-          }
-        />
+
+
+      <CompactTable
+        columns={columns}
+        data={{ ...errorData }}
+        theme={theme}
+        layout={{ custom: true }}
+        select={select}
+        tree={tree}
+        sort={sort}
+        pagination={pagination}
+        onChange={(event) =>
+          handleUpdate(event.target.value, errorData, "Descripción")
+        }
+      />
       </div>
+
+      <Group position="right" mx={10}>
+        <Pagination
+          total={pagination.state.getTotalPages(errorNodes)}
+          page={pagination.state.page + 1}
+          onChange={(page) => pagination.fns.onSetPage(page - 1)}
+          className="
+          [&>div>*]:bg-gray-200 dark:[&>div>*]:bg-gray-700
+          [&>div>*]:text-gray-800 dark:[&>div>*]:text-gray-200
+          [&>div>*]:border border-gray-300 dark:border-gray-600
+          hover:[&>div>*]:bg-blue-500 dark:hover:[&>div>*]:bg-blue-700
+          hover:[&>div>*]:text-white
+          [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
+          [&>div>.active]:text-white
+          rounded-full
+        "
+        />
+      </Group>
     </>
   );
 };

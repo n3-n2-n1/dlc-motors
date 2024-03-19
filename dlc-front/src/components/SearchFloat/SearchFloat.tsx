@@ -43,7 +43,6 @@ const FiltroFloat: React.FC<FiltroProps> = ({ filtersConfig }) => {
       setSearchTerm(value);
     } else {
       setFilterValues((prevValues: any) => {
-        console.log("hi");
         if (value) {
           return {
             ...prevValues,
@@ -58,7 +57,8 @@ const FiltroFloat: React.FC<FiltroProps> = ({ filtersConfig }) => {
   };
 
   useEffect(() => {
-    console.log("Filter values changed", filterValues);
+    toast.success(`Imagen cargada con éxito: ${filterValues}`);
+
   }, [filterValues]);
 
   useEffect(() => {

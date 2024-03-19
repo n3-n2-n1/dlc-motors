@@ -65,7 +65,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-                --data-table-library_grid-template-columns:  44px repeat(10, minmax(0, 1fr));
+                --data-table-library_grid-template-columns:  200px repeat(10, minmax(0, 1fr));
           
                 margin: 16px 0px;
               `,
@@ -293,12 +293,12 @@ const FabricTableChart = ({ columns, data, category }: any) => {
               data={categories}
               clearable
               classNames={{
-                wrapper: "bg-gray-700 text-gray-100 border-gray-500",
-                input: "bg-gray-700 text-gray-100 border-gray-500",
-                section: "bg-gray-700 text-gray-100 [&>button>svg]:text-white",
-                dropdown: "!bg-gray-700 text-gray-100 border-gray-500",
-                options: "bg-gray-700",
-                option: "hover:bg-gray-600 text-gray-100",
+                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
               }}
             />
           ) : (
@@ -378,7 +378,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
 
       <CompactTable
         columns={columns}
-        data={{ ...errorData, nodes: errorNodes }}
+        data={{ ...errorData}}
         theme={theme}
         layout={{ custom: true }}
         select={select}
@@ -404,7 +404,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
           hover:[&>div>*]:text-white
           [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
           [&>div>.active]:text-white
-          rounded-full
+          rounded-full select-none
         "
         />
       </Group>

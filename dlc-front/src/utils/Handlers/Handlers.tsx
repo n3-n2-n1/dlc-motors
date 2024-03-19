@@ -60,29 +60,13 @@ const fetchErrors = async () => {
     }
 
     const returnsData = await response.json();
-    console.log(returnsData.payload);
     return returnsData;
   } catch (error) {
     console.error("error", error);
     throw error;
   }
 };
-// const fetchErrors = async () => {
-//   try {
-//     const response = await fetch(`${URL}/api/v1/productErrors`);
 
-//     if (!response.ok) {
-//       throw new Error("Error status");
-//     }
-
-//     const errorData = await response.json();
-//     console.log(errorData);
-//     return return await response.json();
-//   } catch (error) {
-//     console.error("error", error);
-//     throw error;
-//   }
-// };
 
 const fetchReturns = async () => {
   try {
@@ -93,7 +77,6 @@ const fetchReturns = async () => {
     }
 
     const returnsData = await response.json();
-    console.log(returnsData.payload);
     return returnsData;
   } catch (error) {
     console.error("error", error);
@@ -163,7 +146,6 @@ const createUser = async (userData: string) => {
     }
 
     const responseData = await response.json();
-    console.log("User created successfully:", responseData);
     toast.success("creado");
     location.reload();
   } catch (error) {
@@ -187,8 +169,7 @@ const createProduct = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("Product created successfully:", responseData);
+    toast.success('Product created sucessfully')
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -235,7 +216,7 @@ const createError = async (errorData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product created successfully:", responseData);
+    toast.success("Error created sucessfully")
   } catch (error) {
     console.error("Error creating product:", error);
   }
@@ -257,10 +238,8 @@ const createReturns = async (returnData: any) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("Devolucion created successfully:", responseData);
+    toast.success("Devolucion creada correctamente")
   } catch (error) {
-    console.log(error);
     throw new Error();
   }
 };
@@ -281,7 +260,7 @@ const createMovement = async (movementData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Movimientosss created successfully:", responseData);
+    toast.success("Movimientos creada correctamente")
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -303,10 +282,9 @@ const createDelivery = async (deliveryData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Delivery created successfully:", responseData);
+    toast.success("Pedido creado correctamente")
   } catch (error) {
     console.error("Error creating product:");
-    console.log(deliveryData);
   }
 };
 
@@ -335,7 +313,7 @@ const modifyProduct = async (productToEdit: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product edited successfully:", responseData);
+    toast.success("Modificacion de producto exitosa")
   } catch (error) {
     console.error("Error editing product:", error);
   }
@@ -361,7 +339,7 @@ const updateError = async (errorUpdates: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Error target edited successfully:", responseData);
+    toast.success("Error modificado correctamente")
   } catch (error) {
     console.error("Error editing errors data:", error);
   }
@@ -385,7 +363,7 @@ const deleteProducts = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product deleted successfully:", responseData);
+    toast.success("Producto eliminado correctamente")
   } catch (error) {
     console.error("Error deleting product:", error);
   }
@@ -412,7 +390,7 @@ const editUser = async (userToUpdate: any) => {
     );
 
     const updatedUser = await response.json();
-    console.log("Edited user successfully:", updatedUser);
+    toast.success("Usuario editado correctamente")
   } catch (error) {
     console.error(`Error editing user ${error}`);
   }
@@ -517,7 +495,6 @@ const fetchIncomeObservations = async () => {
 
 const createMultipleProducts = async (data: any) => {
   try {
-    console.log('iiiiiiiiiiiii', data)
     const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
       method: 'POST',
       headers: {
@@ -528,7 +505,7 @@ const createMultipleProducts = async (data: any) => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log('Productos cargados exitosamente');
+    
   } catch (error) {
     console.error('Error al enviar datos al servidor', error);
   }

@@ -54,7 +54,7 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
 
   const customTheme = {
     Table:  `
-    --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(10, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -383,7 +383,7 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
           hover:[&>div>*]:text-white
           [&>div>.active]:bg-blue-600 dark:[&>div>.active]:bg-blue-800
           [&>div>.active]:text-white
-          rounded-full
+          rounded-full select-none
         "
         />
       </Group>

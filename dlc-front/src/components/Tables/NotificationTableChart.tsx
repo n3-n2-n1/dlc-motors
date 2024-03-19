@@ -1,5 +1,4 @@
 import * as React from "react";
-import { DateInput } from '@mantine/dates';
 import { CompactTable } from "@table-library/react-table-library/compact";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useCustom } from "@table-library/react-table-library/table";
@@ -33,20 +32,22 @@ import {
   Space,
   Pagination,
 } from "@mantine/core";
-
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import { ProductOrigins } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
+import { MantineProvider, useMantineTheme } from "@mantine/core";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext.tsx";
+import { useUser } from "../../contexts/UserContext.tsx";
+import { useEffect } from "react";
 
 const NotificationTableChart = ({ columns, data, category }: any) => {
-  const [tableData, setTableData] = React.useState({ nodes: data });
+  const [errorData, setErrorData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
-  console.log(category, "CATEGORIA");
-
+  const { users } = useUser();
+  const userNames = users.map((user) => user.name);
   const {
     brands,
     handleDeleteModal,
@@ -60,20 +61,24 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
     striped: true,
     highlightOnHover: true,
   });
-  const customTheme = {
-    Table:  `
-    --data-table-library_grid-template-columns:  70px repeat(10, minmax(0, 1fr));
 
-    margin: 16px 0px;
-  `,
+  const customTheme = {
+    Table: `
+                --data-table-library_grid-template-columns:  100px repeat(10, minmax(0, 1fr));
+          
+                margin: 16px 0px;
+              `,
   };
+
   const theme = useTheme([mantineTheme, customTheme]);
+
   const handleUpdate = (value: any, id: any, property: any) => {
-    setTableData((state) => ({
+    setErrorData((state) => ({
       ...state,
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
+          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -82,28 +87,9 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
     }));
   };
 
-  const handleDelete = async () => {
-    console.log("SE VA A ELIMINAR EL PRODUCTO", selectedCodigoInt);
-    try {
-      await toast.promise(deleteProducts(selectedCodigoInt), {
-        pending: "Eliminando producto... 🕒",
-        success: {
-          render: "Producto eliminado correctamente! 🚮",
-          autoClose: 1500,
-          onClose: () => {
-            setModalOpened(false);
-          },
-        },
-        error: "Error al eliminar el producto, intenta nuevamente 🤯",
-      });
-    } catch (error) {
-      console.error("Error en la solicitud:", error);
-    }
-  };
-
   //* Pagination *//
 
-  const pagination = usePagination(tableData, {
+  const pagination = usePagination(errorData, {
     state: {
       page: 0,
       size: 12,
@@ -113,40 +99,61 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   function onPaginationChange(action: any, state: any) {
     console.log(action, state);
-    // pagination.fns.onSetPage(0);
+    pagination.fns.onSetPage(0);
   }
 
   //* Search *//
 
   const [search, setSearch] = React.useState("");
 
-  useCustom("search", tableData, {
+  useCustom("search", errorData, {
     state: { search },
     onChange: onSearchChange,
   });
 
   function onSearchChange(action: any, state: any) {
     console.log(action, state);
-    // pagination.fns.onSetPage(0);
+    pagination.fns.onSetPage(0);
+  }
+
+  const [detailSearch, setDetailSearch] = React.useState("");
+  useCustom("det", errorData, {
+    state: { detailSearch },
+    onChange: onSearchDetail,
+  });
+
+  function onSearchDetail(action: any, state: any) {
+    console.log(action, state);
+    pagination.fns.onSetPage(0);
+  }
+
+  const [codeSearch, setCodeSearch] = React.useState("");
+  useCustom("codInterno", errorData, {
+    state: { codeSearch },
+    onChange: onSearchCode,
+  });
+  function onSearchCode(action: any, state: any) {
+    console.log(action, state);
+    pagination.fns.onSetPage(0);
   }
 
   //* Filter *//
 
   const [isHide, setHide] = React.useState(false);
 
-  useCustom("filter", tableData, {
+  useCustom("filter", errorData, {
     state: { isHide },
     onChange: onFilterChange,
   });
 
   function onFilterChange(action: any, state: any) {
     console.log(action, state);
-    // pagination.fns.onSetPage(0);
+    pagination.fns.onSetPage(0);
   }
 
   //* Select *//
 
-  const select = useRowSelect(tableData, {
+  const select = useRowSelect(errorData, {
     onChange: onSelectChange,
   });
 
@@ -157,7 +164,7 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   //* Tree *//
 
   const tree = useTree(
-    tableData,
+    errorData,
     {
       onChange: onTreeChange,
     },
@@ -180,7 +187,7 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   //* Sort *//
 
   const sort = useSort(
-    tableData,
+    errorData,
     {
       onChange: onSortChange,
     },
@@ -193,13 +200,13 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
       sortFns: {
         SKU: (array) => array.sort((a, b) => a.SKU.localeCompare(b.SKU)),
         DESCRIPCION: (array) =>
-          array.sort((a, b) =>
-            a.descripcion
-              .toLowerCase()
-              .localeCompare(b.descripcion.toLowerCase())
-          ),
+          array.sort((a, b) => a.descripcion - b.descripcion),
         ORIGEN: (array) =>
           array.sort((a, b) => a.origen.localeCompare(b.origen)),
+        DEVOLUCIONES: (array) =>
+          array.sort((a, b) =>
+            a.contadorDevoluciones.localeCompare(b.contadorDevoluciones)
+          ),
         STOCK: (array) => array.sort((a, b) => a.stock.localeCompare(b.stock)),
         RUBRO: (array) => array.sort((a, b) => a.rubro.localeCompare(b.rubro)),
       },
@@ -225,11 +232,11 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   };
 
   const handleSave = () => {
-    const node = findNodeById(tableData.nodes, drawerId);
+    const node = findNodeById(errorData.nodes, drawerId);
     const editedNode = { ...node, name: edited };
-    const nodes = insertNode(tableData.nodes, editedNode);
+    const nodes = insertNode(errorData.nodes, editedNode);
 
-    setTableData({
+    setErrorData({
       nodes,
     });
 
@@ -239,126 +246,90 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   //* Custom Modifiers *//
 
-  let modifiedNodes = tableData.nodes;
+  let errorNodes = errorData.nodes;
 
   // search
 
-  modifiedNodes = modifiedNodes.filter(
+  errorNodes = errorNodes.filter(
     (node: any) =>
-      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-      node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
-      node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
-      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-      node.user?.toLowerCase().includes(search.toLowerCase()) ||
-      node.name?.toLowerCase().includes(search.toLowerCase())
+      node.fecha?.toLowerCase()  === " "
   );
 
-  // filter
-  modifiedNodes = isHide
-    ? modifiedNodes.filter((node: any) => !node.check)
-    : modifiedNodes;
 
   const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
-    modifiedNodes = modifiedNodes.filter((node: any) =>
+    errorNodes = errorNodes.filter((node: any) =>
       node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
 
+
   // // Hide columns
-  const [hiddenColumns, setHiddenColumns] = React.useState([]);
-  const toggleColumn = (selectedLabels) => {
-    setHiddenColumns(selectedLabels);
-  };
 
   columns = columns.map((column) => ({
     ...column,
-    hide: hiddenColumns.includes(column.label),
   }));
 
-  const [selectedCheck, setSelectedCheck] = React.useState(false);
-  if (selectedCheck) {
-    modifiedNodes = modifiedNodes.filter(
-      (node: any) => node.check.toLowerCase() === ""
+  if (search) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
+      node.marcasCompatibles?.toLowerCase().includes(search.toLowerCase())
+      // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
-
-  const [selectedOrigin, setSelectedOrigin] = React.useState("");
-  if (selectedOrigin) {
-    modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
-    );
-  }
-
-  const [selectedBrand, setSelectedBrand] = React.useState("");
-  if (selectedBrand) {
-    modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
-    );
-  }
-
-  const [value, setValue] = React.useState<Date | null>(null);
 
 
   return (
     <>
-      <Modal
-        opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-        title={`¿Estás seguro de querer eliminar el producto ${selectedCodigoInt}?`}
-      >
-        <div className="flex flex-row gap-4">
-          <Button
-            className="bg-red-600 hover:bg-red-500 text-gray-100"
-            onClick={() => handleDelete()}
-          >
-            Eliminar
-          </Button>
-          <Button
-            className="bg-blue-600 hover:bg-blue-500 text-gray-100"
-            onClick={() => setModalOpened(false)}
-          >
-            Cancelar
-          </Button>
-        </div>
-      </Modal>
+      <div className="pb-4">
+        <Group>
+          {category ? (
+            <Select
+              value={category || null}
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              classNames={{
+                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              clearable
+            />
+          ) : (
+            <Select
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              classNames={{
+                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              clearable
+            />
+          )}
 
-
-      <Group className="">
-      <DateInput
-      value={value}
-      onChange={setValue}
-      classNames={{
-        wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-        input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-        section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-        dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-        options: "bg-white dark:bg-gray-700",
-        option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-      }}
-      
-      placeholder="Date input"
-    />
-        <TextInput
-          placeholder="Búsqueda"
-          value={search}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-
-        {category ? (
           <Select
-            value={category || null}
+            // value={search}
             onChange={(event) => {
-              setSelectedCategory(event);
+              setSelectedOrigin(event);
             }}
-            placeholder="Rubro"
+            placeholder="Origen"
+            data={ProductOrigins}
             classNames={{
               wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
@@ -369,13 +340,14 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
             }}
             clearable
           />
-        ) : (
+
           <Select
+            // value={search}
             onChange={(event) => {
-              setSelectedCategory(event);
+              setSelectedBrand(event);
             }}
-            placeholder="Rubro"
-            data={categories}
+            placeholder="Marcas"
+            data={brands}
             classNames={{
               wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
@@ -386,50 +358,19 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
             }}
             clearable
           />
-        )}
 
-        <Select
-          // value={search}
-          onChange={(event) => {
-            setSelectedOrigin(event);
-          }}
-          placeholder="Origen"
-          data={ProductOrigins}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-          clearable
-        />
-
-        <Select
-          // value={search}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-          onChange={(event) => {
-            setSelectedBrand(event);
-          }}
-          placeholder="Marcas"
-          data={brands}
-          clearable
-        />
-
-        <Checkbox
-          label="Esconder Chequeados"
-          checked={selectedCheck}
-          onChange={(event) => setSelectedCheck(event.currentTarget.checked)}
-        />
-      </Group>
+          <TextInput
+            placeholder="Búsqueda"
+            value={search}
+            classNames={{
+              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </Group>
+      </div>
 
       <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
@@ -437,10 +378,10 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
                 [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
 
+
       <CompactTable
-        color="blue.3"
         columns={columns}
-        data={{ ...tableData, nodes: modifiedNodes }}
+        data={{ ...errorData}}
         theme={theme}
         layout={{ custom: true }}
         select={select}
@@ -448,15 +389,14 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
         sort={sort}
         pagination={pagination}
         onChange={(event) =>
-          handleUpdate(event.target.value, tableData, "Descripción")
+          handleUpdate(event.target.value, errorData, "Descripción")
         }
       />
       </div>
 
-
       <Group position="right" mx={10}>
         <Pagination
-          total={pagination.state.getTotalPages(modifiedNodes)}
+          total={pagination.state.getTotalPages(errorNodes)}
           page={pagination.state.page + 1}
           onChange={(page) => pagination.fns.onSetPage(page - 1)}
           className="
@@ -471,36 +411,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
         "
         />
       </Group>
-
-      <Drawer
-        opened={drawerId}
-        onClose={handleCancel}
-        title="Edit"
-        padding="xl"
-        size="xl"
-        position="right"
-      >
-        <Group grow>
-          <TextInput
-            label="Name"
-            value={
-              edited ||
-              fromTreeToList(tableData.nodes).find(
-                (node) => node.id === drawerId
-              )?.name
-            }
-            onChange={handleEdit}
-            data-autofocus
-          />
-        </Group>
-        <Space h="md" />
-        <Group grow>
-          <Button variant="outline" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave}>Save</Button>
-        </Group>
-      </Drawer>
     </>
   );
 };

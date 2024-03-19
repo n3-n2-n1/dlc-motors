@@ -50,12 +50,10 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log(values);
         createDelivery(values);
         toast.success("{} creado correctamente");
         formik.resetForm();
       } catch (error) {
-        console.log(error);
         toast.error("Error al crear el reporte.");
       }
     },
@@ -98,20 +96,20 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
   }, [qrCode]);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block pt-4">
+<div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
           {QrReaderButton}
         </div>
       )}
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
+        <div className="">
         <div className="flex flex-row justify-between mb-4">
-            <h1 className="text-3xl mb-2 text-white font-weight-300">
+        <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
               Pedidos
             </h1>
-            <div className="bg-gray-700 rounded-full justify-center hover:bg-gray-800">
+            <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
               <Link to="/historyView">
                 <button className="p-3 text-md font-bold text-white">
                   Historial
@@ -121,12 +119,12 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
           </div>
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
+            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"     
           >
             <div className="mb-4">
               <label
                 htmlFor="fecha"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Fecha y Hora
               </label>
@@ -135,7 +133,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 id="fecha"
                 name="fecha"
                 value={new Date().toLocaleString()}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 disabled
               />
@@ -144,14 +142,14 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <div className="mb-4">
               <label
                 htmlFor="observaciones"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Observaciones
               </label>
               <select
                 id="observaciones"
                 name="observaciones"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
@@ -172,7 +170,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <div className="mb-4">
               <label
                 htmlFor="codigoInt"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Código interno
               </label>
@@ -180,7 +178,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="text"
                 id="codigoInt"
                 name="codigoInt"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
                   handleInputChange(e.target.value);
                 }}
@@ -199,7 +197,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <div className="mb-4">
               <label
                 htmlFor="codOEM"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Código OEM
               </label>
@@ -208,14 +206,14 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 id="codOEM"
                 name="codOEM"
                 value={selectedProduct?.codOEM || "codOEM no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="desc"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Descripción
               </label>
@@ -224,14 +222,14 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 id="desc"
                 name="desc"
                 value={selectedProduct?.descripcion || "Producto no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="stockActual"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Stock Actual
               </label>
@@ -240,7 +238,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 id="stockActual"
                 name="stockActual"
                 value={selectedProduct?.stock || 0}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -249,7 +247,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <div className="mb-4">
               <label
                 htmlFor="numImpo"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Numero de Importacion
               </label>
@@ -257,7 +255,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="text"
                 id="numImpo"
                 name="numImpo"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.numImpo}
@@ -273,7 +271,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <div className="mb-4">
               <label
                 htmlFor="cantidad"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
                 Cantidad
               </label>
@@ -281,7 +279,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 type="number"
                 id="cantidad"
                 name="cantidad"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.cantidad || ""}

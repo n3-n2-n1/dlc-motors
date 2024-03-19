@@ -56,18 +56,15 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log(values);
         const imageUrl = await uploadImageToCloudinary(values.imagen);
-        console.log("URL de la imagen cargada:", imageUrl);
-        toast.success("Imagen cargada con éxito");
+        toast.success(`Imagen cargada con éxito: ${imageUrl}`);
 
         const updatedValues = {
           ...values,
           imagen: imageUrl,
         };
-        console.log("Valores del formulario actualizados:", updatedValues);
         createError(updatedValues);
-
+        toast.success(`Reporte cargado con éxito: ${updatedValues}`);
         toast.success("Reporte cargado con éxito");
         formik.resetForm();
       } catch (error) {
@@ -114,18 +111,18 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   }, [qrCode]);
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 h-screen overflow-y-auto lg:block pt-4">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-900 h-screen overflow-y-auto lg:block pt-4 transition-colors duration-300">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
           {QrReaderButton}
         </div>
       )}
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="mr-6">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-gray-100 dark:bg-gray-900 transition-colors duration-300 ">
+        <div className="pb-1">
           <form
             onSubmit={formik.handleSubmit}
-            className="dark:bg-gray-800 bg-gray-200 text-black dark:text-white p-4 rounded-md shadow-md"
+            className="dark:bg-gray-900 bg-white text-black dark:text-white p-4 rounded-md shadow-md transition-colors duration-300"
           >
             <div className="mb-4">
               <label
@@ -139,7 +136,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 id="fecha"
                 name="fecha"
                 value={new Date().toLocaleString()}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 disabled
               />
@@ -155,7 +152,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
               <select
                 id="observaciones"
                 name="observaciones"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
@@ -184,7 +181,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="text"
                 id="codigoInt"
                 name="codigoInt"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={(e: React.FocusEvent<HTMLInputElement>) => {
                   handleInputChange(e.target.value);
                 }}
@@ -212,7 +209,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 id="codOEM"
                 name="codOEM"
                 value={selectedProduct?.codOEM || "codOEM no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -228,7 +225,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 id="desc"
                 name="desc"
                 value={selectedProduct?.descripcion || "Producto no encontrado"}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -244,7 +241,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 id="stockActual"
                 name="stockActual"
                 value={selectedProduct?.stock || 0}
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 dark:bg-gray-700 dark:text-white disabled:bg-gray-900 disabled:text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
             </div>
@@ -261,7 +258,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="text"
                 id="detalle"
                 name="detalle"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.detalle}
@@ -285,7 +282,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 type="number"
                 id="stockReal"
                 name="stockReal"
-                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.stockReal || ""}
@@ -315,7 +312,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                   formik.setFieldValue("imagen", file);
                   setImagePreview(URL.createObjectURL(file)); // Actualiza el estado de la previsualización
                 }}
-                className="mt-1 block w-full p-2 border border-gray-300 text-white dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
               />
               {formik.touched.imagen && formik.errors.imagen ? (
                 <div className="text-red-500 text-sm mt-1">

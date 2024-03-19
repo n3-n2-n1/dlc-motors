@@ -5,10 +5,10 @@ import { useBrandsObservations } from "../../contexts/BrandsObservationsContext"
 import { useUser } from "../../contexts/UserContext";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 import Navbar from "../../components/Navbar/Navbar";
-import Charted from "../../components/MockTable/MockTable";
-import { NOTIFCOLUMNS } from "../../components/columns/Columns";
 import { NotifFetchNodes } from "../../nodes/productNodes";
+import { NOTIFCOLUMNS } from "../../components/columns/Columns";
 import NotificationTableChart from "../../components/Tables/NotificationTableChart";
+import Loader from "../../components/Loader/Loader";
 export interface Notification {
   name: string;
   message: string;
@@ -21,13 +21,7 @@ export interface Notification {
   stock?: string;
 }
 
-
 const Notifications = () => {
-  
-const {
-  outcomesObservations
-} = useBrandsObservations();
-
   const [filterConfig, setFilterConfig] = useState<FilterConfig[]>([]);
   const { products } = useSearchContext();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -35,25 +29,21 @@ const {
   const [previousStock, setPreviousStock] = useState<Map<string, number>>(
     new Map()
   );
-  const loader = useRef(null);
-  const displayValue = (value: string | undefined) => value || "-";
 
-  const { users } = useUser();
-  const userNames = users?.map((user) => user.name);
-  console.log(userNames)
+  const [isLoading, setIsLoading] = useState(true); // Nuevo estado para el control de carga
 
-  const notifNodes = NotifFetchNodes();
-  
   useEffect(() => {
+    setIsLoading(true);
     const newNotifications = products
       .slice(loadIndex, loadIndex + 100)
       .map((product) => {
-        const prevStock = previousStock.get(product.descripcion) || product.stock;
+        const prevStock =
+          previousStock.get(product.descripcion) || product.stock;
         let message = "";
 
         if (product.Stock === 0) {
           message = `No hay stock`;
-        } else if (product.stock <= 10) {
+        } else if (product.stock <= 1) {
           message = `Stock bajo`;
         } else if (product.stock > prevStock) {
           message = `Reposición`;
@@ -80,14 +70,22 @@ const {
       ...prevNotifications,
       ...newNotifications,
     ]);
+    setIsLoading(false);
   }, [products, loadIndex, previousStock]);
 
-  
-  console.log('Notif', notifications)
+  if (isLoading) {
+    return Loader; // Muestra esto mientras isLoading sea true
+  }
+
+  console.log("Notif", notifications);
+
   return (
-    <div className="flex flex-col bg-gray-100 dark:bg-gray-900 text-white h-screen overflow-hidden text-sm p-6">
-      <Navbar title="Notificaciones" subtitle="Visualizá faltantes, egresos y stocks" />   
-      <div className="mt-4 overflow-x-auto shadow-lg">
+    <div className="flex flex-col bg-gray-100 dark:bg-gray-900 text-white h-screen text-sm p-6 transition-colors duration-300 select-none">
+      <Navbar
+        title="Notificaciones"
+        subtitle="Visualizá faltantes, egresos y stocks"
+      />
+      <div className="mt-4 overflow-x-auto overflow-y-auto shadow-lg transition-colors duration-300">
         <NotificationTableChart columns={NOTIFCOLUMNS} data={notifications} />
       </div>
     </div>

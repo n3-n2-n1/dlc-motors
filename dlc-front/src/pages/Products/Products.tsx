@@ -4,7 +4,6 @@ import Navbar from "../../components/Navbar/Navbar";
 import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
 import TableList from "../../components/TableList/TableList";
-import Charted from "../../components/MockTable/MockTable";
 import { useFetchNodes } from "../../nodes/productNodes";
 import { useState, useEffect } from "react";
 import { PRODUCTCOLUMNS } from "../../components/columns/Columns";
@@ -13,6 +12,7 @@ import { Link } from "react-router-dom";
 import { paths } from "../../routes/paths";
 import ProductTableChart from "../../components/Tables/ProductTableChart";
 import Dashcards from "../../components/Dashcards/Dashcards";
+import Loader from "../../components/Loader/Loader";
 
 const Products = () => {
   
@@ -20,30 +20,30 @@ const Products = () => {
   const nodes = useFetchNodes();
 
   const edit = () => {
-    console.log('editar?')
+    console.log('')
   }
 
   return (
 
-<div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex overflow-hidden text-sm">
+<div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex overflow-hidden text-sm transition-all duration-300">
   <div className="flex-grow h-full flex flex-col">
     <div className="flex-grow">
-      <div className="flex items-center sm:p-6 md:p-4 pt-1 justify-between">
+      <div className="flex items-center sm:p-6 md:p-4 pt-1 justify-between ">
         <Navbar title="Listado de Productos" subtitle="Visualizá productos" />
 
         <section className="flex items-center gap-4">
 
         <Dashcards buttons={[{ text: "Agregar Producto", action: edit, link: '/productos/agregar' }]} />
         <Link to={paths.massive}>
-          <div className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-3 hover:bg-gray-700 hover:text-white dark:bg-blue-700">
-            <h3 className="text-lg font-normal my-2 rounded rounded-2xl hover:text-white">Agregar Masivo</h3>
+          <div className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-gray-700 hover:text-white dark:bg-blue-700 select-none">
+            <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white select-none">Agregar Masivo</h3>
           </div>
         </Link>
         </section>
 
       </div>
 
-      <section className="p-4">
+      <section className="p-4 transition-all ">
         {nodes.length > 0 ? (
           <ProductTableChart
             columns={PRODUCTCOLUMNS}
@@ -51,7 +51,7 @@ const Products = () => {
             category={category}
           />
         ) : (
-          <div className="text-gray-900 dark:text-gray-300">Loading...</div>
+          <div className="bg-gray-900"><Loader /></div>
         )}
       </section>
     </div>

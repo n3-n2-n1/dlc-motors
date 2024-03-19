@@ -23,7 +23,6 @@ export const UserProvider: React.FC = ({
     const fetchUserData = async () => {
       if (token) {
         const userData = await fetchUser(token);
-        // console.log("usuarios de db", userData);
         setUsers(userData);
       }
     };
