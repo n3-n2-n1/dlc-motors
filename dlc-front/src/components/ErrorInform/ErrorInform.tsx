@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { uploadImageToCloudinary } from "../../utils/cloudinaryTool";
 import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Define la interfaz para los props del componente
 interface ErrorFormProps {
@@ -17,7 +18,7 @@ interface ErrorFormProps {
 // Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
-  detalle: Yup.string(),
+  detalle: Yup.string().required("Campo requerido"),
   stockReal: Yup.number().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
   imagen: Yup.mixed() // Opcional: Agrega validaciones específicas para la imagen, si es necesario
@@ -31,6 +32,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   formName,
 }) => {
   const [imagePreview, setImagePreview] = useState("");
+  const { user } = useAuth();
 
   const initialValues = {
     fecha: "",
@@ -40,14 +42,14 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     desc: "",
     stock: 0,
     detalle: "",
-    stockReal: 1,
+    stockReal: null,
     imagen: null,
   };
 
   interface IProduct {
     codigoInt: string;
     descripcion: string;
-    stock: number;
+    stock: any;
     codOEM: string;
   }
 
@@ -62,11 +64,13 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
         const updatedValues = {
           ...values,
           imagen: imageUrl,
+          usuario: user?.name,
         };
-        createError(updatedValues);
+        console.log(updatedValues);
+        formik.resetForm();
+        await createError(updatedValues);
         toast.success(`Reporte cargado con éxito: ${updatedValues}`);
         toast.success("Reporte cargado con éxito");
-        formik.resetForm();
       } catch (error) {
         console.error("Error en el formulario:", error);
         toast.error("Error al cargar la imagen: " + error);
@@ -99,7 +103,10 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     formik.setFieldValue("fecha", new Date().toLocaleString());
     formik.setFieldValue("codOEM", selectedProduct?.codOEM);
     formik.setFieldValue("desc", selectedProduct?.descripcion);
-    formik.setFieldValue("stock", selectedProduct?.stock);
+    formik.setFieldValue(
+      "stock",
+      selectedProduct?.stock === "" ? 0 : selectedProduct?.stock
+    );
   }, [selectedProduct, formik.values.stockReal]);
 
   useEffect(() => {

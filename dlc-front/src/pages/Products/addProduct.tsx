@@ -59,10 +59,18 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
         console.log("URL de la imagen cargada:", imageUrl);
         toast.success("Imagen cargada con éxito");
 
-        const updatedValues = {
+        let updatedValues = {
           ...values,
           imagen: imageUrl,
         };
+
+        if (!updatedValues.esKit) {
+          updatedValues = {
+            ...updatedValues,
+            kit: 0,
+          };
+        }
+
         console.log("Valores del formulario actualizados:", updatedValues);
         createProduct(updatedValues);
 

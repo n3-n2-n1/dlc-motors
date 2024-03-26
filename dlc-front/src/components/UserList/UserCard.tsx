@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { editUser } from "../../utils/Handlers/Handlers";
+import { editUser, deleteUser } from "../../utils/Handlers/Handlers";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user }: any) => {
   const [isEditing, setIsEditing] = useState(false);
   const [userToUpdate, setUserToUpdate] = useState({
     name: user.name,
@@ -10,6 +10,8 @@ const UserCard = ({ user }) => {
     password: user.password,
     username: user.username,
   });
+
+  console.log(userToUpdate)
 
   const handleEditUser = () => {
     setIsEditing(true);
@@ -19,18 +21,21 @@ const UserCard = ({ user }) => {
     setIsEditing(false);
   };
 
-  const handleSubmitEdit = (e) => {
+  const handleSubmitEdit = (e: any) => {
     e.preventDefault();
     editUser(userToUpdate);
     setIsEditing(false);
   };
 
-  const handleDeleteUser = () =>{
+  const handleDeleteUser = (e: any) =>{
     console.log('Acá estas eliminando a:', userToUpdate)
+    e.preventDefault();
+    deleteUser(userToUpdate.username);
+    setIsEditing(false);
   }
 
   return (
-    <div key={user.id} >
+    <div>
   {isEditing ? (
     <form
       onSubmit={handleSubmitEdit}
@@ -48,7 +53,6 @@ const UserCard = ({ user }) => {
             type="password"
             required
             placeholder="Contraseña nueva"
-            value={userToUpdate.password}
             onChange={(e) =>
               setUserToUpdate({ ...userToUpdate, password: e.target.value })
             }
@@ -88,7 +92,8 @@ const UserCard = ({ user }) => {
           <div className="pt-4">
 
           <button
-              onClick={()=>{handleDeleteUser}}
+              type="button"
+              onClick={handleDeleteUser}
               className="bg-red-600 dark:bg-red-600  py-2 dark:text-gray-200 text-gray-100 left-0 font-semibold rounded-xl px-4 hover:bg-blue-500 dark:hover:bg-slate-600 dark:hover:text-white"
               >
               Eliminar usuario
@@ -97,7 +102,7 @@ const UserCard = ({ user }) => {
         </form>
       ) : (
         <div className="bg-gray-100 dark:bg-gray-900 flex flex-col justify-center items-center p-4 select-none ">
-        <div className="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white max-w-md flex flex-col rounded-xl shadow-lg p-4 w-full transition-colors duration-300">
+        <div className="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white max-w-md flex flex-col rounded-xl shadow-lg p-4 w-full">
           <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="rounded-full w-4 h-4 border border-[#6C9C11] dark:border-[#3496CB]"></div>

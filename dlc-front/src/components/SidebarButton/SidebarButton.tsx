@@ -7,10 +7,15 @@ interface SidebarButtonProps {
   to: string;
   children: ReactNode;
   text: string;
+  isActive: boolean;
 }
 
-function SidebarButton({ to, children }: SidebarButtonProps) {
+function SidebarButton({ to, children, isActive }: SidebarButtonProps) {
   const { setSearchResults } = useSearchContext();
+
+  const buttonClasses = `flex items-center px-8 h-[60px] w-full p-4 ${
+    isActive ? "bg-[#225112] text-white" : "hover:bg-[#4370349c] hover:text-white"
+  } hover:opacity-85 dark:hover:bg-gray-700 dark:hover:text-white`;
 
   return (
     <Link
@@ -18,7 +23,7 @@ function SidebarButton({ to, children }: SidebarButtonProps) {
       onClick={() => {
         setSearchResults(null as any);
       }}
-      className="flex items-center px-8 h-[60px] w-full hover:bg-[#225112] hover:opacity-85 dark:hover:bg-gray-700 hover:text-white dark:hover:text-white p-4"
+      className={buttonClasses}
     >
       {children}
     </Link>

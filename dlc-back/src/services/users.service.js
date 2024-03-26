@@ -127,4 +127,21 @@ export default class UserService {
       );
     });
   }
+
+  async deleteUser(username) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "DELETE FROM usuarios WHERE username = ?",
+        [username],
+        (error, results) => {
+          if (error) {
+            console.error(error);
+            reject(new Error("Error al eliminar el usuario"));
+          } else {
+            resolve(results.affectedRows > 0);
+          }
+        }
+      );
+    });
+  }
 }

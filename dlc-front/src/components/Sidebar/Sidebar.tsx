@@ -19,12 +19,16 @@ import CostsIcon, { DarkCostsIcon } from "../icon/CostsIcon/CostsIcon";
 import NotificationsIcon, { DarkNotificationsIcon } from "../icon/NotificationsIcon/NotificationsIcon";
 import LogoutIcon, { DarkLogoutIcon } from "../icon/LogoutIcon/LogoutIcon";
 import ThemeToggleButton from "../../utils/StyleToggle";
+import { useLocation } from 'react-router-dom';
 
 import DarkProductIcon from "../icon/DarkProductIcon";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
@@ -80,7 +84,8 @@ export default function Sidebar() {
 
         {/* //Botones */}
         <div className="flex flex-col dark:text-gray-400 text-gray-700 transition-colors duration-300">
-          <SidebarButton to={paths.products} text="Productos">
+
+          <SidebarButton to={paths.products} text="Productos" isActive={currentPath === paths.products}>
             <div className="text-black dark:text-white">
               <div className="dark:hidden">
                 <ProductsIcon />
@@ -93,7 +98,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Productos</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.categories} text={"Rubros"}>
+          <SidebarButton to={paths.categories} text={"Rubros"} isActive={currentPath === paths.categories}>
             <div className="text-black dark:text-white">
               
               <div className="dark:hidden">
@@ -109,7 +114,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Rubros</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.users} text={"Usuarios"}>
+          <SidebarButton to={paths.users} text={"Usuarios"} isActive={currentPath === paths.users}>
             <div className="text-black dark:text-white">
 
               <div className="dark:hidden">
@@ -125,7 +130,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Usuarios</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.costs} text={"Costos"}>
+          <SidebarButton to={paths.costs} text={"Costos"} isActive={currentPath === paths.costs}>
             <div className="text-black dark:text-white">
 
               <div className="dark:hidden">
@@ -139,7 +144,7 @@ export default function Sidebar() {
 
             <div className="ml-3 font-bold">Costos</div>
           </SidebarButton>
-          <SidebarButton to={paths.historyView} text={"Historial"}>
+          <SidebarButton to={paths.historyView} text={"Historial"} isActive={currentPath === paths.historyView}>
             <div className="text-black dark:text-white">
 
               <div className="dark:hidden">
@@ -155,7 +160,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Historial</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.moves} text={"Movimientos"}>
+          <SidebarButton to={paths.moves} text={"Movimientos"} isActive={currentPath === paths.moves}>
             <div className="text-black dark:text-white">
               <div className="dark:hidden">
 
@@ -170,7 +175,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Movimientos</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.notifications} text={"Notificaciones"}>
+          <SidebarButton to={paths.notifications} text={"Notificaciones"} isActive={currentPath === paths.notifications}>
             <div className="text-black dark:text-white">
               <div className="dark:hidden">
 

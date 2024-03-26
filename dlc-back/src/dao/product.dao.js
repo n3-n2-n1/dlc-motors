@@ -87,7 +87,10 @@ export class ProductDAO {
   ) {
     try {
       const marcasCompatiblesString = marcasCompatibles.join(", ");
-      const kitString = kit.join(", ");
+      let kitString = kit;
+      if (Array.isArray(kit)) {
+        kitString = kit.join(", ");
+      }
 
       // Realizar la lógica para insertar un nuevo producto en la base de datos
       db.query(

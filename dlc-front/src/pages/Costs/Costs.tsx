@@ -8,7 +8,7 @@ import ImportedTableChart from "../../components/Tables/ImportedTableChart";
 import ResaleTableChart from "../../components/Tables/ResaleTableChart";
 import FabricTableChart from "../../components/Tables/FabricTableChart";
 import { fetchCosts } from "../../utils/Handlers/Handlers";
-
+import PageTitle from "../../components/PageTitle/PageTitle";
 
 enum TableType {
   Imported,
@@ -91,6 +91,8 @@ const Costs = () => {
 
 
   return (
+    <>
+    <PageTitle title="DLC Motors • Costos" />
     <div className="flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 transition-colors duration-300 select-none">
       <Navbar title="Costos" subtitle="" />
       <section className="flex flex-row gap-6 pb-4 pt-4 transition-colors duration-300">
@@ -102,6 +104,8 @@ const Costs = () => {
         {renderTable()}
       </div>
     </div>
+    </>
+
   );
 };
 

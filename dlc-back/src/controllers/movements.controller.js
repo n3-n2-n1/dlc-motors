@@ -26,7 +26,13 @@ export const getMovements = async (req, res) => {
 
 export const createMovementInventory = async (req, res) => {
   try {
-    const moves = await movementService.createMovementInventory();
+    const movement = req.body;
+
+    console.log(movement)
+
+    const moves = await movementService.createMovementInventory(movement);
+
+    console.log(moves);
 
     if (!moves || moves.length === 0) {
       return res.status(404).send({
@@ -50,7 +56,20 @@ export const createMovementInventory = async (req, res) => {
 
 export const createIncomeOutcome = async (req, res) => {
   try {
-    const moves = await movementService.createIncomeOutcome();
+    const movement = req.body;
+
+    console.log(movement)
+
+    const moves = await movementService.createIncomeOutcome(movement);
+
+    console.log(moves);
+
+    if (!moves || moves.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        error: "No moves found",
+      });
+    }
 
     res.status(200).send({
       status: "success",

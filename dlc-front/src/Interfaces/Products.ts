@@ -20,7 +20,7 @@ export interface NewIProduct {
   imagen: any;
   contadorDevoluciones: number;
   esKit: boolean;
-  kit: number[];
+  kit: number[] | number;
   newKitNumber: number;
   check: string;
 }

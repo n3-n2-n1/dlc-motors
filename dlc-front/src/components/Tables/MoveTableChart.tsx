@@ -65,7 +65,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  150px repeat(10, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  150px repeat(11, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -100,7 +100,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   function onPaginationChange(action: any, state: any) {
     console.log(action, state);
-    pagination.fns.onSetPage(0);
+    // pagination.fns.onSetPage(0);
   }
 
   //* Search *//
@@ -277,7 +277,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.codInterno.toLowerCase().includes(codeSearch.toLowerCase()) || // Asegúrate de que este filtro esté correcto
+      node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase()) || // Asegúrate de que este filtro esté correcto
       node.desc?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.user?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||

@@ -112,6 +112,7 @@ export const MovesFetchNodes = () => {
         if (result.status === "success") {
           const transformedNodes = result.payload.map((product) => ({
             // Mapea tus datos como necesites
+            user: product.user,
             tipoMov: product.tipoMov,
             fecha: product.fecha,
             observaciones: product.observaciones,
@@ -247,7 +248,7 @@ export const ImportedCost = () => {
 
             codigo: delivery.codigo,
             descripcion: delivery.desc,
-            marcas: delivery.marcas,
+            marca: delivery.marca,
             proveedores: delivery.stockAcumulado,
             stock: delivery.stock,
             rubro: delivery.rubro,

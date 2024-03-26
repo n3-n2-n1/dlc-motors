@@ -9,6 +9,9 @@ import { NotifFetchNodes } from "../../nodes/productNodes";
 import { NOTIFCOLUMNS } from "../../components/columns/Columns";
 import NotificationTableChart from "../../components/Tables/NotificationTableChart";
 import Loader from "../../components/Loader/Loader";
+import PageTitle from "../../components/PageTitle/PageTitle";
+
+
 export interface Notification {
   name: string;
   message: string;
@@ -80,15 +83,19 @@ const Notifications = () => {
   console.log("Notif", notifications);
 
   return (
+    <>
+    <PageTitle title="DLC Motors • Notificaciones" />
+
     <div className="flex flex-col bg-gray-100 dark:bg-gray-900 text-white h-screen text-sm p-6 transition-colors duration-300 select-none">
       <Navbar
         title="Notificaciones"
         subtitle="Visualizá faltantes, egresos y stocks"
-      />
+        />
       <div className="mt-4 overflow-x-auto overflow-y-auto shadow-lg transition-colors duration-300">
         <NotificationTableChart columns={NOTIFCOLUMNS} data={notifications} />
       </div>
     </div>
+        </>
   );
 };
 

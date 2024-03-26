@@ -23,6 +23,7 @@ export class productErrorsDAO {
   }
 
   async createProductError(
+    usuario,
     fecha,
     observaciones,
     codigoInt,
@@ -35,8 +36,9 @@ export class productErrorsDAO {
   ) {
     return new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO errores (fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO errores (user, fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
+          usuario,
           fecha,
           observaciones,
           codigoInt,
@@ -47,7 +49,7 @@ export class productErrorsDAO {
           stockReal,
           imagen,
         ],
-        function (error) {
+        function (error, results) {
           if (error) {
             console.error("An error occurred while executing the query", error);
             reject(new Error("Error al crear el Error de producto."));

@@ -4,7 +4,7 @@ import Errors from "../Errors/Errors";
 import InventoryForm from "../Management/InventoryForm";
 import IncomesOutcomesForm from "../Management/IncomesOutcomesForm";
 import Returns from "../Returns/Returns";
-
+import PageTitle from "../../components/PageTitle/PageTitle.tsx";
 import { DeliveriesObservations } from "../../routes/routes";
 
 import { useSearchContext } from "../../contexts/SearchContext";
@@ -34,6 +34,9 @@ const Moves: React.FC = () => {
   const changeToDelivery = () => {setCurrentComponent(<DeliveryForm formName="Pedidos" products={products} observationsList={DeliveriesObservations} />);    setSelectedButton("Pedidos");}
 
   return (
+    <>
+    <PageTitle title="DLC Motors • Movimientos" />
+    
     <div className="flex flex-col bg-gray-100 dark:bg-gray-900 xl:w-768 flex-shrink-0 dark:border-gray-800 h-full w-full overflow-auto text-sm p-6 overflow-y-hidden transition-colors duration-300 select-none">
       <div className="flex flex-row gap-2 justify-between">
       <Navbar title='Movimientos' subtitle="" />
@@ -52,6 +55,7 @@ const Moves: React.FC = () => {
         {currentComponent}
       </div>
     </div>
+    </>
   );
 };
 

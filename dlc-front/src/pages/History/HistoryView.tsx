@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Dashcards from "../../components/Dashcards/Dashcards";
-import { DELIVERYCOLUMNS, ERRORCOLUMNS, MOVESCOLUMNS, RETURNCOLUMNS } from "../../components/columns/Columns";
-import { ErrorFetchNodes, MovesFetchNodes, DeliveryFetchNodes, ReturnsFetchNodes } from "../../nodes/productNodes";
+import {
+  DELIVERYCOLUMNS,
+  ERRORCOLUMNS,
+  MOVESCOLUMNS,
+  RETURNCOLUMNS,
+} from "../../components/columns/Columns";
+import {
+  ErrorFetchNodes,
+  MovesFetchNodes,
+  DeliveryFetchNodes,
+  ReturnsFetchNodes,
+} from "../../nodes/productNodes";
 import ErrorTableChart from "../../components/Tables/ErrorTableChart";
 import ReturnTableChart from "../../components/Tables/ReturnTableChart";
 import MoveTableChart from "../../components/Tables/MoveTableChart";
 import DeliveryTableChart from "../../components/Tables/DeliveryTableChart";
-
+import PageTitle from "../../components/PageTitle/PageTitle";
 enum TableType {
   Error,
   Return,
@@ -17,9 +27,8 @@ enum TableType {
 
 const HistoryView = () => {
   const [currentTable, setCurrentTable] = useState<TableType | null>(null);
-  
+
   const [selectedButton, setSelectedButton] = useState<string>("");
-  
 
   const changeTable = (tableType: TableType) => {
     setCurrentTable(tableType);
@@ -49,32 +58,71 @@ const HistoryView = () => {
   const renderTable = () => {
     switch (currentTable) {
       case TableType.Error:
-        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} />; 
+        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} />;
       case TableType.Return:
-        return <ReturnTableChart columns={RETURNCOLUMNS} data={returnNodes}  />;
+        return <ReturnTableChart columns={RETURNCOLUMNS} data={returnNodes} />;
       case TableType.Inventory:
         return <MoveTableChart columns={MOVESCOLUMNS} data={movesNodes} />;
       case TableType.Delivery:
-        return <DeliveryTableChart columns={DELIVERYCOLUMNS} data={deliveryNodes}/>;
+        return (
+          <DeliveryTableChart columns={DELIVERYCOLUMNS} data={deliveryNodes} />
+        );
       default:
         return <div></div>;
     }
   };
 
-  
   return (
-    <div className="flex flex-col bg-gray-100 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 dark:bg-gray-900 transition-colors duration-300 select-none">
-      <Navbar title="Historial" subtitle="" />
-      <section className="flex flex-row gap-6 pb-4 pt-4">
-        <Dashcards buttons={[{ text: "Revisión de Errores", action: () => changeTable(TableType.Error), link: "", isActive: selectedButton==="Errores" }]}/>
-        <Dashcards buttons={[{ text: "Historial de Devoluciones", action: () => changeTable(TableType.Return), link: "", isActive: selectedButton==="Devoluciones"}]}/>
-        <Dashcards buttons={[{ text: "Pedidos", action: () => changeTable(TableType.Delivery), link: "", isActive: selectedButton==="Pedidos"}]} />
-        <Dashcards buttons={[{ text: "Historial de Movimientos", action: () => changeTable(TableType.Inventory), link: "", isActive: selectedButton==="Movimientos"}]}/>
-      </section>
-      <div className="border-t border-gray-200 ">
-        {renderTable()}
+    <>
+      <PageTitle title="DLC Motors • Historial" />
+
+      <div className="flex flex-col bg-gray-100 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 dark:bg-gray-900 transition-colors duration-300 select-none">
+        <Navbar title="Historial" subtitle="" />
+        <section className="flex flex-row gap-6 pb-4 pt-4">
+          <Dashcards
+            buttons={[
+              {
+                text: "Revisión de Errores",
+                action: () => changeTable(TableType.Error),
+                link: "",
+                isActive: selectedButton === "Errores",
+              },
+            ]}
+          />
+          <Dashcards
+            buttons={[
+              {
+                text: "Historial de Devoluciones",
+                action: () => changeTable(TableType.Return),
+                link: "",
+                isActive: selectedButton === "Devoluciones",
+              },
+            ]}
+          />
+          <Dashcards
+            buttons={[
+              {
+                text: "Pedidos",
+                action: () => changeTable(TableType.Delivery),
+                link: "",
+                isActive: selectedButton === "Pedidos",
+              },
+            ]}
+          />
+          <Dashcards
+            buttons={[
+              {
+                text: "Historial de Movimientos",
+                action: () => changeTable(TableType.Inventory),
+                link: "",
+                isActive: selectedButton === "Movimientos",
+              },
+            ]}
+          />
+        </section>
+        <div className="border-t border-gray-200 ">{renderTable()}</div>
       </div>
-    </div>
+    </>
   );
 };
 

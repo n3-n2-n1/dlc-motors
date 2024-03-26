@@ -187,6 +187,12 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
 
   //* Sort *//
 
+  // search
+
+
+
+
+
   const sort = useSort(
     errorData,
     {
@@ -286,6 +292,21 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
     );
   }
 
+    
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codigo?.toLowerCase().includes(search.toLowerCase()) ||
+        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+        node.sku?.toLowerCase().includes(search.toLowerCase()) ||
+        node.marca?.toLowerCase().includes(search.toLowerCase()) 
+
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
+
   return (
     <>
       <div className="pt-4">
@@ -327,23 +348,6 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
             />
           )}
 
-          <Select
-            // value={search}
-            onChange={(event) => {
-              setSelectedOrigin(event);
-            }}
-            placeholder="Origen"
-            data={ProductOrigins}
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
-            clearable
-          />
 
           <Select
             // value={search}
@@ -384,7 +388,7 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
 
       <CompactTable
         columns={columns}
-        data={{ ...errorData}}
+        data={{ ...errorData, nodes: errorNodes}}
         theme={theme}
         layout={{ custom: true }}
         select={select}

@@ -14,6 +14,7 @@ import {
 import { HOMECOLUMNS, MOVESCOLUMNS } from "../../components/columns/Columns";
 import Loader from "../../components/Loader/Loader";
 import { paths } from "../../routes/paths";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
 function Home() {
   const [saleStats, setSaleStats] = useState([]);
@@ -136,8 +137,14 @@ function Home() {
   console.log("hola" + moveNodes);
 
   return (
+
+    <>
+    <PageTitle title="DLC Motors • Inicio" />
+
     <main className="transition-colors duration-300 bg-gray-100 dark:bg-gray-900 sm:p-6 space-y-6 xl:w-768 w-full flex-shrink-0 border-r dark:border-gray-800 h-screen overflow-y-auto lg:block select-none">
       <div className="text-gray-900 font-semibold dark:text-white text-xl flex items-center flex-grow gap-3">
+        <div className="text-gray-900 font-semibold dark:text-[#CDFF71] text-xl flex items-center">
+
         <svg
           width="20"
           className="blink-svg"
@@ -148,67 +155,69 @@ function Home() {
         >
           <path
             d="M9.99609 1.68262C8.99275 1.68262 7.99509 1.81147 7.05535 2.07806"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
           <path
             d="M1.51724 18.5897V9.44779C1.51724 7.21419 2.23179 5.50116 3.37305 4.25977"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M18.4728 18.5899V10.9135M9.99414 1.68457C13.6398 1.68457 17.2104 3.38524 18.2023 7.21218"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
           <path
             d="M6.39471 18.5905C6.39471 18.5905 5.9401 17.1579 5.59913 15.0844M13.5979 18.5905C13.5979 18.5905 14.7617 14.923 14.7617 10.8305C14.7617 10.0302 14.6584 9.35033 14.4767 8.77441"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
           <path
             d="M9.99414 16.1357V17.4908"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
           <path
             d="M5.23208 10.8304C5.23208 6.73788 7.9344 5.79492 9.99752 5.79492C10.6092 5.79492 11.2771 5.87781 11.9141 6.10111"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
           <path
             d="M8.40281 12.1914C8.40281 10.9194 9.11625 10.2272 9.99633 10.2272C10.8764 10.2272 11.5898 10.9194 11.5898 12.1914"
-            stroke="#6A707A"
-            stroke-width="2.03488"
-            stroke-linecap="round"
-          />
+            stroke="currentColor"
+            strokeWidth="2.03488"
+            strokeLinecap="round"
+            />
         </svg>
+        </div>
+
         <span>Bienvenido, {user?.name}</span>
       </div>
       <section>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {baseStats.map((data, index) => (
             <Stats
-              key={index}
-              title={data.title}
-              value={data.value}
-              percentage={data.percentage}
+            key={index}
+            title={data.title}
+            value={data.value}
+            percentage={data.percentage}
               icon={data.icon}
               link={data.path}
             />
-          ))}
+            ))}
         </div>
       </section>
       <section className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
@@ -223,6 +232,7 @@ function Home() {
       </section>
       {/* <Footer /> */}
     </main>
+            </>
   );
 }
 

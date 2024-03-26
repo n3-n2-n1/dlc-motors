@@ -32,7 +32,7 @@ import {
   Space,
   Pagination,
 } from "@mantine/core";
-import '@mantine/dates/styles.css'
+import "@mantine/dates/styles.css";
 import { DateInput } from "@mantine/dates";
 
 import { useSearchContext } from "../../contexts/SearchContext";
@@ -136,7 +136,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
     onChange: onBrandChange,
   });
 
-  
   function onBrandChange(action: any, state: any) {
     console.log(action, state);
   }
@@ -262,9 +261,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
       node.origen?.toLowerCase().includes(search.toLowerCase()) ||
       node.user?.toLowerCase().includes(search.toLowerCase()) ||
-      node.detalle?.toLowerCase().includes(search.toLowerCase()) || 
-      node.marcasCompatibles?.includes(brandSearch.toLowerCase()) || ""
-
+      node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
+      node.marcasCompatibles?.includes(brandSearch.toLowerCase()) 
   );
 
   // filter
@@ -304,37 +302,34 @@ const ProductTableChart = ({ columns, data, category }: any) => {
     );
   }
 
-
-
   const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
-    modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
-    );
-  }
+    modifiedNodes = modifiedNodes.filter((node: any) => {
+      // Convierte el arreglo marcasCompatibles a una cadena
+      const compatibleBrands = Array.isArray(node.marcasCompatibles) 
+        ? node.marcasCompatibles.join(" / ").toLowerCase()
+        : (node.marcasCompatibles || "").toLowerCase();
   
-
-
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
+  }
   const [value, setValue] = React.useState<Date | null>(null);
 
   if (search) {
-    modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-      node.SKU?.toLowerCase().includes(search.toLowerCase()) 
+    modifiedNodes = modifiedNodes.filter(
+      (node: any) =>
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+        node.SKU?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
-
-
-
-
-
   return (
     <>
       <Modal
+        className="[&>div>section>header>h2]:!text-gray-900"
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
         title={`¿Estás seguro de querer eliminar el producto ${selectedCodigoInt}?`}
@@ -358,12 +353,17 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       <div className="pb-4 transition-colors duration-300">
         <MultiSelect
           classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
             options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
           }}
           data={columns.map((column) => column.label)}
           value={hiddenColumns}
@@ -374,23 +374,29 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       </div>
 
       <Group>
-      <DateInput
-        classNames={{
-          wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-          input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-          section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-        }}
-        value={value}
-        onChange={setValue}
-        placeholder="Selecciona fechas"
-      />
+        <DateInput
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+          }}
+          value={value}
+          onChange={setValue}
+          placeholder="Selecciona fechas"
+        />
 
         <TextInput
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            }}
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+          }}
           placeholder="Búsqueda"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
@@ -400,12 +406,17 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           <Select
             value={category || null}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
             onChange={(event) => {
               setSelectedCategory(event);
@@ -416,14 +427,19 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           />
         ) : (
           <Select
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
             onChange={(event) => {
               setSelectedCategory(event);
             }}
@@ -435,12 +451,17 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
         <Select
           classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
             options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
           }}
           onChange={(event) => {
             setSelectedOrigin(event);
@@ -450,38 +471,45 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           clearable
         />
 
-<Select
-            // value={search}
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
-            onChange={(event) => {
-              setBrandSearch(event);
-            }}
-            placeholder="Marcas"
-            data={brands}
-            clearable
-          />
+        <Select
+          // value={search}
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            console.log('Evento', event)
+            setSelectedBrand(event);
+          }}
+          placeholder="Marcas"
+          data={brands}
+          clearable
+        />
 
         <Checkbox
-          classNames={{label:"font-semibold"}}
+          classNames={{ label: "font-semibold" }}
           label="Ocultar check"
           checked={selectedCheck}
           onChange={(event) => setSelectedCheck(event.currentTarget.checked)}
         />
       </Group>
 
-      <div className=" [&>table]:border-gray-200  [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+      <div
+        className=" [&>table]:border-gray-200  [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300">
-
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300"
+      >
         <CompactTable
           className="transition-colors duration-300"
           columns={columns}
@@ -498,7 +526,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
         />
       </div>
 
-      <Group >
+      <Group>
         <Pagination
           total={pagination.state.getTotalPages(modifiedNodes)}
           page={pagination.state.page + 1}

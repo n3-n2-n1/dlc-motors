@@ -42,7 +42,7 @@ import { useUser } from "../../contexts/UserContext.tsx";
 
 const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
-  
+
   const { users } = useUser();
   const userNames = users.map((user) => user.name);
 
@@ -53,7 +53,7 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   const customTheme = {
-    Table:  `
+    Table: `
     --data-table-library_grid-template-columns:  120px repeat(10, minmax(0, 1fr));
 
     margin: 16px 0px;
@@ -95,7 +95,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   //* Search *//
 
   const [search, setSearch] = React.useState("");
-  
 
   useCustom("search", errorData, {
     state: { search },
@@ -245,15 +244,15 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   errorNodes = errorNodes.filter(
     (node: any) =>
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.detalle?.toLowerCase().includes(detailSearch.toLowerCase()) || 
+      node.detalle?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase()) ||
       node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.estado.toLowerCase().includes(detailSearch.toLowerCase()) || 
+      node.estado.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.desc?.toLowerCase().includes(search.toLowerCase()) 
+      node.desc?.toLowerCase().includes(search.toLowerCase())
   );
 
   // // Hide columns
@@ -265,8 +264,8 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   }));
 
   if (detailSearch) {
-    errorNodes = errorNodes.filter(
-      (node: any) => node.det?.toLowerCase().includes(detailSearch.toLowerCase())
+    errorNodes = errorNodes.filter((node: any) =>
+      node.det?.toLowerCase().includes(detailSearch.toLowerCase())
     );
   }
 
@@ -284,92 +283,105 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   }
 
   if (search) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.det?.toLowerCase().includes(search.toLowerCase())
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+        node.det?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
   return (
     <>
-    <div className="pt-4">
+      <div className="pt-4">
+        <Group>
+          <Select
+            onChange={(event) => {
+              console.log(event);
+              setSelectedUser(event);
+            }}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            placeholder="Usuario"
+            data={userNames}
+            clearable
+          />
+          <TextInput
+            placeholder="Detalle"
+            value={detailSearch}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            onChange={(event) => setDetailSearch(event.target.value)}
+          />
+          <TextInput
+            placeholder="Código Interno"
+            value={codeSearch}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            onChange={(event) => setCodeSearch(event.target.value)}
+          />
+          <TextInput
+            placeholder="Búsqueda"
+            value={search}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </Group>
+      </div>
 
-      <Group>
-        <Select
-          onChange={(event) => {
-            console.log(event);
-            setSelectedUser(event);
-          }}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-          placeholder="Usuario"
-          data={userNames}
-          clearable
-        />
-        <TextInput
-          placeholder="Detalle"
-          value={detailSearch}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          onChange={(event) => setDetailSearch(event.target.value)}
-        />
-        <TextInput
-          placeholder="Código Interno"
-          value={codeSearch}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          onChange={(event) => setCodeSearch(event.target.value)}
-        />
-        <TextInput
-          placeholder="Búsqueda"
-          value={search}
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-      </Group>
-    </div>
-    
-    <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+      <div
+        className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
-
-      <CompactTable
-        columns={columns}
-        data={{ ...errorData, nodes: errorNodes }}
-        theme={theme}
-        layout={{ custom: true }}
-        select={select}
-        
-        tree={tree}
-        sort={sort}
-        pagination={pagination}
-        onChange={(event) =>
-          handleUpdate(event.target.value, errorData, "Descripción")
-        }
-      />
-
-        </div>
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0"
+      >
+        <CompactTable
+          columns={columns}
+          data={{ ...errorData, nodes: errorNodes }}
+          theme={theme}
+          layout={{ custom: true }}
+          select={select}
+          tree={tree}
+          sort={sort}
+          pagination={pagination}
+          onChange={(event) =>
+            handleUpdate(event.target.value, errorData, "Descripción")
+          }
+        />
+      </div>
       <Group position="right" mx={10}>
         <Pagination
           total={pagination.state.getTotalPages(errorNodes)}

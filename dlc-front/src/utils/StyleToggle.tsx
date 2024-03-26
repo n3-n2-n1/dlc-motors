@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
 const ThemeToggleButton: React.FC = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('darkMode');
+    const initialValue = JSON.parse(saved!);
+    return initialValue || false;
+  });
+
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle('dark', darkMode);
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
 
   const handleToggle = () => {

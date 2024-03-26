@@ -8,6 +8,7 @@ import {
   loginUser,
   logoutUser,
   updateUser,
+  deleteUser,
 } from "../controllers/users.controller.js";
 
 const usersRouter = Router();
@@ -38,6 +39,10 @@ usersRouter.get(
 
 usersRouter.put("/:username", (req, res) => {
   passport.authenticate("jwt", { session: false }), updateUser(req, res);
+});
+
+usersRouter.delete("/:username", (req, res) => {
+  passport.authenticate("jwt", { session: false }), deleteUser(req, res);
 });
 
 usersRouter.get("/logout", logoutUser);

@@ -13,17 +13,67 @@ export default class MovementService {
     }
   }
 
-  async createMovementInventory() {
+  async createMovementInventory(movement) {
     try {
-      return await this.movementDAO.createMovementInventory();
+      const {
+        fecha,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        arreglo,
+        usuario,
+        tipoMov,
+      } = movement;
+
+      return await this.movementDAO.createMovementInventory(
+        fecha,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        arreglo,
+        usuario,
+        tipoMov
+      );
     } catch (error) {
       throw new Error("Error en el servicio: " + error.message);
     }
   }
 
-  async createIncomeOutcome() {
+  async createIncomeOutcome(movement) {
     try {
-      return await this.movementDAO.createIncomeOutcome();
+      const {
+        date,
+        observaciones,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        detalle,
+        cantidad,
+        kit,
+        usuario,
+        tipoMov,
+      } = movement;
+
+      return await this.movementDAO.createIncomeOutcome(
+        date,
+        observaciones,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        detalle,
+        cantidad,
+        kit,
+        usuario,
+        tipoMov
+      );
     } catch (error) {
       throw new Error("Error en el servicio: " + error.message);
     }

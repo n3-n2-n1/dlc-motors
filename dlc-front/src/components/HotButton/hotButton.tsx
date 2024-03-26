@@ -14,18 +14,21 @@ const HotButton: React.FC<HotButtonProps & { onClick: () => void }> = ({
   onClick,
   isActive,
 }) => {
+
+  const baseClasses = "flex flex-col items-center justify-center rounded-full px-4 transition-all duration-300 select-none ";
+  const activeClasses = "bg-[#225112] text-gray-300 shadow-3xl ";
+  const inactiveClasses = "shadow-lg hover:bg-gray-700 text-white bg-black ";
+  const darkModeActiveClasses = "dark:bg-blue-400 ";
+  const darkModeInactiveClasses = "hover:dark:bg-blue-900 dark:bg-blue-600 ";
+
   return (
     <Link to={link}>
       <button
-        className={`flex flex-col items-center justify-center rounded-full px-4 
-  transition-all duration-300 select-none 
-  ${
-    isActive
-      ? "bg-[#225112] text-gray-300 shadow-3xl"
-      : "shadow-lg hover:bg-gray-700 text-white bg-black"
-  } 
-  ${isActive && "dark:bg-blue-400"} 
-  hover:dark:bg-blue-900 dark:bg-blue-600`}
+        className={
+          baseClasses +
+          (isActive ? activeClasses : inactiveClasses) +
+          (isActive ? darkModeActiveClasses : darkModeInactiveClasses)
+        }
         onClick={onClick}
       >
         <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white">

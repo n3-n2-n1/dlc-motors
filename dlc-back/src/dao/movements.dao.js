@@ -20,67 +20,42 @@ export class MovementDAO {
 
   async createMovementInventory(
     fecha,
-    codInterno,
+    codigoInt,
     codOEM,
     desc,
     stock,
-    stockReal,
     stockAct,
-    arreglos,
-    observaciones,
-    det,
-    cantidad,
-    kit
+    arreglo,
+    usuario,
+    tipoMov
   ) {
     return new Promise((resolve, reject) => {
       try {
         db.query(
-          "INSERT INTO movimientos (fecha, codInterno, codOEM, ` desc` , stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
+          "INSERT INTO movimientos (fecha, codigoInt, codOEM, `desc`, stock, stockAct, arreglo, user,tipoMov) VALUES (?,?,?,?,?,?,?,?,?)",
           [
             fecha,
-            codInterno,
+            codigoInt,
             codOEM,
             desc,
             stock,
-            stockReal,
             stockAct,
             arreglo,
+            usuario,
+            tipoMov,
           ],
-          function (error) {
+          function (error, results) {
             if (error) {
               console.error(
                 "An error occurred while executing the query",
                 error
               );
-              res.status(500).json({
-                error: "Error al insertar el movimiento de inventario.",
-              });
-              return;
+              reject(
+                new Error("Error al insertar el movimiento de inventario.")
+              );
+            } else {
+              resolve(results);
             }
-
-            // Get the inserted product
-            db.query(
-              "SELECT * FROM movimientos WHERE fecha = ?",
-              [fecha],
-              function (error, results) {
-                if (error) {
-                  console.error(
-                    "An error occurred while executing the query",
-                    error
-                  );
-                  res.status(500).json({
-                    error:
-                      "Error al obtener el movimiento de inventario insertado.",
-                  });
-                  return;
-                }
-
-                res.status(200).json({
-                  message: "Movimiento de inventario insertado correctamente.",
-                  product: results[0],
-                });
-              }
-            );
           }
         );
         resolve;
@@ -91,63 +66,57 @@ export class MovementDAO {
   }
 
   async createIncomeOutcome(
-    fecha,
-    codInterno,
+    date,
+    observaciones,
+    codigoInt,
     codOEM,
     desc,
     stock,
-    stockReal,
     stockAct,
-    arreglos,
-    observaciones,
-    det,
+    detalle,
     cantidad,
-    kit
+    kit,
+    usuario,
+    tipoMov
   ) {
     return new Promise((resolve, reject) => {
+      console.log(
+        date,
+        observaciones,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        detalle,
+        cantidad,
+        kit,
+        usuario,
+        tipoMov
+      );
       db.query(
-        "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, `desc` , stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO movimientos (fecha, observaciones, codigoInt, codOEM, `desc`, stock, stockAct, det, cantidad, kit, user, tipoMov) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
         [
-          fecha,
+          date,
           observaciones,
-          codInterno,
+          codigoInt,
           codOEM,
           desc,
           stock,
-          det,
+          stockAct,
+          detalle,
           cantidad,
           kit,
-          stockAct,
+          usuario,
+          tipoMov,
         ],
-        function (error) {
+        function (error, results) {
           if (error) {
             console.error("An error occurred while executing the query", error);
-            res.status(500).json({ error: "Error al insertar el producto." });
-            return;
+            reject(new Error("Error al crear el ingreso/egreso."));
+          } else {
+            resolve(results);
           }
-
-          // Get the inserted product
-          db.query(
-            "SELECT * FROM movimientos WHERE fecha = ?",
-            [fecha],
-            function (error, results, fields) {
-              if (error) {
-                console.error(
-                  "An error occurred while executing the query",
-                  error
-                );
-                res
-                  .status(500)
-                  .json({ error: "Error al obtener el producto insertado." });
-                return;
-              }
-
-              res.status(200).json({
-                message: "Producto insertado correctamente.",
-                product: results[0],
-              });
-            }
-          );
         }
       ),
         (error, results) => {

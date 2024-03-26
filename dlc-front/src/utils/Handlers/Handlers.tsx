@@ -67,7 +67,6 @@ const fetchErrors = async () => {
   }
 };
 
-
 const fetchReturns = async () => {
   try {
     const response = await fetch(`${URL}/api/v1/returns`);
@@ -169,7 +168,7 @@ const createProduct = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success('Product created sucessfully')
+    toast.success("Product created sucessfully");
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -216,7 +215,7 @@ const createError = async (errorData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Error created sucessfully")
+    toast.success("Error created sucessfully");
   } catch (error) {
     console.error("Error creating product:", error);
   }
@@ -238,7 +237,7 @@ const createReturns = async (returnData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Devolucion creada correctamente")
+    toast.success("Devolucion creada correctamente");
   } catch (error) {
     throw new Error();
   }
@@ -260,9 +259,31 @@ const createMovement = async (movementData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Movimientos creada correctamente")
+    toast.success("Movimiento de ingreso/egreso creado correctamente");
   } catch (error) {
-    console.error("Error creating product:");
+    console.error("Error creating income / outcome movement:");
+  }
+};
+
+const createInventoryMovement = async (movementData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/movements/inventario`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(movementData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Movimiento de inventario creado correctamente");
+  } catch (error) {
+    console.error("Error creating inventory movement");
   }
 };
 
@@ -282,7 +303,7 @@ const createDelivery = async (deliveryData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Pedido creado correctamente")
+    toast.success("Pedido creado correctamente");
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -313,25 +334,21 @@ const modifyProduct = async (productToEdit: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Modificacion de producto exitosa")
+    toast.success("Modificacion de producto exitosa");
   } catch (error) {
     console.error("Error editing product:", error);
   }
 };
 
-
 const updateError = async (errorUpdates: any) => {
   try {
-    const response = await fetch(
-      `${URL}/api/v1/productErrors/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(errorUpdates),
-      }
-    );
+    const response = await fetch(`${URL}/api/v1/productErrors/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(errorUpdates),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -339,11 +356,11 @@ const updateError = async (errorUpdates: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Error modificado correctamente")
+    toast.success("Error modificado correctamente");
   } catch (error) {
     console.error("Error editing errors data:", error);
   }
-}
+};
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -363,7 +380,7 @@ const deleteProducts = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Producto eliminado correctamente")
+    toast.success("Producto eliminado correctamente");
   } catch (error) {
     console.error("Error deleting product:", error);
   }
@@ -390,9 +407,28 @@ const editUser = async (userToUpdate: any) => {
     );
 
     const updatedUser = await response.json();
-    toast.success("Usuario editado correctamente")
+    toast.success("Usuario editado correctamente");
   } catch (error) {
     console.error(`Error editing user ${error}`);
+  }
+};
+
+const deleteUser = async (username: string) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/users/${username}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting user");
+    }
+
+    toast.success("Usuario eliminado correctamente");
+  } catch (error) {
+    console.error(`Error deleting user ${error}`);
   }
 };
 
@@ -492,25 +528,22 @@ const fetchIncomeObservations = async () => {
   }
 };
 
-
 const createMultipleProducts = async (data: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
   } catch (error) {
-    console.error('Error al enviar datos al servidor', error);
+    console.error("Error al enviar datos al servidor", error);
   }
 };
-
 
 export {
   fetchUser,
@@ -526,8 +559,10 @@ export {
   fetchMoves,
   handleAddMassive,
   createMovement,
+  createInventoryMovement,
   createDelivery,
   editUser,
+  deleteUser,
   fetchReturns,
   fetchDelivery,
   fetchCosts,
@@ -536,5 +571,5 @@ export {
   fetchOutcomeObservations,
   fetchReturnObservations,
   fetchIncomeObservations,
-  createMultipleProducts
+  createMultipleProducts,
 };

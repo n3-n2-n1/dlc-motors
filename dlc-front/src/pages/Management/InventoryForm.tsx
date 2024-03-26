@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createMovement } from "../../utils/Handlers/Handlers";
+import { createInventoryMovement } from "../../utils/Handlers/Handlers";
 import { Link } from "react-router-dom";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
+import { toast } from "react-toastify";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Define la interfaz para los props del componente
 interface InventoryFormProps {
@@ -21,6 +23,8 @@ const validationSchema = Yup.object().shape({
 
 // Componente funcional del formulario de inventario
 const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
+  const { user } = useAuth();
+
   // Valores iniciales del formulario
   const initialValues = {
     fecha: "",
@@ -44,13 +48,25 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        await createMovement(values);
-        alert("Creado");
-        
-        formik.resetForm();
+        const updatedValues = {
+          ...values,
+          usuario: user?.name,
+        };
+        if (updatedValues?.stockAct && updatedValues?.stockAct < 0) {
+          toast.error(
+            "No se puede realizar el movimiento, stock no puede quedar negativo"
+          );
+          return;
+        } else {
+          // formik.resetForm();
+          await createInventoryMovement(updatedValues);
+          console.log(updatedValues);
+          toast.success("Movimiento creado con éxito");
+        }
+
       } catch (error) {
+        toast.error("Error al crear el movimiento");
         console.error(error);
-        // Handle error case here
       }
     },
   });
@@ -102,7 +118,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   }, [qrCode]);
 
   return (
-<div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
@@ -111,13 +127,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
       )}
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto transition-colors duration-300">
         <div className="overflow-auto">
-        <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-gray-100 dark:bg-gray-900 mb-4 pt-6 transition-colors duration-300">
-        <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300 transition-colors duration-300">
+          <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-gray-100 dark:bg-gray-900 mb-4 pt-6 transition-colors duration-300">
+            <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300 transition-colors duration-300">
               Inventario
             </h1>
             <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6 transition-colors duration-300">
               <Link to="/historyView">
-              <button className="p-3 text-md font-bold text-white">
+                <button className="p-3 text-md font-bold text-white">
                   Historial
                 </button>
               </Link>
@@ -125,7 +141,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
           </div>
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md transition-colors duration-300"     
+            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md transition-colors duration-300"
           >
             <div className="mb-4">
               <label

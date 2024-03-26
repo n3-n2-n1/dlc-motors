@@ -1,4 +1,4 @@
-import {productErrorsDAO} from "../dao/productErrors.dao.js";
+import { productErrorsDAO } from "../dao/productErrors.dao.js";
 
 export default class ErrorService {
   constructor() {
@@ -9,11 +9,13 @@ export default class ErrorService {
     try {
       return await this.productErrorsDAO.getProductErrors();
     } catch (error) {
-      throw new Error("Error en el servicio" + error.message)
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 
-  async createProductError( fecha,
+  async createProductError(
+    usuario,
+    fecha,
     observaciones,
     codigoInt,
     codOEM,
@@ -21,10 +23,12 @@ export default class ErrorService {
     stock,
     detalle,
     stockReal,
-    imagen){
+    imagen
+  ) {
     try {
-
-      return await this.productErrorsDAO.createProductError( fecha,
+      return await this.productErrorsDAO.createProductError(
+        usuario,
+        fecha,
         observaciones,
         codigoInt,
         codOEM,
@@ -32,44 +36,54 @@ export default class ErrorService {
         stock,
         detalle,
         stockReal,
-        imagen);
-      
+        imagen
+      );
     } catch (error) {
-      throw new Error("Error en el servicio" + error.message)
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 
-  async deleteProductError(errorId){
+  async deleteProductError(errorId) {
     try {
-      return await this.productErrorsDAO.deleteProductError(errorId)
+      return await this.productErrorsDAO.deleteProductError(errorId);
     } catch (error) {
-      throw new Error ("Error en el servicio", + error.message)
+      throw new Error("Error en el servicio", +error.message);
     }
   }
 
   async updateErrorStatus(id, estado) {
     try {
-      return await this.productErrorsDAO.updateErrorStatus(id, estado)
+      return await this.productErrorsDAO.updateErrorStatus(id, estado);
     } catch (error) {
-      throw new Error("Error en el servicio" + error.message)
+      throw new Error("Error en el servicio" + error.message);
     }
   }
 
-  async updateProductError(fecha, observaciones, codigoInt, codOEM, descripcion, stock, detalle, stockReal, imagen){
-      try {
-        return await this.productErrorsDAO.updateProductError(
-          fecha,
-          observaciones,
-          codigoInt,
-          codOEM,
-          descripcion,
-          stock,
-          detalle,
-          stockReal,
-          imagen
-          )
-      } catch (error) {
-        throw new Error("Error en el servicio")
-      }
+  async updateProductError(
+    fecha,
+    observaciones,
+    codigoInt,
+    codOEM,
+    descripcion,
+    stock,
+    detalle,
+    stockReal,
+    imagen
+  ) {
+    try {
+      return await this.productErrorsDAO.updateProductError(
+        fecha,
+        observaciones,
+        codigoInt,
+        codOEM,
+        descripcion,
+        stock,
+        detalle,
+        stockReal,
+        imagen
+      );
+    } catch (error) {
+      throw new Error("Error en el servicio");
     }
+  }
 }

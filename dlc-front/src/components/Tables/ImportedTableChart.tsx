@@ -137,6 +137,16 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     pagination.fns.onSetPage(0);
   }
 
+  const [brandSearch, setBrandSearch] = React.useState("");
+  useCustom("brandSearch", errorData, {
+    state: { brandSearch },
+    onChange: onBrandChange,
+  });
+
+  function onBrandChange(action: any, state: any) {
+    console.log(action, state);
+  }
+
   //* Filter *//
 
   const [isHide, setHide] = React.useState(false);
@@ -252,14 +262,61 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-      node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) 
+      node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
+      node.marca?.includes(brandSearch.toLowerCase()) 
+
   );
+
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codigo?.toLowerCase().includes(search.toLowerCase()) ||
+        node.marca?.toLowerCase().includes(search.toLowerCase()) ||
+        node.sku?.toLowerCase().includes(search.toLowerCase())
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
 
   // // Hide columns
 
   columns = columns.map((column) => ({
     ...column,
   }));
+
+
+  const [selectedBrand, setSelectedBrand] = React.useState(false);
+  if (selectedBrand) {
+    errorNodes = errorNodes.filter((node: any) => {
+      // Convierte el arreglo marcasCompatibles a una cadena
+      const compatibleBrands = Array.isArray(node.marcasCompatibles) 
+        ? node.marcasCompatibles.join(" / ").toLowerCase()
+        : (node.marcasCompatibles || "").toLowerCase();
+        console.log(compatibleBrands)
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
+  }
+
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  if (selectedCategory) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
+    );
+  }
+
+  
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+        node.SKU?.toLowerCase().includes(search.toLowerCase())
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
 
 
   return (
@@ -307,6 +364,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
           <Select
             // value={search}
             onChange={(event) => {
+              console.log('evento', event)
               setSelectedBrand(event);
             }}
             placeholder="Marcas"
@@ -344,7 +402,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
       <CompactTable
         columns={columns}
-        data={{ ...errorData }}
+        data={{ ...errorData, nodes: errorNodes }}
         theme={theme}
         layout={{ custom: true }}
         select={select}

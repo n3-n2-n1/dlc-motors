@@ -3,12 +3,15 @@ import { paths } from "../../routes/paths";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import { useSearchContext } from "../../contexts/SearchContext";
-
+import PageTitle from "../../components/PageTitle/PageTitle";
 const Categories = () => {
   // const [categories, setCategories] = useState<string[]>([]);
   const { categories } = useSearchContext();
 
   return (
+    <>
+    <PageTitle title="DLC Motors • Rubros" />
+
     <div className="bg-gray-100 dark:bg-gray-900 w-full flex-shrink-0 border-r border-gray-500 dark:border-gray-800 h-screen overflow-y-hidden transition-colors duration-300 select-none">
       <div className=" dark:bg-gray-900 p-4 md:p-6 shadow-lg dark:text-white pt-4">
         <Navbar title="Rubros" subtitle="" />
@@ -33,18 +36,18 @@ const Categories = () => {
                         viewBox="0 0 16 16"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="#000000"
-                        class="bi bi-arrow-right"
+                        className="bi bi-arrow-right"
                       >
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                         <g
                           id="SVGRepo_tracerCarrier"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         ></g>
                         <g id="SVGRepo_iconCarrier">
                           {" "}
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
                           ></path>{" "}
                         </g>
@@ -57,18 +60,18 @@ const Categories = () => {
                         viewBox="0 0 16 16"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="#ffffff"
-                        class="bi bi-arrow-right"
+                        className="bi bi-arrow-right"
                       >
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                         <g
                           id="SVGRepo_tracerCarrier"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         ></g>
                         <g id="SVGRepo_iconCarrier">
                           {" "}
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
                           ></path>{" "}
                         </g>
@@ -82,6 +85,7 @@ const Categories = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
