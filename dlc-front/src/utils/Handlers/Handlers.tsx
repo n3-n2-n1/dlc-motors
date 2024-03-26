@@ -5,15 +5,23 @@ import { toast } from "react-toastify";
 
 const URL = "http://localhost:3000";
 
+const token = localStorage.getItem("userJWT");
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //----------------------READING HANDLERS-------------------------//
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 
-const fetchUser = async (): Promise<User[]> => {
+const fetchUser = async (token: string): Promise<User[]> => {
   try {
-    const response = await fetch(`${URL}/api/v1/users`);
+    const response = await fetch(`${URL}/api/v1/users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -51,9 +59,8 @@ const fetchErrors = async () => {
       throw new Error("Error status");
     }
 
-    const errorData = await response.json();
-    console.log(errorData);
-    return errorData.payload;
+    const returnsData = await response.json();
+    return returnsData;
   } catch (error) {
     console.error("error", error);
     throw error;
@@ -69,7 +76,6 @@ const fetchReturns = async () => {
     }
 
     const returnsData = await response.json();
-    console.log(returnsData);
     return returnsData;
   } catch (error) {
     console.error("error", error);
@@ -83,7 +89,8 @@ const fetchMoves = async () => {
     if (!response.ok) {
       throw new Error("Error al obtener el historial de acciones");
     }
-    return await response.json(); // Retorna los datos
+    const responseData = await response.json(); // Retorna los datos
+    return responseData;
   } catch (error) {
     console.error("Error:", error);
     throw error; // Vuelve a lanzar el error para que pueda ser manejado donde sea que llames a esta función
@@ -105,7 +112,7 @@ const fetchDelivery = async () => {
 
 const fetchCosts = async () => {
   try {
-    const response = await fetch(`${URL}/api/v1/costos`);
+    const response = await fetch(`${URL}/api/v1/costs`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -138,7 +145,6 @@ const createUser = async (userData: string) => {
     }
 
     const responseData = await response.json();
-    console.log("User created successfully:", responseData);
     toast.success("creado");
     location.reload();
   } catch (error) {
@@ -162,8 +168,7 @@ const createProduct = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("Product created successfully:", responseData);
+    toast.success("Product created sucessfully");
   } catch (error) {
     console.error("Error creating product:");
   }
@@ -210,7 +215,7 @@ const createError = async (errorData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product created successfully:", responseData);
+    toast.success("Error created sucessfully");
   } catch (error) {
     console.error("Error creating product:", error);
   }
@@ -232,10 +237,8 @@ const createReturns = async (returnData: any) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    console.log("Devolucion created successfully:", responseData);
+    toast.success("Devolucion creada correctamente");
   } catch (error) {
-    console.log(error);
     throw new Error();
   }
 };
@@ -256,9 +259,31 @@ const createMovement = async (movementData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Movimientosss created successfully:", responseData);
+    toast.success("Movimiento de ingreso/egreso creado correctamente");
   } catch (error) {
-    console.error("Error creating product:");
+    console.error("Error creating income / outcome movement:");
+  }
+};
+
+const createInventoryMovement = async (movementData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/movements/inventario`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(movementData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Movimiento de inventario creado correctamente");
+  } catch (error) {
+    console.error("Error creating inventory movement");
   }
 };
 
@@ -278,10 +303,9 @@ const createDelivery = async (deliveryData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Delivery created successfully:", responseData);
+    toast.success("Pedido creado correctamente");
   } catch (error) {
     console.error("Error creating product:");
-    console.log(deliveryData);
   }
 };
 
@@ -310,9 +334,31 @@ const modifyProduct = async (productToEdit: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product edited successfully:", responseData);
+    toast.success("Modificacion de producto exitosa");
   } catch (error) {
     console.error("Error editing product:", error);
+  }
+};
+
+const updateError = async (errorUpdates: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/productErrors/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(errorUpdates),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Error modificado correctamente");
+  } catch (error) {
+    console.error("Error editing errors data:", error);
   }
 };
 
@@ -334,7 +380,7 @@ const deleteProducts = async (productData: any) => {
     }
 
     const responseData = await response.json();
-    console.log("Product deleted successfully:", responseData);
+    toast.success("Producto eliminado correctamente");
   } catch (error) {
     console.error("Error deleting product:", error);
   }
@@ -353,6 +399,7 @@ const editUser = async (userToUpdate: any) => {
       {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userToUpdate),
@@ -360,9 +407,141 @@ const editUser = async (userToUpdate: any) => {
     );
 
     const updatedUser = await response.json();
-    console.log("Edited user successfully:", updatedUser);
+    toast.success("Usuario editado correctamente");
   } catch (error) {
     console.error(`Error editing user ${error}`);
+  }
+};
+
+const deleteUser = async (username: string) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/users/${username}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting user");
+    }
+
+    toast.success("Usuario eliminado correctamente");
+  } catch (error) {
+    console.error(`Error deleting user ${error}`);
+  }
+};
+
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+//-------------OBSERVATIONS/BRANDS HANDLERS----------------------//
+//---------------------------------------------------------------//
+//---------------------------------------------------------------//
+
+const fetchBrands = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/brands`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    throw error;
+  }
+};
+
+const fetchErrorObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/errors`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Errors Observations:", error);
+    throw error;
+  }
+};
+
+const fetchOutcomeObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/outcomes`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Outcomes Observations:", error);
+    throw error;
+  }
+};
+
+const fetchReturnObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/returns`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Returns Observations:", error);
+    throw error;
+  }
+};
+
+const fetchIncomeObservations = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/incomes`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error fetching Incomes Observations:", error);
+    throw error;
+  }
+};
+
+const createMultipleProducts = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
   }
 };
 
@@ -370,6 +549,7 @@ export {
   fetchUser,
   fetchErrors,
   createError,
+  updateError,
   fetchProducts,
   createProduct,
   modifyProduct,
@@ -379,9 +559,17 @@ export {
   fetchMoves,
   handleAddMassive,
   createMovement,
+  createInventoryMovement,
   createDelivery,
   editUser,
+  deleteUser,
   fetchReturns,
   fetchDelivery,
   fetchCosts,
+  fetchBrands,
+  fetchErrorObservations,
+  fetchOutcomeObservations,
+  fetchReturnObservations,
+  fetchIncomeObservations,
+  createMultipleProducts,
 };

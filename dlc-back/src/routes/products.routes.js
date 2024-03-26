@@ -8,6 +8,7 @@ import {
   createProduct,
   editProduct,
   deleteProduct,
+  createMultipleProducts
 } from "../controllers/products.controller.js";
 
 const productsRouter = Router();
@@ -35,5 +36,12 @@ productsRouter.put("/:username", (req, res) => {
 productsRouter.delete("/:pid", (req, res) => {
   deleteProduct(req, res);
 });
+
+
+productsRouter.post("/createMultiple", (req, res) => {
+  createMultipleProducts(req, res)
+})
+
+
 
 export default productsRouter;

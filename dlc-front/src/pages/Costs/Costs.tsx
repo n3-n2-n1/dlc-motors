@@ -1,95 +1,111 @@
-import Dashcards from "../../components/Dashcards/Dashcards";
-import { useState } from "react";
+
 import { useSearchContext } from "../../contexts/SearchContext";
-import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
-import { useFilterValues } from "../../contexts/FilterContext";
-import { OutcomeObservations } from "../../routes/routes";
-import FiltroFloat from "../../components/SearchFloat/SearchFloat";
-import { CostFabricTable, CostImportedTable, CostResaleTable } from "../../components/TableMoves/TableMoves";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
+import Dashcards from "../../components/Dashcards/Dashcards";
+import { COLUMNSFABRIC, DELIVERYCOLUMNS, ERRORCOLUMNS, IMPORTEDCOLUMNS, MOVESCOLUMNS, RESALECOLUMNS, RETURNCOLUMNS } from "../../components/columns/Columns";
+import ImportedTableChart from "../../components/Tables/ImportedTableChart";
+import ResaleTableChart from "../../components/Tables/ResaleTableChart";
+import FabricTableChart from "../../components/Tables/FabricTableChart";
+import { fetchCosts } from "../../utils/Handlers/Handlers";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
-
+enum TableType {
+  Imported,
+  Resale,
+  Fabric
+}
 
 const Costs = () => {
-
+  const [selectedButton, setSelectedButton] = useState<string>("");
   const { products } = useSearchContext();
-  const [currentComponent, setCurrentComponent] =useState<React.ReactNode>(null);
-  const [filterConfig, setFilterConfig] = useState<FilterConfig[]>([]);
-  const { filterValues, setFilterValues } = useFilterValues();
+  const [currentTable, setCurrentTable] = useState<TableType | null>(null);
+  const { categories } = useSearchContext();
+  const [importedNodes, setImportedNodes] = useState([]);
+  const [fabricNodes, setFabricNodes] = useState([]);
+  const [resaleNodes, setResaleNodes] = useState([]);
 
 
-  const costFilterConfig: FilterConfig[] = [
-    {
-      key: "rubro",
-      label: "Rubros",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-      options: [],
-      
-    }, 
+  const changeTable = (tableType: TableType) => {
+    setCurrentTable(tableType);
+    // Mueve la lógica de setSelectedButton aquí
+    switch (tableType) {
+      case TableType.Imported:
+        setSelectedButton("Importado");
+        break;
+      case TableType.Resale:
+        setSelectedButton("Reventa");
+        break;
+      case TableType.Fabric:
+        setSelectedButton("Fabrica");
+        break;
+      default:
+        setSelectedButton("");
+        break;
+    }
+  };
 
-    {
-      key: "texto",
-      label: "Ingrese texto...",
-      type: "text", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-    }, 
-
-    {
-      key: "marcas",
-      label: "Marcas Compatibles",
-      type: "dropdown",
-      options: []
-    }, 
-
+  const fetchImportedData = async () => {
+    try {
+      const result = await fetchCosts();
+      console.log("Payload data:", result.payload); // Confirma que los datos son correctos
   
-  ]
+      if (result.status === "success") {
+        // Suponiendo que el 'rubro' viene dentro de cada objeto en el payload
+        setFabricNodes(result.payload.filter(item => item.rubro === 'Fabrica'));
+        setImportedNodes(result.payload.filter(item => item.rubro === 'Importado'));
+        setImportedNodes(result.payload.filter(item => item.rubro === 'Nacional'));
+        setResaleNodes(result.payload.filter(item => item.rubro === 'Reventa'));
+      } else {
+        throw new Error("La respuesta del servidor no fue de éxito.");
+      }
+    } catch (error) {
+      console.error("Hubo un error al recuperar los datos:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchImportedData();
+  }, []);
+  
 
 
+  console.log('aver', importedNodes)
     
-  const changeToImported = () => {
-    setCurrentComponent(<CostImportedTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
+  const renderTable = () => {
+    switch (currentTable) {
+      case TableType.Imported:
+        console.log('Imported Table Data:', importedNodes);
+        return <ImportedTableChart columns={IMPORTEDCOLUMNS} data={importedNodes} category={categories}/>;
+      case TableType.Resale:
+        console.log('Resale Table Data:', resaleNodes);
+        return <ResaleTableChart columns={RESALECOLUMNS} data={resaleNodes} category={categories}/>;
+      case TableType.Fabric:
+        console.log('Fabric Table Data:', fabricNodes);
+        return <FabricTableChart columns={COLUMNSFABRIC} data={fabricNodes} category={categories} />;
+      default:
+        return <div></div>;
+    }
   };
+  
 
-  const changeToResale = () => {
-    setCurrentComponent(<CostResaleTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
-  };
-
-  const changeToFabric = () => {
-    setCurrentComponent(<CostFabricTable costImported={[]}/>);
-    setFilterConfig(costFilterConfig);
-    setFilterValues({})
-  };
 
   return (
-    <div className="flex flex-col bg-gray-900 bg-gray-100 bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-auto text-sm p-6">
-
-      <Navbar title="Costos" subtitle="Costos de producto y demás" />
-
-      <section className="flex flex-row gap-6">
-        <Dashcards buttons={[
-            { text: "Importado", action: changeToImported, link: "" },
-          ]}
-        />
-        <Dashcards buttons={[
-            {
-              text: "Reventa", action: changeToResale, link: "",
-            },
-          ]}
-        />
-        <Dashcards buttons={[
-            {
-              text: "Fabrica", action: changeToFabric, link: "",
-            },
-          ]}
-        />
-        <FiltroFloat filtersConfig={filterConfig} />
-
+    <>
+    <PageTitle title="DLC Motors • Costos" />
+    <div className="flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 transition-colors duration-300 select-none">
+      <Navbar title="Costos" subtitle="" />
+      <section className="flex flex-row gap-6 pb-4 pt-4 transition-colors duration-300">
+        <Dashcards buttons={[{ text: "Importados", action: () => changeTable(TableType.Imported), link: "", isActive: selectedButton ==="Importado" }]}/>
+        <Dashcards buttons={[{ text: "Reventa", action: () => changeTable(TableType.Resale), link: "", isActive: selectedButton ==="Reventa" }]}/>
+        <Dashcards buttons={[{ text: "Fábrica", action: () => changeTable(TableType.Fabric), link: "", isActive: selectedButton ==="Fabrica" }]}/>
       </section>
-      <div className="border-t border-gray-200 mt-4">{currentComponent}</div>
+      <div className="border-t border-gray-200 ">
+        {renderTable()}
+      </div>
     </div>
+    </>
+
   );
 };
 

@@ -1,18 +1,40 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface HotButtonProps {
   link: string;
   children: React.ReactNode;
   text: string;
+  isActive: boolean;
 }
 
-const HotButton: React.FC<HotButtonProps & { onClick: () => void }> = ({ link, children, onClick }) => {
+const HotButton: React.FC<HotButtonProps & { onClick: () => void }> = ({
+  link,
+  children,
+  onClick,
+  isActive,
+}) => {
+
+  const baseClasses = "flex flex-col items-center justify-center rounded-full px-4 transition-all duration-300 select-none ";
+  const activeClasses = "bg-[#225112] text-gray-300 shadow-3xl ";
+  const inactiveClasses = "shadow-lg hover:bg-gray-700 text-white bg-black ";
+  const darkModeActiveClasses = "dark:bg-blue-400 ";
+  const darkModeInactiveClasses = "hover:dark:bg-blue-900 dark:bg-blue-600 ";
+
   return (
     <Link to={link}>
-      <div className="flex flex-col items-center justify-center bg-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-blue-500 hover:text-white" onClick={onClick}>
-        <h3 className="text-xl font-semibold my-3 rounded rounded-2xl hover:text-white">{children}</h3>
-      </div>
+      <button
+        className={
+          baseClasses +
+          (isActive ? activeClasses : inactiveClasses) +
+          (isActive ? darkModeActiveClasses : darkModeInactiveClasses)
+        }
+        onClick={onClick}
+      >
+        <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white">
+          {children}
+        </h3>
+      </button>
     </Link>
   );
 };

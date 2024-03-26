@@ -34,9 +34,7 @@ export const AuthProvider: React.FC = ({
 
   useEffect(() => {
     const checkTokenValidity = async () => {
-      console.log("EL TOKEN EN EL USEFFECT", token);
       if (token && token !== "null") {
-        console.log("entró");
         const { status, payload } = await checkUser(token);
         if (status === "success") {
           const now = Math.floor(Date.now() / 1000);
@@ -68,14 +66,12 @@ export const AuthProvider: React.FC = ({
         body: JSON.stringify(values),
       });
       const data = await response.json();
-      console.log("DATA DE LOGIN", data);
 
       if (!response.ok) {
         throw new Error("Error al intentar iniciar sesión.");
       } else {
         const { status, payload } = await checkUser(data.token);
 
-        console.log("DATA DE CHECKUSER", status, payload);
         if (status === "success") {
           setUser(payload);
           setToken(data.token);
@@ -109,7 +105,6 @@ export const AuthProvider: React.FC = ({
 
   const logout = async () => {
     try {
-      console.log("deslogueando paisano");
       const response = await fetch(`${URL}/api/v1/users/logout`, {
         method: "GET",
         headers: {
@@ -118,12 +113,10 @@ export const AuthProvider: React.FC = ({
         },
       });
 
-      console.log(response);
 
       if (!response.ok) {
         throw new Error("Falló la solicitud al servidor.");
       } else {
-        console.log("metiendo logica de desloguei paiii");
         setUser(null);
         setToken(null);
         localStorage.setItem("userJWT", "null");

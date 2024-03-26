@@ -7,6 +7,7 @@ import {
   createProductError,
   deleteProductError,
   updateProductError,
+  updateErrorStatus,
 } from "../controllers/productErrors.controller.js";
 
 const productErrorsRouter = Router();
@@ -26,6 +27,11 @@ productErrorsRouter.delete("/", (req, res) => {
 productErrorsRouter.delete("/update/", (req, res) => {
   updateProductError(req, res);
 });
+
+productErrorsRouter.put("/", (req, res) => {
+  updateErrorStatus(req, res);
+});
+
 
 
 export default productErrorsRouter;

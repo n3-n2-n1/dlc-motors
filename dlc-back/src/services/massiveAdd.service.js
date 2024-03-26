@@ -13,22 +13,19 @@ export default class MassiveAddService {
       // Itera sobre las filas del archivo Excel y guárdalas en la base de datos
       for (const row of sheetData) {
         db.query(
-          "INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Precio, Stock, Image, hasStock, Origen, CodTango, CodOEM, marcasCompatibles, Devoluciones, Tag, Kit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT INTO productos (Codigo, Producto, Rubro, CodBarras, Stock, Image, Origen, SKU, CodOEM, marcasCompatibles, Devoluciones, Kit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             row.Codigo,
             row.Producto,
             row.Rubro,
             row.CodBarras,
-            row.Precio,
             row.Stock,
             row.Image,
-            row.hasStock,
             row.Origen,
-            row.CodTango,
+            row.SKU,
             row.CodOEM,
             row.marcasCompatibles,
             row.Devoluciones,
-            row.Tag,
             row.Kit,
           ]
         );

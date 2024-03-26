@@ -1,50 +1,80 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import TableList from "../../components/TableList/TableList";
 import Actions from "../../components/Actions/Actions";
-import QRCodeScanner from "../../components/qrScanner/qrScanner";
 import Navbar from "../../components/Navbar/Navbar";
 import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { FilterConfig } from "../../components/SearchFloat/SearchFloat";
-
-function Products() {
+import TableList from "../../components/TableList/TableList";
+import { useFetchNodes } from "../../nodes/productNodes";
+import { useState, useEffect } from "react";
+import { PRODUCTCOLUMNS } from "../../components/columns/Columns";
+import HotButton from "../../components/HotButton/hotButton";
+import { Link } from "react-router-dom";
+import { paths } from "../../routes/paths";
+import ProductTableChart from "../../components/Tables/ProductTableChart";
+import Dashcards from "../../components/Dashcards/Dashcards";
+import Loader from "../../components/Loader/Loader";
+import PageTitle from "../../components/PageTitle/PageTitle";
+const Products = () => {
   const { category } = useParams();
-  const [filterConfig, setFilterConfig] = useState<FilterConfig[]>([]);
+  const nodes = useFetchNodes();
 
-  const ProductFilterConfig: FilterConfig[] = [
-    {
-      key: "Origen",
-      label: "Origen",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-    },
-    {
-      key: "Rubro",
-      label: "Rubro",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-    },
-    {
-      key: "Marca",
-      label: "Marca",
-      type: "dropdown", // Asegúrate de que el valor sea exactamente "dropdown" o "text"
-    },
-  ];
+  console.log(nodes)
+
+  const edit = () => {
+    console.log("");
+  };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex overflow-hidden text-sm">
-      <div className="flex-grow h-full flex flex-col">
-        <div className="flex-grow bg-gray-900">
-          <div className="flex justify-between items-center sm:p-6 md:p-4">
-            <Navbar title="Productos" subtitle=" " />
-            <FiltroFloat filtersConfig={ProductFilterConfig}  />
-            <div className="flex items-center">
-              <Actions />
+    <>
+      <PageTitle title="DLC Motors • Productos" />
+
+      <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex overflow-hidden text-sm transition-all duration-300">
+        <div className="flex-grow h-full flex flex-col">
+          <div className="flex-grow">
+            <div className="flex items-center sm:p-6 md:p-4 pt-1 justify-between ">
+              <Navbar
+                title="Listado de Productos"
+                subtitle="Visualizá productos"
+              />
+
+              <section className="flex items-center gap-4">
+                <Dashcards
+                  buttons={[
+                    {
+                      text: "Agregar Producto",
+                      action: edit,
+                      link: "/productos/agregar",
+                    },
+                  ]}
+                />
+                <Link to={paths.massive}>
+                  <div className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-gray-700 hover:text-white dark:bg-blue-700 select-none">
+                    <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white select-none">
+                      Agregar Masivo
+                    </h3>
+                  </div>
+                </Link>
+              </section>
             </div>
+
+            <section className="p-4 transition-all ">
+              {nodes.length > 0 ? (
+                <ProductTableChart
+                  columns={PRODUCTCOLUMNS}
+                  data={nodes}
+                  category={category}
+                />
+              ) : (
+                <div className="bg-gray-900">
+                  <Loader />
+                </div>
+              )}
+            </section>
           </div>
-          <TableList category={category} />
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};
 
 export default Products;

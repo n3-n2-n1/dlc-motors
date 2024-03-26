@@ -3,7 +3,8 @@ import passport from "passport";
 import { verifyRole } from '../middlewares/auth.js';
 import {
   getMovements,
-  createMovementInventory
+  createMovementInventory,
+  createIncomeOutcome,
 } from "../controllers/movements.controller.js";
 
 const movementsRouter = Router();

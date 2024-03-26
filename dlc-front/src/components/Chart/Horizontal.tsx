@@ -9,10 +9,20 @@ const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "
 
 // Define una paleta de colores para las barras
 const barColors = [
-  '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
-  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-  '#80B300', '#809900'
+  'rgba(255, 193, 182, 0.6)', // Coral pastel
+  'rgba(255, 224, 179, 0.6)', // Melocotón pastel
+  'rgba(255, 209, 255, 0.6)', // Lavanda pastel
+  'rgba(255, 255, 179, 0.6)', // Amarillo pastel
+  'rgba(179, 217, 255, 0.6)', // Azul cielo pastel
+  'rgba(255, 223, 211, 0.6)', // Rosa pastel
+  'rgba(194, 194, 240, 0.6)', // Lila pastel
+  'rgba(214, 224, 179, 0.6)', // Verde menta pastel
+  'rgba(179, 230, 204, 0.6)', // Aguamarina pastel
+  'rgba(255, 179, 179, 0.6)', // Rojo sandía pastel
+  'rgba(209, 209, 224, 0.6)', // Gris azulado pastel
+  'rgba(255, 245, 230, 0.6)'  // Marfil pastel
 ];
+
 
 const Horizontal = () => {
   const { products } = useSearchContext();
@@ -24,6 +34,8 @@ const Horizontal = () => {
       backgroundColor: barColors,
       borderColor: barColors,
       borderWidth: 1,
+      textOpacity: '0.3',
+
       
     }]
   });
@@ -39,6 +51,9 @@ const Horizontal = () => {
         backgroundColor: barColors,
         borderColor: barColors,
         borderWidth: 1,
+        textOpacity: '0.9',
+        
+
       }]
     });
   }, [products]);
@@ -48,26 +63,26 @@ const Horizontal = () => {
     plugins: {
       legend: {
         labels: {
-          color: 'white' // Hace que el texto de la leyenda sea blanco
+          color: 'gray' // Hace que el texto de la leyenda sea blanco
         }
       },
       title: {
         display: true,
         text: 'Ventas por Mes',
-        color: 'white' // Hace que el título sea blanco
+        color: 'gray' // Hace que el título sea blanco
       }
     },
     scales: {
       x: {
         ticks: {
-          color: 'white' // Hace que las etiquetas del eje x sean blancas
+          color: 'gray' // Hace que las etiquetas del eje x sean blancas
         },
         grid: {
         }
       },
       y: {
         ticks: {
-          color: 'white' // Hace que las etiquetas del eje y sean blancas
+          color: 'gray' // Hace que las etiquetas del eje y sean blancas
         },
         grid: {
         }
@@ -76,7 +91,7 @@ const Horizontal = () => {
   };
 
   return (
-    <div  style={{ width: '1200px', height: '500px' }}>
+    <div style={{ width: '1200px', height: '380px', color: 'black'}}>
       <Bar data={chartData} options={options} />
     </div>
   );

@@ -9,8 +9,6 @@ const NotificationIcon = () => {
   const dropdownRef = useRef(null);
   const { notif } = useNotification(); // Change here
 
-  console.log(notif);
-
   return (
     <div className="relative flex items-center" ref={dropdownRef}>
       <button

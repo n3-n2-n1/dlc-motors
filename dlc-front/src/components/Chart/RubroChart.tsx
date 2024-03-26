@@ -42,17 +42,16 @@ const RubroChart = () => {
               labels: rubroLabels,
               datasets: [
                   {
-                      label: 'Cantidad por Rubro',
+                      label: 'Rubro',
                       data: rubroData,
-                      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                      borderColor: 'rgba(53, 162, 235, 1)',
+                      borderColor: 'rgba(93, 102, 235, 0.3)',
                       borderWidth: 1,
                       type: 'bar',
                       color:'white' // Especifica el tipo de gráfico para este conjunto de datos
                       
                   },
                   {
-                      label: 'Línea de Tendencia',
+                      label: 'Tendencia',
                       data: rubroData, // Puedes cambiar estos datos para representar otra métrica si lo deseas
                       borderColor: 'rgba(255, 99, 132, 1)',
                       borderWidth: 2,
@@ -63,7 +62,7 @@ const RubroChart = () => {
       }
   }, [products]);
 
-  return <div className='w-[805px] h-[415px] p-4 rounded-xl bg-gray-700'>
+  return <div className='w-[813px] h-[415px] p-4 rounded-xl dark:bg-gray-700 text-white'>
       <Bar data={chartData} />
   </div>;
 };

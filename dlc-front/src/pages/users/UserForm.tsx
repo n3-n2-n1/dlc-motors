@@ -46,17 +46,15 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
       try {
         createUser(values as any);
         // location.reload();
-        console.log(values);
-        toast.success('Usuario correctamente.')
+        toast.success('Usuario creado correctamente.')
+        formik.resetForm();
       } catch (error) {
-        console.log(error)
         toast.error( `Error al crear el usuario. ${error}`)
       }
     },
   });
 
   useEffect(() => {
-    console.log(formik.errors)
   }, [formik.errors])
   
 
@@ -64,20 +62,20 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   // const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   return (
-    <div className="bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block hidden pt-4 pb-4">
-      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
-        <div className="flex-row">
-          <p className="text-2xl mb-2 text-white font-weight-300">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block pb-4">
+      <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray transition-colors duration-300">
+        <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300 transition-colors duration-300">
             Agregar usuarios
-          </p>
+          </h1>
+        <div className="flex-row pt-4 transition-colors duration-300">
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md"
+            className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white p-4 rounded-md shadow-md transition-colors duration-300"
           >
-            <div className="mb-4">
+            <div className="mb-4 transition-colors duration-300">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-300"
               >
                 Nombre completo
               </label>
@@ -99,7 +97,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
             <div className="mb-4">
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-300"
               >
                 Nombre de Usuario
               </label>
@@ -121,7 +119,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
             <div className="mb-4">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-300"
               >
                 Contraseña
               </label>
@@ -143,7 +141,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
             <div className="mb-4">
               <label
                 htmlFor="role"
-                className="block text-sm font-medium text-gray-100 dark:text-gray-300"
+                className="block text-sm font-semibold text-gray-600 dark:text-gray-300"
               >
                 Jerarquía
               </label>
@@ -176,7 +174,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
             <div>
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-2xl hover:bg-blue-600"
+                className="bg-black hover:bg-gray-600 font-semibold dark:bg-blue-500 text-white py-2 px-4 rounded-2xl dark:hover:bg-blue-600"
               >
                 Aceptar
               </button>

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { useSearchContext } from "../contexts/SearchContext.tsx";
 import { useAuth } from "../contexts/AuthContext.tsx";
+import { useBrandsObservations } from "../contexts/BrandsObservationsContext.tsx";
 
 import { paths } from "./paths";
 
@@ -35,72 +36,30 @@ const Notifications = lazy(
   () => import("../pages/Notifications/Notifications")
 );
 
-const HistoryView = lazy(() => import("../pages/History/HistoryView"));
+const MassiveAdd = lazy(() => import("../pages/Massive/MasiveAdd")
+);
 
-const Scanner = lazy(() => import("../pages/Scanner/Scanner"));
+const HistoryView = lazy(() => import("../pages/History/HistoryView"));
 
 const HandleFatal = lazy(() => import("../pages/404/404.tsx"));
 
-export const IncomeObservations = [
-  "Cancelación",
-  "Devolución",
-  "Error",
-  "Fábrica",
-  "Importación",
-  "Compra a terceros",
-  "Otro",
-  "Armado de kits",
-];
-
-export const OutcomeObservations = [
-  "ML",
-  "FLEX",
-  "FLEX G",
-  "DML",
-  "ML LAURA",
-  "MLF",
-  "TRANSFERENCIA",
-  "EFECTIVO",
-  "CTA CTE",
-  "CAMBIO POR FALLA",
-  "CAMBIO POR OTRO PRODUCTO",
-  "MOTO",
-  "MKP",
-  "VENTA EN LOCAL",
-  "OTRO",
-  "ERROR",
-  "Para armar kits",
-];
-
-export const ErrorsObservations = [
-  "Difiere ficha de sistema",
-  "Stock real diferente a ficha/sist",
-  "Todo diferente",
-  "Otro inconveniente	",
-];
-
-// ! Aplicar
-export const ReturnsObservations = [
-  "Producto distinto al enviado",
-  "Roto/fallado",
-  "Vuelve al stock",
-  "Otro inconveniente",
-];
-
 export const DeliveriesObservations = ["Courier", "Pedido"];
-
 export const ProductOrigins = ["Fábrica", "Nacional", "Importado"];
-
-export const Brands = ["Volskwagen", "Ford", "Fiat", "Renault", "Citroen"];
+export const MovementTypes = ["Ingreso", "Egreso", "Inventario"];
 
 const AppRoutes: React.FC = () => {
   const { products, categories } = useSearchContext();
   const { user } = useAuth();
+  const {
+    brands,
+    incomesObservations,
+    outcomesObservations,
+  } = useBrandsObservations();
 
   return (
     <Routes>
       <Route element={<PublicRoute user={user} />}>
-          <Route path={paths.login} element={<Login />} />
+        <Route path={paths.login} element={<Login />} />
       </Route>
 
       <Route element={<ProtectedRoute redirectPath="/login" user={user} />}>
@@ -109,13 +68,14 @@ const AppRoutes: React.FC = () => {
           <Route path={paths.home} element={<Home />} />
           <Route path={paths.products} element={<Products />} />
           <Route path={`${paths.products}/:category`} element={<Products />} />
+          <Route path={paths.massive} element={<MassiveAdd />} />
           <Route
             path={paths.addProduct}
-            element={<AddProduct categories={categories} brands={Brands} />}
+            element={<AddProduct categories={categories} brands={brands} />}
           />
           <Route
             path={`${paths.editProduct}/:id`}
-            element={<EditProduct categories={categories} brands={Brands} />}
+            element={<EditProduct categories={categories} brands={brands} />}
           />
           <Route path={paths.categories} element={<Categories />} />
           <Route path={paths.costs} element={<Costs />} />
@@ -132,7 +92,7 @@ const AppRoutes: React.FC = () => {
             element={
               <IncomesOutcomesForm
                 formName={"Ingreso"}
-                observationsList={IncomeObservations}
+                observationsList={incomesObservations}
                 products={products}
               />
             }
@@ -146,12 +106,11 @@ const AppRoutes: React.FC = () => {
             element={
               <IncomesOutcomesForm
                 formName={"Egreso"}
-                observationsList={OutcomeObservations}
+                observationsList={outcomesObservations}
                 products={products}
               />
             }
           />
-          <Route path={paths.scanner} element={<Scanner />} />
         </Route>
       </Route>
 

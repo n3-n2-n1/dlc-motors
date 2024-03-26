@@ -155,6 +155,39 @@ export const updateUser = async (req, res) => {
   }
 };
 
+export const deleteUser = async (req, res) => {
+  try {
+    const username = req.params.username;
+
+    if (!username) {
+      return res.status(400).send({
+        status: "error",
+        error: "Falta el nombre de usuario",
+      });
+    }
+
+    const userDeleted = await userService.deleteUser(username);
+
+    if (!userDeleted) {
+      return res.status(404).send({
+        status: "error",
+        error: `Error al eliminar el usuario ${username}`,
+      });
+    }
+
+    res.status(200).send({
+      status: "success",
+      message: `Usuario ${username} eliminado correctamente`,
+    });
+  } catch (error) {
+    console.error("Error al intentar eliminar usuario", error);
+    res.status(500).send({
+      status: "error",
+      error: `Error interno del servidor: ${error}`,
+    });
+  }
+};
+
 export const logoutUser = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
   const { username } = await userService.decodeUser(token)

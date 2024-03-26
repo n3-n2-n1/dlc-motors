@@ -4,31 +4,29 @@ interface SearchIconProps {
 
 function SearchIcon({ color = "currentColor" }: SearchIconProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <mask
-        id="mask0_80_3906"
-        maskUnits="userSpaceOnUse"
-        x="0"
-        y="0"
-        width="24"
-        height="24"
-      >
-        <rect width="24" height="24" fill="#D9D9D9" />
-      </mask>
-      <g mask="url(#mask0_80_3906)">
-        <path
-          d="M18.9 20.3L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16C7.68333 16 6.146 15.371 4.888 14.113C3.62933 12.8543 3 11.3167 3 9.5C3 7.68333 3.62933 6.14567 4.888 4.887C6.146 3.629 7.68333 3 9.5 3C11.3167 3 12.8543 3.629 14.113 4.887C15.371 6.14567 16 7.68333 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L20.325 18.925C20.5083 19.1083 20.6 19.3333 20.6 19.6C20.6 19.8667 20.5 20.1 20.3 20.3C20.1167 20.4833 19.8833 20.575 19.6 20.575C19.3167 20.575 19.0833 20.4833 18.9 20.3ZM9.5 14C10.75 14 11.8127 13.5627 12.688 12.688C13.5627 11.8127 14 10.75 14 9.5C14 8.25 13.5627 7.18733 12.688 6.312C11.8127 5.43733 10.75 5 9.5 5C8.25 5 7.18733 5.43733 6.312 6.312C5.43733 7.18733 5 8.25 5 9.5C5 10.75 5.43733 11.8127 6.312 12.688C7.18733 13.5627 8.25 14 9.5 14Z"
-          fill={color}
-        />
-      </g>
-    </svg>
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="10.0193" cy="9.54959" r="8.49784" fill="#CDFF71" stroke="#020202" strokeWidth="2.03948"/>
+<path d="M9.40494 12.1566C11.1732 12.1566 12.6068 10.7231 12.6068 8.95474C12.6068 7.18643 11.1732 5.75293 9.40494 5.75293C7.63663 5.75293 6.20312 7.18643 6.20312 8.95474C6.20312 10.7231 7.63663 12.1566 9.40494 12.1566Z" fill="white" stroke="#020202" strokeWidth="2.03948" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M13.8019 13.314L11.6719 11.2217" stroke="#020202" strokeWidth="2.03948" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
   );
 }
+
+
+
+export const DarkSearchIcon = () => {
+  return(
+
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="9.51932" cy="10.0496" r="8.49784" fill="#374151" stroke="white" strokeWidth="2.03948"/>
+<path d="M8.90494 12.6566C10.6732 12.6566 12.1068 11.2231 12.1068 9.45474C12.1068 7.68643 10.6732 6.25293 8.90494 6.25293C7.13663 6.25293 5.70312 7.68643 5.70312 9.45474C5.70312 11.2231 7.13663 12.6566 8.90494 12.6566Z" fill="#374151" stroke="white" strokeWidth="2.03948" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M13.3019 13.814L11.1719 11.7217" stroke="white" strokeWidth="2.03948" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
+  )
+}
+
+
 
 export default SearchIcon;

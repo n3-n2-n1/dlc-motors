@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { verifyRole } from '../middlewares/auth.js';
+import { verifyRole } from "../middlewares/auth.js";
 import {
   getUsers,
   getUserWithToken,
@@ -8,6 +8,7 @@ import {
   loginUser,
   logoutUser,
   updateUser,
+  deleteUser,
 } from "../controllers/users.controller.js";
 
 const usersRouter = Router();
@@ -24,24 +25,26 @@ usersRouter.post(
 
 usersRouter.get(
   "/",
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate("jwt", { session: false }),
   // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
   getUsers
 );
 
 usersRouter.get(
   "/check",
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate("jwt", { session: false }),
   // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
   getUserWithToken
 );
 
 usersRouter.put("/:username", (req, res) => {
-    // passport.authenticate('jwt', { session: false }),
-  updateUser(req, res);
+  passport.authenticate("jwt", { session: false }), updateUser(req, res);
+});
+
+usersRouter.delete("/:username", (req, res) => {
+  passport.authenticate("jwt", { session: false }), deleteUser(req, res);
 });
 
 usersRouter.get("/logout", logoutUser);
-
 
 export default usersRouter;

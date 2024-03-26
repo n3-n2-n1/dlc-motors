@@ -1,119 +1,81 @@
-import db from "../database/db.js";
+import { MovementDAO } from "../dao/movements.dao.js";
 
 export default class MovementService {
-    constructor() { }
+  constructor() {
+    this.movementDAO = new MovementDAO();
+  }
 
-    async getMovements() {
-        return new Promise((resolve, reject) => {
-            db.query("SELECT * FROM movimientos", (error, results, fields) => {
-                if (error) {
-                    console.error("An error occurred while executing the query", error);
-                    reject(new Error("Error al obtener movimientos."))
-                    return;
-                }
-                else {
-                    resolve(results);
-                }
-            });
-        });
+  async getMovements() {
+    try {
+      return await this.movementDAO.getMovements();
+    } catch (error) {
+      throw new Error("Error en el servicio: " + error.message);
     }
+  }
 
-    async createMovementInventory(fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos, observaciones, det, cantidad, kit,) {
-        return new Promise((resolve, reject) => {
-            try {
-                db.query(
-                    "INSERT INTO movimientos (fecha, codInterno, codOEM, ` desc` , stock, stockReal, stockAct, arreglo) VALUES (?,?,?,?,?,?)",
-                    [fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglo],
-                    function (error) {
-                        if (error) {
-                            console.error("An error occurred while executing the query", error);
-                            res
-                                .status(500)
-                                .json({ error: "Error al insertar el movimiento de inventario." });
-                            return;
-                        }
+  async createMovementInventory(movement) {
+    try {
+      const {
+        fecha,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        arreglo,
+        usuario,
+        tipoMov,
+      } = movement;
 
-                        // Get the inserted product
-                        db.query(
-                            "SELECT * FROM movimientos WHERE fecha = ?",
-                            [fecha],
-                            function (error, results) {
-                                if (error) {
-                                    console.error(
-                                        "An error occurred while executing the query",
-                                        error
-                                    );
-                                    res.status(500).json({
-                                        error:
-                                            "Error al obtener el movimiento de inventario insertado.",
-                                    });
-                                    return;
-                                }
-
-                                res.status(200).json({
-                                    message: "Movimiento de inventario insertado correctamente.",
-                                    product: results[0],
-                                });
-
-                            }
-                        );
-                    }
-                );
-                resolve
-            } catch (error) {
-                reject(new Error("Error"))
-            }
-        });
+      return await this.movementDAO.createMovementInventory(
+        fecha,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        arreglo,
+        usuario,
+        tipoMov
+      );
+    } catch (error) {
+      throw new Error("Error en el servicio: " + error.message);
     }
+  }
 
-    async createIncomeOutcome(fecha, codInterno, codOEM, desc, stock, stockReal, stockAct, arreglos, observaciones, det, cantidad, kit) {
-        return new Promise((resolve, reject) => {
-            db.query(
-                "INSERT INTO movimientos (fecha, observaciones, codInterno, codOEM, `desc` , stock, det, cantidad, kit, stockAct) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                [
-                    fecha, observaciones, codInterno, codOEM, desc, stock, det, cantidad, kit, stockAct
-                ],
-                function (error) {
-                    if (error) {
-                        console.error("An error occurred while executing the query", error);
-                        res.status(500).json({ error: "Error al insertar el producto." });
-                        return;
-                    }
-    
-                    // Get the inserted product
-                    db.query(
-                        "SELECT * FROM movimientos WHERE fecha = ?",
-                        [fecha],
-                        function (error, results, fields) {
-                            if (error) {
-                                console.error(
-                                    "An error occurred while executing the query",
-                                    error
-                                );
-                                res
-                                    .status(500)
-                                    .json({ error: "Error al obtener el producto insertado." });
-                                return;
-                            }
-    
-                            res.status(200).json({
-                                message: "Producto insertado correctamente.",
-                                product: results[0],
-                            });
-    
-                        }
-                    );
-                }
-            ),
-            (error, results) => {
-                if(error) {
-                    console.error("Error")
-                    reject (new Error("Error al pushear el movimiento"))
-                }
-                else {
-                    resolve(results);
-                }
-            }
-        })
+  async createIncomeOutcome(movement) {
+    try {
+      const {
+        date,
+        observaciones,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        detalle,
+        cantidad,
+        kit,
+        usuario,
+        tipoMov,
+      } = movement;
+
+      return await this.movementDAO.createIncomeOutcome(
+        date,
+        observaciones,
+        codigoInt,
+        codOEM,
+        desc,
+        stock,
+        stockAct,
+        detalle,
+        cantidad,
+        kit,
+        usuario,
+        tipoMov
+      );
+    } catch (error) {
+      throw new Error("Error en el servicio: " + error.message);
     }
+  }
 }

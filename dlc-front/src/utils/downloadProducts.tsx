@@ -17,6 +17,7 @@ const exportToExcel = async () => {
       XLSX.writeFile(wb, 'productos.xlsx');
   
       console.log('Productos exportados a Excel correctamente.');
+  
     } catch (error) {
       console.error('Error al exportar productos a Excel:', error);
     }
