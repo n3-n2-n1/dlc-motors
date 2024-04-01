@@ -27,37 +27,35 @@ export const getDeliveries = async (req, res) => {
 
 export const createDelivery = async (req, res) => {
   try {
-    const { 
-      cantidad, 
-      codigoInt, 
-      fecha, 
-      desc, 
-      numImpo, 
-      observaciones 
+    const {
+      cantidad,
+      codOEM,
+      codigoInt,
+      desc,
+      fecha,
+      numImpo,
+      observaciones,
+      stock,
     } = req.body;
 
+    console.log(req.body)
 
-    if (
-      !cantidad ||
-      !codigoInt ||
-      !fecha ||
-      !desc ||
-      !numImpo ||
-      !observaciones
-    ) {
-      return res.status(404).send({
+    if (!cantidad || !codOEM || !codigoInt || !desc || !fecha || !numImpo || !observaciones) {
+      return res.status(400).send({
         status: "error",
-        error: "No deliveries found",
+        error: "Incomplete Values",
       });
     }
 
     const createdDelivery = deliveryService.createDelivery(
       cantidad,
+      codOEM,
       codigoInt,
-      fecha,
       desc,
+      fecha,
       numImpo,
-      observaciones
+      observaciones,
+      stock,
     );
 
     res.status(200).send({
@@ -71,8 +69,6 @@ export const createDelivery = async (req, res) => {
         error: `Failed to create delivery with code ${desc}`,
       });
     }
-
-
   } catch (error) {
     console.error(error);
     return res.status(500).send({

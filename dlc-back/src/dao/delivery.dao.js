@@ -20,16 +20,20 @@ export class DeliveryDAO {
 
   async createDeliveries(
     cantidad,
+    codOEM,
     codigoInt,
-    fecha,
     desc,
+    fecha,
     numImpo,
-    observaciones
+    observaciones,
+    stock,
   ) {
     return new Promise((resolve, reject) => {
+      const stockDeposito = stock !== '' ? parseInt(stock, 10) : 0;
+
       db.query(
-        "INSERT INTO delivery (cantidad, fecha, `desc`, numImpo, observaciones) VALUES (?, ?, ?, ?, ?)",
-        [cantidad, fecha, desc, numImpo, observaciones],
+        "INSERT INTO delivery (cantidad, codOEM, codigoInt, `desc`, fecha, numImpo, observaciones, stockDeposito) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [cantidad, codOEM, codigoInt, desc, fecha, numImpo, observaciones, stockDeposito],
         (error, results) => {
           if (error) {
             console.error("SQL Error: ", error);

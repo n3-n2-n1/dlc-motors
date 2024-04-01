@@ -1,25 +1,28 @@
 import { ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 import { User } from "../../Interfaces/User";
 
 type ProtectedRouteProps = {
   user: User | null;
-  requiredRole?: string;
+  // requiredRole?: string;
   redirectPath?: string;
   children?: ReactNode;
 };
 
 const ProtectedRoute = ({
   user,
-  requiredRole,
+  // requiredRole,
   redirectPath = "/",
   children,
 }: ProtectedRouteProps) => {
   const location = useLocation();
 
-  if (!user || (requiredRole && user.role !== requiredRole)) {
+  // if (!user || (requiredRole && user.role !== requiredRole)) {
+  //   return <Navigate to={redirectPath} state={{ from: location }} replace />;
+  // }
+
+  if (!user) {
     return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 

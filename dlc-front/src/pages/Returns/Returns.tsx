@@ -8,6 +8,8 @@ import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
 
+import { useAuth } from "../../contexts/AuthContext";
+
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido"),
@@ -33,6 +35,8 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [inputValue, setInputValue] = useState("");
 
+  const { user } = useAuth();
+
   const initialValues = {
     fecha: null,
     observaciones: "",
@@ -53,10 +57,15 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
       if (values.kit) {
         values.cantidad = parseInt(values.cantidad) * parseInt(values.kit);
       }
+
+      const updatedValues = {
+        ...values,
+        usuario: user?.name,
+      };
       
       try {
-        // await createReturns(values);
-        console.log(values);
+        await createReturns(updatedValues);
+        console.log(updatedValues);
         formik.resetForm();
       } catch (error) {
         console.error(error);

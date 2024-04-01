@@ -72,6 +72,9 @@ export class ProductDAO {
       );
     });
   }
+
+
+  
   async createProduct(
     codigoInt,
     codOEM,

@@ -13,6 +13,8 @@ const {
 export default class UserService {
   constructor() {}
 
+  
+
   // Funcion para decodificar el JWT
   async decodeUser(token) {
     try {
@@ -28,6 +30,7 @@ export default class UserService {
   // Función para loguear al usuario generando un JWT
   loginUser(user) {
     try {
+      console.log(user)
       const userDTO = new UserDTO(user);
       const jwtUser = JSON.parse(JSON.stringify(userDTO));
 

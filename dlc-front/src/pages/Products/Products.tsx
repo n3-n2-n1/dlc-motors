@@ -18,7 +18,7 @@ const Products = () => {
   const { category } = useParams();
   const nodes = useFetchNodes();
 
-  console.log(nodes)
+  console.log(nodes);
 
   const edit = () => {
     console.log("");
@@ -28,12 +28,12 @@ const Products = () => {
     <>
       <PageTitle title="DLC Motors • Productos" />
 
-      <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex overflow-hidden text-sm transition-all duration-300">
+      <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex overflow-y-hidden text-sm transition-all duration-300">
         <div className="flex-grow h-full flex flex-col">
           <div className="flex-grow">
             <div className="flex items-center sm:p-6 md:p-4 pt-1 justify-between ">
               <Navbar
-                title="Listado de Productos"
+                title="Productos"
                 subtitle="Visualizá productos"
               />
 
@@ -48,7 +48,7 @@ const Products = () => {
                   ]}
                 />
                 <Link to={paths.massive}>
-                  <div className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-gray-700 hover:text-white dark:bg-blue-700 select-none">
+                  <div className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 hover:bg-gray-700 hover:text-white dark:bg-blue-600 select-none">
                     <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white select-none">
                       Agregar Masivo
                     </h3>
@@ -56,20 +56,21 @@ const Products = () => {
                 </Link>
               </section>
             </div>
-
-            <section className="p-4 transition-all ">
+            <section className="p-4 transition-all ">              
               {nodes.length > 0 ? (
                 <ProductTableChart
                   columns={PRODUCTCOLUMNS}
                   data={nodes}
                   category={category}
                 />
+                
               ) : (
                 <div className="bg-gray-900">
                   <Loader />
                 </div>
               )}
             </section>
+
           </div>
         </div>
       </div>

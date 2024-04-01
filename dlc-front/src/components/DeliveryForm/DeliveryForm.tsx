@@ -50,8 +50,9 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        createDelivery(values);
-        toast.success("{} creado correctamente");
+        console.log(values)
+        await createDelivery(values);
+        toast.success("Pedido creado correctamente");
         formik.resetForm();
       } catch (error) {
         toast.error("Error al crear el reporte.");

@@ -14,15 +14,29 @@ export default class DeliveryService {
     }
   }
 
-
-
-  async createDelivery({cantidad, codigoInt, fecha, desc, numImpo, observaciones}) {
+  async createDelivery(
+    cantidad,
+    codOEM,
+    codigoInt,
+    desc,
+    fecha,
+    numImpo,
+    observaciones,
+    stock
+  ) {
     try {
-      return await this.deliveryDAO.createDeliveries(cantidad, codigoInt, fecha, desc, numImpo, observaciones)
+      return await this.deliveryDAO.createDeliveries(
+        cantidad,
+        codOEM,
+        codigoInt,
+        desc,
+        fecha,
+        numImpo,
+        observaciones,
+        stock,
+      );
     } catch (error) {
-      throw new Error("Error en el servicio" + error.message)
+      throw new Error("Error en el servicio" + error.message);
     }
   }
-
-  
 }

@@ -38,28 +38,27 @@ const FiltroFloat: React.FC<FiltroProps> = ({ filtersConfig }) => {
     setShowDatePicker((prevState) => !prevState);
   };
 
-  const handleSearchChange = (key: string, value: string) => {
-    if (key === "globalSearch") {
-      setSearchTerm(value);
-    } else {
-      setFilterValues((prevValues: any) => {
-        if (value) {
-          return {
-            ...prevValues,
-            [key]: value,
-          };
-        } else {
-          const { [key]: _, ...rest } = prevValues;
-          return rest;
-        }
-      });
-    }
-  };
+  // const handleSearchChange = (key: string, value: string) => {
+  //   if (key === "globalSearch") {
+  //     setSearchTerm(value);
+  //   } else {
+  //     setFilterValues((prevValues: any) => {
+  //       if (value) {
+  //         return {
+  //           ...prevValues,
+  //           [key]: value,
+  //         };
+  //       } else {
+  //         const { [key]: _, ...rest } = prevValues;
+  //         return rest;
+  //       }
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    toast.success(`Imagen cargada con éxito: ${filterValues}`);
-
-  }, [filterValues]);
+  // useEffect(() => {
+  //   toast.success(`Imagen cargada con éxito: ${filterValues}`);
+  // }, [filterValues]);
 
   useEffect(() => {
     // This function will be called when the component unmounts
@@ -182,8 +181,8 @@ const FiltroFloat: React.FC<FiltroProps> = ({ filtersConfig }) => {
                   const endDate = selectedDays?.to?.toISOString().slice(0, 10);
                   setStartDate(formatDate(startDate));
                   setEndDate(formatDate(endDate));
-                  startDate && handleSearchChange("fechaInicio", startDate);
-                  endDate && handleSearchChange("fechaFin", endDate);
+                  // startDate && handleSearchChange("fechaInicio", startDate);
+                  // endDate && handleSearchChange("fechaFin", endDate);
                 }}
                 mode="range"
                 locale={es}

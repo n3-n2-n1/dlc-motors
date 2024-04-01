@@ -122,12 +122,34 @@ export const PRODUCTCOLUMNS = [
 //Fecha/hora	Aviso	Imagen	Código interno	Descripción		OEM	Marca	Rubro	Origen	Stock
 export const NOTIFCOLUMNS = [
   {
-    label: <div className="">Aviso</div>,
-    renderCell: (item: any) => (
-      <div className="p-2 break-words text-sm text-gray-700 dark:text-gray-200">
-        {item.message || "-"}
-      </div>
-    ),
+    label: <div className="">Estado</div>,
+    renderCell: (item: any) => {
+      let bgColorClass = ""; // Color de fondo por defecto
+      let bgColorText = "";
+
+      if (item.message === "Stock bajo") {
+        bgColorClass = "bg-yellow-200"; // Cambia a amarillo para "Stock bajo"
+        bgColorText = "text-black";
+      } else if (item.message === "Reposición") {
+        bgColorClass = "bg-green-200"; // Cambia a verde para "Reposición"
+        bgColorText = "text-black";
+      } else if (item.message === "Stock vacío") {
+        bgColorClass = "bg-red-200"; // Cambia a rojo para "Stock vacío"
+        bgColorText = "text-black";
+      }
+
+      return (
+        <div>
+
+        <div className={`pl-3 p-2 break-words text-sm text-gray-700 dark:text-gray-200 ${bgColorClass} rounded-md m-1`}>
+          <p className={` ${bgColorText} font-bold`}>
+
+          {item.message}
+          </p>
+        </div>
+        </div>
+      );
+    },
     resize,
   },
   {
@@ -321,12 +343,12 @@ export const ERRORCOLUMNS = [
 export const MOVESCOLUMNS = [
   {
     label: "Usuario",
-    renderCell: (item: any) => item.user || "-",
+    renderCell: (item: any) => <div className="ml-2">{item.user}</div>  || "-",
     resize,
   },
   {
     label: "Fecha",
-    renderCell: (item: any) => <div className="p-2">{item.fecha}</div> || "-",
+    renderCell: (item: any) => <div className="">{item.fecha}</div> || "-",
     resize,
   },
   {

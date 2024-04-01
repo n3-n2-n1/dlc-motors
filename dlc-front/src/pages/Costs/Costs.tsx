@@ -54,7 +54,6 @@ const Costs = () => {
         // Suponiendo que el 'rubro' viene dentro de cada objeto en el payload
         setFabricNodes(result.payload.filter(item => item.rubro === 'Fabrica'));
         setImportedNodes(result.payload.filter(item => item.rubro === 'Importado'));
-        setImportedNodes(result.payload.filter(item => item.rubro === 'Nacional'));
         setResaleNodes(result.payload.filter(item => item.rubro === 'Reventa'));
       } else {
         throw new Error("La respuesta del servidor no fue de éxito.");
@@ -71,6 +70,7 @@ const Costs = () => {
 
 
   console.log('aver', importedNodes)
+  console.log('aver', resaleNodes)
     
   const renderTable = () => {
     switch (currentTable) {
@@ -97,8 +97,8 @@ const Costs = () => {
       <Navbar title="Costos" subtitle="" />
       <section className="flex flex-row gap-6 pb-4 pt-4 transition-colors duration-300">
         <Dashcards buttons={[{ text: "Importados", action: () => changeTable(TableType.Imported), link: "", isActive: selectedButton ==="Importado" }]}/>
-        <Dashcards buttons={[{ text: "Reventa", action: () => changeTable(TableType.Resale), link: "", isActive: selectedButton ==="Reventa" }]}/>
         <Dashcards buttons={[{ text: "Fábrica", action: () => changeTable(TableType.Fabric), link: "", isActive: selectedButton ==="Fabrica" }]}/>
+        <Dashcards buttons={[{ text: "Reventa", action: () => changeTable(TableType.Resale), link: "", isActive: selectedButton ==="Reventa" }]}/>
       </section>
       <div className="border-t border-gray-200 ">
         {renderTable()}

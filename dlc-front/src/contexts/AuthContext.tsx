@@ -1,6 +1,5 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { User } from "../Interfaces/User";
-// import { checkUser } from "../utils/Handlers/Handlers";
 
 const userJWT = localStorage.getItem("userJWT");
 
@@ -16,6 +15,7 @@ interface AuthContextProps {
   // setToken: React.Dispatch<React.SetStateAction<string | null>>;
   login: (values: Values) => Promise<void>;
   logout: () => Promise<void>;
+  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -31,6 +31,7 @@ export const AuthProvider: React.FC = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState(userJWT);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkTokenValidity = async () => {
@@ -52,6 +53,7 @@ export const AuthProvider: React.FC = ({
         setUser(null);
         localStorage.setItem("userJWT", "null");
       }
+      setLoading(false);
     };
     checkTokenValidity();
   }, [token]);
@@ -61,6 +63,7 @@ export const AuthProvider: React.FC = ({
       const response = await fetch(`${URL}/api/v1/users/login`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
@@ -88,11 +91,13 @@ export const AuthProvider: React.FC = ({
 
   const checkUser = async (token: string) => {
     try {
+      console.log(token)
       const response = await fetch(`${URL}/api/v1/users/check`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+
         },
       });
       const data = await response.json();
@@ -127,7 +132,7 @@ export const AuthProvider: React.FC = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

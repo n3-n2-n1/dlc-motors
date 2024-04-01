@@ -11,6 +11,8 @@ import Layout from "../components/Layout/Layout";
 import PublicRoute from "./components/PublicRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
+import Loader from "../components/Loader/Loader";
+
 const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
 
@@ -49,12 +51,16 @@ export const MovementTypes = ["Ingreso", "Egreso", "Inventario"];
 
 const AppRoutes: React.FC = () => {
   const { products, categories } = useSearchContext();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const {
     brands,
     incomesObservations,
     outcomesObservations,
   } = useBrandsObservations();
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Routes>

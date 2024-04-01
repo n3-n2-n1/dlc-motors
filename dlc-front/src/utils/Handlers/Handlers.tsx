@@ -223,6 +223,7 @@ const createError = async (errorData: any) => {
 
 const createReturns = async (returnData: any) => {
   try {
+    console.log(returnData)
     const response = await fetch(`${URL}/api/v1/returns`, {
       method: "POST",
       headers: {

@@ -21,7 +21,8 @@ export const UserProvider: React.FC = ({
  
   useEffect(() => {
     const fetchUserData = async () => {
-      if (token) {
+
+      if (token && token !== "null") {
         const userData = await fetchUser(token);
         setUsers(userData);
       }

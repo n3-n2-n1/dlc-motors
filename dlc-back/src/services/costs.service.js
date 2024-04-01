@@ -12,5 +12,29 @@ export default class CostsService {
       throw new Error("Error en el servicio:" + error.message);
     }
   }
+
+  async createCosts(
+    descripcion,
+    codigo,
+    marca,
+    stock,
+    proveedores,
+    rubro,
+    sku
+    ){
+    try{
+      return await this.costDAO.createCosts(
+        descripcion,
+        codigo,
+        marca,
+        stock,
+        proveedores,
+        rubro,
+        sku
+        );
+    } catch(error){
+      throw new Error("Error en el servicio" + error.message)
+    }
+  }
   
 }

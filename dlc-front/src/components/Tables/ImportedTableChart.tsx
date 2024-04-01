@@ -42,6 +42,8 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
 import { useEffect } from "react";
+import ReloadTable from "../Reload/Reload.tsx";
+import { paths } from "../../routes/paths.ts";
 
 const ImportedTableChart = ({ columns, data, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -301,7 +303,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
+      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
 
@@ -323,39 +325,39 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     <>
       <div className="pt-4">
         <Group>
-          {category ? (
+        {category ? (
             <Select
+            classNames={{
+              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
               value={category || null}
               onChange={(event) => {
                 setSelectedCategory(event);
               }}
               placeholder="Rubro"
               data={categories}
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
               clearable
             />
           ) : (
             <Select
+            classNames={{
+              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
               onChange={(event) => {
                 setSelectedCategory(event);
               }}
               placeholder="Rubro"
               data={categories}
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
               clearable
             />
           )}
@@ -390,6 +392,9 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+          <ReloadTable path={paths.costs} />
+
         </Group>
       </div>
 

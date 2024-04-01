@@ -38,6 +38,8 @@ export const SearchProvider: React.FC = ({
     const fetchData = async () => {
       try {
         let data = await fetchProducts();
+
+        console.log('this isss',data)
         data = data.map((item: any) => ({
           ...item,
           kit: item.kit === "No" ? null : item.kit.split(",").map(Number),
@@ -49,7 +51,7 @@ export const SearchProvider: React.FC = ({
         setSearchResults(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
       } catch (error) {
-        alert("Error al buscar el producto");
+        console.error("Error al buscar el producto");
       }
     };
 

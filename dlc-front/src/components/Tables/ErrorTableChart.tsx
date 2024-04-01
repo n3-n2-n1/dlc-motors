@@ -39,6 +39,8 @@ import SortIcon from "../icon/SortIcon/SortIcon";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
 import { useUser } from "../../contexts/UserContext.tsx";
+import { paths } from "../../routes/paths.ts";
+import ReloadTable from "../Reload/Reload.tsx";
 
 const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -358,6 +360,9 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+          <ReloadTable path={paths.historyView} />
+
         </Group>
       </div>
 
