@@ -72,10 +72,11 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   });
   const customTheme = {
     Table: `
-        --data-table-library_grid-template-columns: 70px 1fr 1fr 1fr 4.5fr 1fr 1fr repeat(4, 0.3fr);
-        margin: 16px 0px;
-      `,
+    --data-table-library_grid-template-columns:  80px repeat(11, minmax(0, 1fr));
+    margin: 16px 0px;
+    `,
   };
+  
   const theme = useTheme([mantineTheme, customTheme]);
   const handleUpdate = (value: any, id: any, property: any) => {
     setTableData((state) => ({
@@ -115,7 +116,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const pagination = usePagination(tableData, {
     state: {
       page: 0,
-      size: 13,
+      size: 14,
     },
     onChange: onPaginationChange,
   });
@@ -218,7 +219,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           ),
         ORIGEN: (array) =>
           array.sort((a, b) => a.origen.localeCompare(b.origen)),
-        STOCK: (array) => array.sort((a, b) => a.stock.localeCompare(b.stock)),
+        STOCK: (array) => array.sort((a, b) => a.stock && b.stock ? a.stock.localeCompare(b.stock) : 0),
         RUBRO: (array) => array.sort((a, b) => a.rubro.localeCompare(b.rubro)),
       },
     }

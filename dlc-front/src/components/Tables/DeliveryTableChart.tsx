@@ -32,7 +32,7 @@ import { paths } from "../../routes/paths.ts";
 import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
+import Dashcards from "../Dashcards/Dashcards.tsx";
 
 
 DEFAULT_OPTIONS.highlightOnHover = true;
@@ -413,6 +413,11 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     return `${parseInt(day) + 1}-${month}-${year}`;
   };
 
+  
+  const edit = () => {
+    console.log("");
+  };
+
   return (
     <>
       <div className="pt-4">
@@ -502,6 +507,16 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
             value={impoSearch}
             onChange={(event) => setImpoSearch(event.target.value)}
           />
+
+                  <Dashcards
+                    buttons={[
+                      {
+                        text: "Agregar masivamente",
+                        action: edit,
+                        link: "/massiveDelivery",
+                      },
+                    ]}
+                  />
 
           <ReloadTable path={paths.historyView} />
         </Group>

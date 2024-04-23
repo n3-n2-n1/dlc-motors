@@ -13,25 +13,11 @@ const validationSchema = Yup.object().shape({
   username: Yup.string().required("Campo requerido"),
 });
 
-/** Administrador
-Vendedor
-Operador depósito
-Supervisor
-Operador fábrica
-Cliente
- */
-
-// Importa las librerías necesarias
-
-// import { createProduct } from "../../utils/Handlers/Handlers";
-
 interface UserFormProps {
   user?: User[];
 }
 
-// Componente funcional del formulario de inventario
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
-  // Valores iniciales del formulario
   const initialValues = {
     name: "",
     password: "",
@@ -56,10 +42,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
   useEffect(() => {
   }, [formik.errors])
-  
 
-  // Estado para manejar el producto seleccionado
-  // const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 overflow-y-auto lg:block pb-4">

@@ -6,52 +6,71 @@ import Loader from '../../components/Loader/Loader';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import { NOTIFCOLUMNS } from '../../components/columns/Columns';
 
+
+
+type Notification = {
+  name: string;         // Descripción del producto
+  message: string;      // Mensaje de la notificación (por ejemplo, 'Stock bajo')
+  origen: string;       // Origen del producto
+  rubro: string;        // Rubro o categoría del producto
+  oem: string;          // Código OEM del producto
+  marca: string;        // Marca o marcas compatibles
+  stock: number;        // Cantidad actual de stock
+  image: string;        // URL de la imagen del producto
+  codInterno: string;   // Código interno del producto
+};
+
+
 const Notifications = () => {
   const { products } = useSearchContext();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const LOW_STOCK_THRESHOLD_PERCENT = 20; // Define el umbral como 20% del stock inicial
 
   const generateNotifications = (products: any[]): Notification[] => {
-  // Suponiendo que 'products' es un array de objetos con información del producto
-  return products.map(product => {
-    let message = '';
-
-    if (product.stock === 0) {
-      message = 'No hay stock';
-    } else if (product.stock <= 10) {
-      message = 'Stock bajo';
-    } else if (product.stock < 5) {
-      message = 'Reposición';
-    }
-
-    return message ? {
-      name: product.descripcion,
-      message,
-      origen: product.origen,
-      rubro: product.rubro,
-      oem: product.codOEM,
-      marca: product.marcasCompatibles,
-      stock: product.stock,
-      image: product.imagen,
-      codInterno: product.codigoInt
-    } : null;
-  }).filter(Boolean); // Filtra los elementos nulos
-};
-
-// Nota: Asegúrate de exportar el tipo 'Notification' si está definido en otro archivo.
-
-
+    return products.map(product => {
+      let message = '';
+  
+      // Convertir 'stock' a número. Si es vacío o inválido, considerar como 0.
+      const stock = product.stock ? parseInt(product.stock, 10) : 0;
+      const threshold = 10; // Ajusta este valor según tus necesidades
+  
+      if (stock === 0) {
+        message = 'No hay stock';
+      } else if (stock <= threshold) {
+        message = 'Stock bajo';
+      }
+  
+      if (message) {
+        return {
+          name: product.descripcion,
+          message,
+          origen: product.origen,
+          rubro: product.rubro,
+          oem: product.codOEM,
+          marca: product.marcasCompatibles,
+          stock: stock,
+          image: product.imagen,
+          codInterno: product.codigoInt
+        };
+      }
+  
+      return null;
+    }).filter(Boolean);
+  };
+  
   useEffect(() => {
     setIsLoading(true);
     const newNotifications = generateNotifications(products);
-    setNotifications(prev => [...prev, ...newNotifications]);
-    console.log(newNotifications + 'acaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    setNotifications(newNotifications); // Establece las nuevas notificaciones
     setIsLoading(false);
-  }, [products]);
+  }, [products]); // Dependencia 'products'
 
   if (isLoading) {
     return <Loader />;
   }
+
+  console.log(notifications)
 
   return (
     <>

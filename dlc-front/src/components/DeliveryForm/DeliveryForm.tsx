@@ -5,7 +5,7 @@ import { createDelivery } from "../../utils/Handlers/Handlers";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 // Define la interfaz para los props del componente
 interface DeliveryFormProps {
@@ -14,12 +14,39 @@ interface DeliveryFormProps {
   formName: string;
 }
 
+const NumericInput = ({ field, form, ...props }) => {
+  const handleChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    if (value >= 0) {
+      form.setFieldValue(field.name, value);
+    } else {
+      form.setFieldValue(field.name, '');
+    }
+  };
+
+  return (
+    <input
+      {...field}
+      {...props}
+      type="number"
+      onChange={handleChange}
+      value={field.value || ''}
+    />
+  );
+};
 // Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
   numImpo: Yup.string().required("Campo requerido"),
-  cantidad: Yup.number().required("Campo requerido"),
+  cantidad: Yup.number()
+    .min(1, "La cantidad no puede ser menor a 1")
+    .required("Campo requerido"),
+  codOEM: Yup.string().test(
+    "invalid",
+    "Debe ingresar un código interno válido para continuar",
+    (value) => value !== undefined
+  ),
 });
 
 // Componente funcional del formulario de inventario
@@ -50,8 +77,13 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log(values)
-        await createDelivery(values);
+        const updatedValues = {
+          ...values,
+          stockAcumulado: values.cantidad + parseInt(values.stock),
+        };
+
+        console.log(updatedValues);
+        await createDelivery(updatedValues);
         toast.success("Pedido creado correctamente");
         formik.resetForm();
       } catch (error) {
@@ -97,7 +129,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
   }, [qrCode]);
 
   return (
-<div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
@@ -106,8 +138,8 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
       )}
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
         <div className="">
-        <div className="flex flex-row justify-between mb-4">
-        <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
+          <div className="flex flex-row justify-between mb-4">
+            <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
               Pedidos
             </h1>
             <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
@@ -120,7 +152,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
           </div>
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"     
+            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"
           >
             <div className="mb-4">
               <label
@@ -210,6 +242,11 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+              {formik.touched.codigoInt && formik.errors.codOEM ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.codOEM}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -276,20 +313,16 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
               >
                 Cantidad
               </label>
-              <input
-                type="number"
-                id="cantidad"
-                name="cantidad"
+              <NumericInput
+                field={formik.getFieldProps("cantidad")}
+                form={formik}
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.cantidad || ""}
               />
-              {formik.touched.cantidad && formik.errors.cantidad ? (
+              {formik.touched.cantidad && formik.errors.cantidad && (
                 <div className="text-red-500 text-sm mt-1">
                   {formik.errors.cantidad}
                 </div>
-              ) : null}
+              )}
             </div>
             <div>
               {/* Botón de Agregar */}

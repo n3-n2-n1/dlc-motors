@@ -351,7 +351,7 @@ const editProduct: React.FC<EditProductFormProps> = ({
               ) : null}
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 select-none">
               <label
                 htmlFor="stock"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -365,6 +365,7 @@ const editProduct: React.FC<EditProductFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600  rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 disabled:bg-gray-900 disabled:border-gray-800"                onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.stock}
+                disabled
               />
               {formik.touched.stock && formik.errors.stock ? (
                 <div className="text-red-500 text-sm mt-1">

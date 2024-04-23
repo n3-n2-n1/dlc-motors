@@ -8,34 +8,31 @@ import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 import { useAuth } from "../../contexts/AuthContext";
 
-// Define la interfaz para los props del componente
 interface IncomesOutcomesFormProps {
   formName: string;
   observationsList: string[];
-  products: any[]; //! TYPE
+  products: any[];
 }
 
 // !! Hay que hacer que, en caso de que no encuentre un producto, tire un error en el yup para que no permita continuar con el formulario.
 
-// Fecha y hora del ingreso	(Campo fijo)
-//* Observaciones (menú desplegable)
-//* Detalle (agregar texto)
-//* Cantidad ingresada
-//* OEM del producto
-// Descripción detallada  (Campo fijo)
-// Stock resultante luego del ingreso (Campo fijo)
-
-// Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   desc: Yup.string().required("Campo requerido"),
   detalle: Yup.string().required("Campo requerido"),
-  cantidad: Yup.number().required("Campo requerido"),
+  cantidad: Yup.number()
+    .min(1, "La cantidad no puede ser menor a 1")
+    .required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido"),
   kit: Yup.number().nullable(),
+  stockAct: Yup.number().min(0, "El stock restante no puede ser menor a 0"),
+  codOEM: Yup.string().test(
+    "invalid",
+    "Debe ingresar un código interno válido para continuar",
+    (value) => value !== undefined
+  ),
 });
 
-// Componente funcional del formulario de inventario
 const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
   formName,
   observationsList,
@@ -43,7 +40,6 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
 }) => {
   const { user } = useAuth();
 
-  // Valores iniciales del formulario
   const initialValues = {
     date: "",
     observaciones: "",
@@ -252,6 +248,11 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+              {formik.touched.codigoInt && formik.errors.codOEM ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.codOEM}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -392,6 +393,11 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
+              {formik.touched.stockAct && formik.errors.stockAct ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.stockAct}
+                </div>
+              ) : null}
             </div>
             <div>
               {/* Botón de Agregar */}

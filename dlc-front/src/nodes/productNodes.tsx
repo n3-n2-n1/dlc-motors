@@ -31,7 +31,9 @@ export const useFetchNodes = () => {
         check: product.check,
         stock: product.stock,
         rubro: product.rubro,
+        stockFuturo: product.stockFuturo,
       }));
+      console.log('esta chinga llega vacia?' + transformedNodes)
       setProductNodes(transformedNodes);
     }
   }, [products]);
@@ -126,6 +128,7 @@ export const MovesFetchNodes = () => {
             det: product.det,
             stockAct: product.stockAct,
             stockReal: product.stockReal,
+            desc: product.desc
             // ...otros campos
           }));
           setMovesNodes(transformedNodes);

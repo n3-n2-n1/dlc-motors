@@ -123,6 +123,7 @@ const fetchCosts = async () => {
   }
 };
 
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //---------------------CREATION HANDLERS-------------------------//
@@ -310,6 +311,29 @@ const createDelivery = async (deliveryData: any) => {
   }
 };
 
+const createCosts = async (costData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/costs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(costData),
+    });
+
+    if (!response.ok) {
+      const costData = await response.json();
+      throw new Error(costData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Costo creado correctamente");
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+
+}
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //-------------------------EDIT HANDLERS-------------------------//
@@ -341,6 +365,31 @@ const modifyProduct = async (productToEdit: any) => {
   }
 };
 
+const modifyCosts = async (newCosts: any) => {
+  try {
+    const response = await fetch(
+      `${URL}/api/v1/costs/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCosts),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Modificacion de costo exitosa");
+  } catch (error) {
+    console.error("Error editing product:", error);
+  }
+};
+
 const updateError = async (errorUpdates: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/productErrors/`, {
@@ -362,6 +411,67 @@ const updateError = async (errorUpdates: any) => {
     console.error("Error editing errors data:", error);
   }
 };
+
+
+const updateDelivery = async (deliveryUpdates: any) => {
+  try {
+    console.log(deliveryUpdates)
+
+    const user = await checkUser();
+
+    const parsedDeliveryUpdates = {
+      usuario: user.name,
+      date: new Date().toLocaleString(),
+      observaciones: "Importación",
+      tipoMov: "Ingreso",
+      codigoInt: deliveryUpdates.codigoInt,
+      codOEM: deliveryUpdates.codOEM,
+      desc: deliveryUpdates.desc,
+      detalle: deliveryUpdates.numImpo,
+      estado: deliveryUpdates.estado,
+      stock: deliveryUpdates.stockDeposito,
+      cantidad: deliveryUpdates.cantidad,
+      stockAct: deliveryUpdates.stockAcumulado,
+    }
+
+    console.log(parsedDeliveryUpdates)
+
+    // ! Crear un objeto solo con el estado y el numImpo para hacer el fetch al update
+    const deliveryStatusUpdates = {
+      estado: deliveryUpdates.estado,
+      numImpo: deliveryUpdates.numImpo,
+      cantidad: deliveryUpdates.cantidad,
+      codigoInt: deliveryUpdates.codigoInt,
+    }
+
+    console.log(deliveryStatusUpdates)
+
+    const response = await fetch(`${URL}/api/v1/delivery/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(deliveryStatusUpdates),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    // ! Acá evaluar el estado que trae deliveryUpdates, si es "Entregado" hacer el fetch para crear el nuevo movimiento de INGRESO enviando parsedDeliveryUpdates
+
+    if (deliveryUpdates.estado === "Entregado") {
+      console.log("Ejecuto creación de movimiento de ingreso")
+      createMovement(parsedDeliveryUpdates)
+    }
+
+    // const responseData = await response.json();
+    toast.success("Delivery modificado correctamente");
+  } catch (error) {
+    console.error("Error editing delivery:", error);
+  }
+}
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -432,6 +542,27 @@ const deleteUser = async (username: string) => {
     console.error(`Error deleting user ${error}`);
   }
 };
+
+const checkUser = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/users/check`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error checking user");
+    }
+
+    const userData = await response.json();
+    return userData.payload;
+  } catch (error) {
+    console.error(`Error checking user ${error}`);
+  }
+
+}
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -546,11 +677,32 @@ const createMultipleProducts = async (data: any) => {
   }
 };
 
+
+const createMultipleDelivery = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/delivery/createMultiple`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok){
+        throw new Error(`HTTP error`);
+      }
+  } catch (error) {
+    console.error("Error al enviar los datos al servidor", error)
+  }
+};
+
 export {
   fetchUser,
   fetchErrors,
   createError,
   updateError,
+  updateDelivery,
   fetchProducts,
   createProduct,
   modifyProduct,
@@ -573,4 +725,7 @@ export {
   fetchReturnObservations,
   fetchIncomeObservations,
   createMultipleProducts,
+  createMultipleDelivery,
+  modifyCosts,
+  createCosts
 };

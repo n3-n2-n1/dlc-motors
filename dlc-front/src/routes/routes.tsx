@@ -12,6 +12,7 @@ import PublicRoute from "./components/PublicRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 import Loader from "../components/Loader/Loader";
+import DeliveryMassive from "../pages/Massive/DeliveryMassiveAdd.tsx";
 
 const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
@@ -38,8 +39,7 @@ const Notifications = lazy(
   () => import("../pages/Notifications/Notifications")
 );
 
-const MassiveAdd = lazy(() => import("../pages/Massive/MasiveAdd")
-);
+const MassiveAdd = lazy(() => import("../pages/Massive/MasiveAdd"));
 
 const HistoryView = lazy(() => import("../pages/History/HistoryView"));
 
@@ -52,11 +52,8 @@ export const MovementTypes = ["Ingreso", "Egreso", "Inventario"];
 const AppRoutes: React.FC = () => {
   const { products, categories } = useSearchContext();
   const { user, loading } = useAuth();
-  const {
-    brands,
-    incomesObservations,
-    outcomesObservations,
-  } = useBrandsObservations();
+  const { brands, incomesObservations, outcomesObservations } =
+    useBrandsObservations();
 
   if (loading) {
     return <Loader />;
@@ -75,6 +72,7 @@ const AppRoutes: React.FC = () => {
           <Route path={paths.products} element={<Products />} />
           <Route path={`${paths.products}/:category`} element={<Products />} />
           <Route path={paths.massive} element={<MassiveAdd />} />
+          <Route path={paths.massiveDelivery} element={<DeliveryMassive />} />
           <Route
             path={paths.addProduct}
             element={<AddProduct categories={categories} brands={brands} />}

@@ -32,7 +32,6 @@ usersRouter.get(
 
 usersRouter.get(
   "/check",
-  passport.authenticate("jwt", { session: false }),
   // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
   getUserWithToken
 );

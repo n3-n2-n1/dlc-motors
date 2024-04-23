@@ -1,5 +1,5 @@
 import db from "../database/db.js";
-
+import { ProductDAO } from "./product.dao.js";
 export class productErrorsDAO {
   constructor(db) {
     this.db = db;
@@ -102,6 +102,11 @@ export class productErrorsDAO {
             console.error(error);
             reject(new Error("Error al editar el estado del error"));
           } else {
+            const productDao = new ProductDAO()
+            if(estado === 'En revisión'){
+              const codigoInt = id;
+              productDao.modifyCheck(estado, codigoInt)
+            }
             resolve(results);
           }
         }

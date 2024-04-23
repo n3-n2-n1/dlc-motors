@@ -14,8 +14,15 @@ const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido"),
   detalle: Yup.string().required("Campo requerido"),
-  cantidad: Yup.number().required("Campo requerido"),
+  cantidad: Yup.number()
+    .min(1, "Las devoluciones no pueden ser menores a 1")
+    .required("Campo requerido"),
   kit: Yup.number().nullable(),
+  codOEM: Yup.string().test(
+    "invalid",
+    "Debe ingresar un código interno válido para continuar",
+    (value) => value !== undefined
+  ),
 });
 
 interface IProduct {
@@ -53,7 +60,6 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-
       if (values.kit) {
         values.cantidad = parseInt(values.cantidad) * parseInt(values.kit);
       }
@@ -62,7 +68,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
         ...values,
         usuario: user?.name,
       };
-      
+
       try {
         await createReturns(updatedValues);
         console.log(updatedValues);
@@ -73,6 +79,11 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
       }
     },
   });
+
+  useEffect(() => {
+    console.log(formik.errors)
+    console.log(formik.values)
+  }, [formik.errors])
 
   const handleInputChange = (codigoInt: string) => {
     const product = products.find((product) => product.codigoInt === codigoInt);
@@ -108,7 +119,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
   }, [qrCode]);
 
   return (
-<div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
@@ -118,7 +129,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray overflow-auto">
         <div className=" flex-row">
           <div className="flex flex-row justify-between mb-4">
-          <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
+            <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
               Devoluciones
             </h1>
             <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
@@ -132,7 +143,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
 
           <form
             onSubmit={formik.handleSubmit}
-            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"     
+            className="bg-white dark:bg-gray-900 text-black dark:text-white p-4 rounded-md shadow-md"
           >
             <div className="mb-4">
               <label
@@ -219,6 +230,11 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+              {formik.touched.codigoInt && formik.errors.codOEM ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.codOEM}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -305,7 +321,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 <label
                   htmlFor="kit"
                   className="block text-sm font-medium text-gray-600 dark:text-gray-300"
-                  >
+                >
                   Unidades en Kit
                 </label>
                 <select

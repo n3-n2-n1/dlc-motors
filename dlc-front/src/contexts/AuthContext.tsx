@@ -100,6 +100,7 @@ export const AuthProvider: React.FC = ({
 
         },
       });
+      console.log(response)
       const data = await response.json();
 
       return data;

@@ -25,10 +25,19 @@ enum TableType {
   Delivery,
 }
 
+import { useAuth } from "../../contexts/AuthContext";
+import useRoleCheck from "../../hooks/useRoleCheck";
+
 const HistoryView = () => {
   const [currentTable, setCurrentTable] = useState<TableType | null>(null);
 
   const [selectedButton, setSelectedButton] = useState<string>("");
+
+  const { user } = useAuth();
+
+  const isSalesMan = useRoleCheck(user?.role, ["Vendedor"]);
+  const isDepositOperator = useRoleCheck(user?.role, ["Operador de depósito"]);
+  const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
 
   const changeTable = (tableType: TableType) => {
     setCurrentTable(tableType);
@@ -79,36 +88,42 @@ const HistoryView = () => {
       <div className="flex flex-col bg-gray-100 dark:text-white text-gray-600 h-screen overflow-auto text-sm p-6 dark:bg-gray-900 transition-colors duration-300 select-none">
         <Navbar title="Historial" subtitle="" />
         <section className="flex flex-row gap-6 pb-4 pt-4">
-          <Dashcards
-            buttons={[
-              {
-                text: "Revisión de Errores",
-                action: () => changeTable(TableType.Error),
-                link: "",
-                isActive: selectedButton === "Errores",
-              },
-            ]}
-          />
-          <Dashcards
-            buttons={[
-              {
-                text: "Historial de Devoluciones",
-                action: () => changeTable(TableType.Return),
-                link: "",
-                isActive: selectedButton === "Devoluciones",
-              },
-            ]}
-          />
-          <Dashcards
-            buttons={[
-              {
-                text: "Pedidos",
-                action: () => changeTable(TableType.Delivery),
-                link: "",
-                isActive: selectedButton === "Pedidos",
-              },
-            ]}
-          />
+          {!isFactoryOperator && (
+            <Dashcards
+              buttons={[
+                {
+                  text: "Revisión de Errores",
+                  action: () => changeTable(TableType.Error),
+                  link: "",
+                  isActive: selectedButton === "Errores",
+                },
+              ]}
+            />
+          )}
+          {!isFactoryOperator && !isDepositOperator && (
+            <Dashcards
+              buttons={[
+                {
+                  text: "Historial de Devoluciones",
+                  action: () => changeTable(TableType.Return),
+                  link: "",
+                  isActive: selectedButton === "Devoluciones",
+                },
+              ]}
+            />
+          )}
+          {!isFactoryOperator && (
+            <Dashcards
+              buttons={[
+                {
+                  text: "Pedidos",
+                  action: () => changeTable(TableType.Delivery),
+                  link: "",
+                  isActive: selectedButton === "Pedidos",
+                },
+              ]}
+            />
+          )}
           <Dashcards
             buttons={[
               {
