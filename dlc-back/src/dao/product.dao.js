@@ -27,7 +27,6 @@ export class ProductDAO {
         kitString = kit.join(", ");
       }
 
-      // Realizar la lógica para insertar un nuevo producto en la base de datos
       db.query(
         "INSERT INTO productos (codigoInt, codOEM, SKU, descripcion, rubro, origen, marcasCompatibles, stock, imagen, contadorDevoluciones, kit) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
@@ -64,7 +63,6 @@ export class ProductDAO {
             );
           }
 
-          // Get the inserted product
           db.query(
             "SELECT * FROM productos WHERE codigoInt = ?",
             [codigoInt],
@@ -258,12 +256,9 @@ export class ProductDAO {
   }
 
   async modifyStock(newStock, codigoInt) {
-    // Asegúrate de que stockAct es un número
     if (isNaN(newStock)) {
       throw new Error("El valor de cantidad debe ser numérico");
     }
-
-    console.log("codigoInt:", codigoInt, "newStock:", newStock);
 
     return new Promise((resolve, reject) => {
       db.query(
@@ -282,12 +277,8 @@ export class ProductDAO {
   }
 
   async modifyStockOutcome(codigoInt, stockAct) {
-    // Restar la cantidad del stock actual, permitiendo valores negativos
     const newStock = stockAct;
 
-    console.log("codigoInt:", codigoInt, "newStock:", newStock);
-
-    // Actualizar el stock en la base de datos
     return new Promise((resolve, reject) => {
       db.query(
         "UPDATE productos SET stock = stock - ? WHERE codigoInt = ?",
@@ -305,9 +296,6 @@ export class ProductDAO {
   }
 
   async modifyCheck(estado, codigoInt) {
-    console.log("codigoInt:", codigoInt, "newStock:", estado);
-
-    // Actualizar el stock en la base de datos
     return new Promise((resolve, reject) => {
       db.query(
         "UPDATE productos SET check = ? WHERE codigoInt = ?",
@@ -347,18 +335,14 @@ export class ProductDAO {
         "UPDATE productos SET stockFuturo = ? WHERE codigoInt = ?",
         [newFutureStock, codigoInt],
         (error, results) => {
-          if(error){
+          if (error) {
             console.error("Error al modificar el stock", error);
-            reject(error)
-          }
-          else{
-            resolve(results)
+            reject(error);
+          } else {
+            resolve(results);
           }
         }
-      )
-    })
+      );
+    });
   }
-
-
-
 }

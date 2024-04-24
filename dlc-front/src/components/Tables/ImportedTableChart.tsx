@@ -94,7 +94,6 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -315,7 +314,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     });
   }
 
-  const [selectedCategory, setSelectedCategory] = React.useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
       node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
@@ -349,39 +348,11 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   useEffect(() => {
     const getCost = async () => {
       const response = await fetchCosts();
-      console.log(response.payload);
       setCosts(response.payload);
     };
 
     getCost();
   }, []);
-
-  {
-    /* Si hay costo, lo muestro, y tambien botoncito para agregar otro o editar/borrar */
-  }
-
-  {
-    /* Cada producto tiene sus proveedores en un array, por ejemplo: */
-  }
-  {
-    /*
-                
-                producto1.proveedores =
-                [
-                  {
-                    nombre: YAOPEI
-                    origen: importado
-                    valor: 5,70
-                  },
-                  {
-                    nombre: WANCHUNKEIN
-                    origen: nacional
-                    valor: 15,00
-                  },
-                ]
-                
-                */
-  }
 
   const [activeItemCode, setActiveItemCode] = React.useState(null);
   const [providerName, setProviderName] = React.useState("");
@@ -396,44 +367,29 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   // For new cost purposes
   const [newCostItem, setNewCostItem] = React.useState(null);
 
-  useEffect(() => {
-    console.log(activeItemCode);
-  }, [activeItemCode]);
-
-  useEffect(() => {
-    console.log(origin);
-  }, [origin]);
-
   const handleAddCost = (e: any, costFound: any) => {
     e.preventDefault();
-    console.log("add");
-    console.log({ providerName, cost, origin, activeItemCode });
 
     costFound = costFound || {};
-    console.log(costFound);
 
     const newCost = {
       nombre: providerName,
       origen: origin || "Nacional",
       valor: cost,
     };
-    console.log("new cost", newCost);
 
     let newCosts;
 
     if (costFound.proveedores) {
       // Parse the string into an array
       const parsedProveedores = JSON.parse(costFound.proveedores);
-      console.log("parsedProveedores", parsedProveedores);
 
       // Scenario 1: costFound.proveedores already exists, so append newCost to it
-      console.log("Scenario 1");
       newCosts = {
         id: activeItemCode,
         ...costFound,
         proveedores: [...parsedProveedores, newCost],
       };
-      // ! ACÁ UPDATEAS CON EL HANDLER DE MODIFYCOSTS
       modifyCosts(newCosts);
     } else {
       // Scenario 2: costFound.proveedores doesn't exist, so create a new array with newCost as its first element
@@ -445,7 +401,6 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
         rubro: newCostItem?.rubro,
         sku: newCostItem?.SKU,
       };
-      console.log("Scenario 2");
       newCosts = { ...itemData, proveedores: [newCost] };
       createCosts(newCosts);
       setNewCostItem(null);
@@ -458,64 +413,46 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   };
 
   const handleEditCost = (e: any, costFound: any) => {
-    const { user } = useAuth();
+    e.preventDefault();
 
-    const isOperator = useRoleCheck(user?.role, ["Operador de Fábrica"]);
+    costFound = costFound || {};
 
-    return (
-      <>
-        {!isOperator && e.origen != 'Fabrica' ? (
-          () => {
-            e.preventDefault();
-            console.log("edit");
+    // Create newCost
+    const newCost = {
+      nombre: providerName,
+      valor: cost,
+      origen: origin,
+    };
 
-            costFound = costFound || {};
-            console.log(costFound);
+    // Parse the string into an array
+    const parsedProveedores = JSON.parse(costFound.proveedores);
 
-            // Create newCost
-            const newCost = {
-              nombre: providerName,
-              valor: cost,
-              origen: origin,
-            };
-
-            // Parse the string into an array
-            const parsedProveedores = JSON.parse(costFound.proveedores);
-
-            // Find the index of the cost being edited
-            const costIndex = parsedProveedores.findIndex(
-              (cost: any) => cost.nombre === editingCost?.nombre
-            );
-
-            // Replace the cost at costIndex with newCost
-            parsedProveedores[costIndex] = newCost;
-
-            // Update costFound.proveedores with the modified array
-            const updatedCosts = {
-              id: activeItemCode,
-              ...costFound,
-              proveedores: parsedProveedores,
-            };
-
-            // Update the costs state with updatedCosts
-            console.log(updatedCosts);
-            modifyCosts(updatedCosts);
-
-            // Reset the form and editingCost
-            setProviderName("");
-            setCost("");
-            setOrigin("");
-            setEditingCost(null);
-          }
-        ) : (
-          <p className="text-center text-white">-</p>
-        )}
-      </>
+    // Find the index of the cost being edited
+    const costIndex = parsedProveedores.findIndex(
+      (cost: any) => cost.nombre === editingCost?.nombre
     );
+
+    // Replace the cost at costIndex with newCost
+    parsedProveedores[costIndex] = newCost;
+
+    // Update costFound.proveedores with the modified array
+    const updatedCosts = {
+      id: activeItemCode,
+      ...costFound,
+      proveedores: parsedProveedores,
+    };
+
+    // Update the costs state with updatedCosts
+    modifyCosts(updatedCosts);
+
+    // Reset the form and editingCost
+    setProviderName("");
+    setCost("");
+    setOrigin("");
+    setEditingCost(null);
   };
 
   const handleDeleteCost = (costToDelete: any, costFound: any) => {
-    console.log("delete");
     // Parse the string into an array
     const parsedProveedores = JSON.parse(costFound.proveedores);
 
@@ -532,7 +469,6 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     };
 
     // Update the costs state with updatedCosts
-    console.log("costos actualizados luego del delete", updatedCosts);
     modifyCosts(updatedCosts);
     setDeletingCost(null);
     setModalOpened(false);
@@ -547,6 +483,10 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
 
       let proveedores;
 
+      const { user } = useAuth();
+      const isOperator = useRoleCheck(user?.role, ["Operador de Fábrica"]);
+      const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
+
       if (costFound) {
         proveedores = JSON.parse(costFound.proveedores);
       }
@@ -558,39 +498,54 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
               <ul style={{ margin: "0", padding: "0" }}>
                 {costFound ? (
                   <div>
-                    {proveedores.map((cost) => (
-                      <div className="p-2 border-b-2 border-b-slate-600 pb-2">
-                        <div className="flex flex-row gap-4 px-1 align-middle items-center">
-                          <h3 className="font-bold py-1">{cost.nombre}</h3>
-                          <p>{cost.valor}</p>
-                          <p>{cost.origen}</p>
-                          <button
-                            className="rounded-full bg-black flex px-4 py-2"
-                            onClick={() => {
-                              setEditingCost(cost);
-                              setActiveItemCode(item.codigoInt);
-                              setProviderName(cost.nombre);
-                              setCost(cost.valor);
-                              setOrigin(cost.origen);
-                            }}
-                          >
-                            Editar
-                          </button>
-                          <button
-                            className="rounded-full bg-red-700 flex px-4 py-2"
-                            onClick={() => {
-                              setModalOpened(true);
-                              setProviderName(cost.nombre);
-                              setCostFoundToFilter(costFound);
-                              setDeletingCost(cost);
-                              // handleDeleteCost(cost, costFound)
-                            }}
-                          >
-                            Borrar
-                          </button>
+                    {proveedores.map((cost, index) => {
+                      return (!isOperator && cost.origen === "Fabrica") ||
+                        isAdmin ? (
+                        <div key={index} className="p-2 border-b-2 border-b-slate-600 pb-2">
+                          <div className="flex flex-row gap-3 px-1 align-middle items-center">
+                            <h3 className="text-black dark:text-white font-extrabold py-1">• {cost.nombre}</h3>
+                            <div>|</div>
+                            <p className="text-black dark:text-white font-semibold">Valor:</p>
+                            <p className="text-black dark:text-white">{cost.valor}</p>
+                            <div>-</div>
+                            <p className="text-black dark:text-white font-semibold">Origen:</p>
+                            <p className="text-black dark:text-white">{cost.origen}</p>
+
+
+                            <div className="">
+                            <button
+                              className="rounded-full bg-red-700 flex px-4 py-2 hover:bg-red-500"
+                              onClick={() => {
+                                setModalOpened(true);
+                                setProviderName(cost.nombre);
+                                setCostFoundToFilter(costFound);
+                                setDeletingCost(cost);
+                              }}
+                            >
+                              <p className="text-gray-200 dark:text-white">Borrar</p>
+                              
+                            </button>
+                            </div>
+                            <div>
+                              
+                            <button
+                              className="rounded-full bg-black flex px-4 py-2 hover:bg-gray-400"
+                              onClick={() => {
+                                setEditingCost(cost);
+                                setActiveItemCode(item.codigoInt);
+                                setProviderName(cost.nombre);
+                                setCost(cost.valor);
+                                setOrigin(cost.origen);
+                              }}
+                            >
+                              <p className="text-gray-200 dark:text-white">Editar</p>
+                            </button>
+                            </div>
+
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ) : null;
+                    })}
                     {activeItemCode !== item.codigoInt && (
                       <div className="pb-3 pt-4">
                         <button
@@ -598,7 +553,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
                           className="p-2 rounded-full items-center hover:bg-gray-500 bg-gray-400 dark:bg-black py-2 px-4 py-3"
                           onClick={() => setActiveItemCode(item.codigoInt)}
                         >
-                          <a className="dark:text-white text-black font-bold">
+                          <a className="dark:text-white text-black font-bold hover:bg-gray-400">
                             Agregar Costo
                           </a>
                         </button>
@@ -635,7 +590,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
                 ) : (
                   <div className="pt-3">
                     <button
-                      className="p-2 rounded-full items-center hover:bg-gray-500 bg-gray-400 dark:bg-black py-2 px-4 py-3"
+                      className="p-3 rounded-full items-center hover:bg-gray-500 bg-gray-400 dark:bg-black px-4 py-3"
                       onClick={() => {
                         setActiveItemCode(item.codigoInt);
                         setNewCostItem(item);

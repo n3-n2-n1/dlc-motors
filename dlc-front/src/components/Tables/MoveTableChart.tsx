@@ -86,7 +86,6 @@ const MoveTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -106,7 +105,6 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     // pagination.fns.onSetPage(0);
   }
 
@@ -144,7 +142,6 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
-
 
   const [brandSearch, setBrandSearch] = React.useState("");
   useCustom("marcas", errorData, {
@@ -291,7 +288,10 @@ const MoveTableChart = ({ columns, data, category }: any) => {
       node.det?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.codigoInt?.toLowerCase().includes(codeSearch.toLowerCase()) ||
       node.marcas?.toLowerCase().includes(brandSearch.toLowerCase()) ||
-      node.marcasCompatibles?.toLowerCase().includes(brandSearch.toLowerCase())
+      node.marcasCompatibles
+        ?.toLowerCase()
+        .includes(brandSearch.toLowerCase()) |
+        node.origen?.toLowerCase().includes(brandSearch.toLowerCase())
   );
 
   // // Hide columns
@@ -330,19 +330,19 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     );
   }
 
-  
   const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
+      node.marcasCompatibles
+        ?.toLowerCase()
+        .includes(selectedBrand.toLowerCase())
     );
   }
-  
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.tipoMov.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
 
@@ -354,6 +354,12 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   function onObsDetail(action: any, state: any) {
     console.log(action, state);
     pagination.fns.onSetPage(0);
+  }
+
+  if (selectedOrigin) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.tipoMov?.toLowerCase().includes(selectedDetail.toLowerCase())
+    );
   }
 
   if (selectedDetail) {
@@ -374,20 +380,17 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     );
   }
 
-  
   if (search) {
-    console.log(errorNodes)
-    errorNodes = errorNodes.filter((node: any) =>
-      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.det?.toLowerCase().includes(search.toLowerCase())
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+        node.det?.toLowerCase().includes(search.toLowerCase()) ||
+        node.tipoMov?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
-
-
-
 
   const [selectedDays, setSelectedDays] = useState<DateRange | undefined>();
 
@@ -396,43 +399,31 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | undefined>();
 
-  React.useEffect(() => {
-    console.log(selectedDays)
-  }, [selectedDays])
-
   if (startDate && endDate) {
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-  
     errorNodes = errorNodes.filter((node: any) => {
       if (!node.fecha) {
         return false;
       }
-  
-      const [date, time] = node.fecha.split(', ');
-      const [nodeDay, nodeMonth, nodeYear] = date.split('/').map(Number);
-      console.log("node.fecha", node.fecha);
-      console.log("Parsed day, month, year", nodeDay, nodeMonth, nodeYear);
-  
+
+      const [date, time] = node.fecha.split(", ");
+      const [nodeDay, nodeMonth, nodeYear] = date.split("/").map(Number);
+
       const nodeDate = new Date(nodeYear, nodeMonth - 1, nodeDay);
       nodeDate.setHours(0, 0, 0, 0);
-  
-      const [startDay, startMonth, startYear] = startDate.split('-').map(Number);
+
+      const [startDay, startMonth, startYear] = startDate
+        .split("-")
+        .map(Number);
       const start = new Date(startYear + 2000, startMonth - 1, startDay);
       start.setHours(0, 0, 0, 0);
-  
-      const [endDay, endMonth, endYear] = endDate.split('-').map(Number);
+
+      const [endDay, endMonth, endYear] = endDate.split("-").map(Number);
       const end = new Date(endYear + 2000, endMonth - 1, endDay);
       end.setHours(0, 0, 0, 0);
-  
-      console.log("nodeDate", nodeDate)
-      console.log("start", start)
-      console.log("end", end)
-  
+
       return nodeDate >= start && nodeDate <= end;
     });
   }
-
 
   const inputSelectStyle =
     "border border-gray-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500";
@@ -478,70 +469,75 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     const year = date.getFullYear().toString().slice(-2);
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
-    console.log(parseInt(day) + 1);
     return `${parseInt(day) + 1}-${month}-${year}`;
   };
-
 
   return (
     <>
       <div className="pt-4 transition-colors duration-300">
         <Group>
-        <div className="relative">
-          <button className={dropdownStyle} onClick={toggleDatePicker}>
-            {startDate && endDate
-              ? `${startDate} a ${endDate}`
-              : "Rango de fechas"}
-          </button>
-          {showDatePicker && (
-            <DayPicker
-              selected={selectedDays}
-              onSelect={(selectedDays) => {
-                setSelectedDays(selectedDays);
-                const startDate = selectedDays?.from
-                  ?.toISOString()
-                  .slice(0, 10);
-                const endDate = selectedDays?.to?.toISOString().slice(0, 10);
-                setStartDate(formatDate(startDate));
-                setEndDate(formatDate(endDate));
-              }}
-              mode="range"
-              locale={es}
-              formatters={{ formatDay, formatCaption, formatWeekdayName }}
-              footer={footer}
-              className ="absolute z-10 bg-gray-700 p-2 rounded-md shadow-lg mt-2"
-              classNames={{
-                caption: "font-gotham flex justify-center relative items-center py-1",
-                caption_label: "text-base font-bold text-gray-100",
-                nav: "flex items-center",
-                nav_button: "h-6 w-6 bg-transparent hover:bg-blue-600 p-1 rounded-full transition-colors duration-300",
-                nav_button_previous: "text-white absolute left-2",
-                nav_button_next: "text-white absolute right-2",
-                table: "w-full border-collapse",
-                head_row: "flex font-gotham text-green-400",
-                head_cell: "mx-0.5 w-7 font-gotham text-sm",
-                row: "flex w-full",
-                cell: "text-gray-300 rounded-full h-7 w-7 text-center text-sm p-0 mx-0.5 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-outside)]:bg-gray-700/30 [&:has([aria-selected].day-outside)]:text-gray-300 [&:has([aria-selected])]:bg-blue-600/70 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
-                day: "h-7 w-7 p-0 font-gotham font-bold text-white hover:text-blue-300",
-                day_range_end: "day-range-end",
-                day_today: "rounded-full bg-green-600 text-white",
-                day_outside: "day-outside text-gray-400 opacity-50",
-                day_disabled: "text-gray-600 opacity-50",
-                day_hidden: "invisible",
-              }}
-            />
-          )}
-        </div>
+          <div className="relative">
+            <button className={dropdownStyle} onClick={toggleDatePicker}>
+              {startDate && endDate
+                ? `${startDate} a ${endDate}`
+                : "Rango de fechas"}
+            </button>
+            {showDatePicker && (
+              <DayPicker
+                selected={selectedDays}
+                onSelect={(selectedDays) => {
+                  setSelectedDays(selectedDays);
+                  const startDate = selectedDays?.from
+                    ?.toISOString()
+                    .slice(0, 10);
+                  const endDate = selectedDays?.to?.toISOString().slice(0, 10);
+                  setStartDate(formatDate(startDate));
+                  setEndDate(formatDate(endDate));
+                }}
+                mode="range"
+                locale={es}
+                formatters={{ formatDay, formatCaption, formatWeekdayName }}
+                footer={footer}
+                className="absolute z-10 bg-gray-700 p-2 rounded-md shadow-lg mt-2"
+                classNames={{
+                  caption:
+                    "font-gotham flex justify-center relative items-center py-1",
+                  caption_label: "text-base font-bold text-gray-100",
+                  nav: "flex items-center",
+                  nav_button:
+                    "h-6 w-6 bg-transparent hover:bg-blue-600 p-1 rounded-full transition-colors duration-300",
+                  nav_button_previous: "text-white absolute left-2",
+                  nav_button_next: "text-white absolute right-2",
+                  table: "w-full border-collapse",
+                  head_row: "flex font-gotham text-green-400",
+                  head_cell: "mx-0.5 w-7 font-gotham text-sm",
+                  row: "flex w-full",
+                  cell: "text-gray-300 rounded-full h-7 w-7 text-center text-sm p-0 mx-0.5 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-outside)]:bg-gray-700/30 [&:has([aria-selected].day-outside)]:text-gray-300 [&:has([aria-selected])]:bg-blue-600/70 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
+                  day: "h-7 w-7 p-0 font-gotham font-bold text-white hover:text-blue-300",
+                  day_range_end: "day-range-end",
+                  day_today: "rounded-full bg-green-600 text-white",
+                  day_outside: "day-outside text-gray-400 opacity-50",
+                  day_disabled: "text-gray-600 opacity-50",
+                  day_hidden: "invisible",
+                }}
+              />
+            )}
+          </div>
 
           <Select
             // value={search}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
             onChange={(event) => {
               setSelectedBrand(event);
@@ -553,14 +549,19 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
           {category ? (
             <Select
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
               value={category || null}
               onChange={(event) => {
                 setSelectedCategory(event);
@@ -571,14 +572,19 @@ const MoveTableChart = ({ columns, data, category }: any) => {
             />
           ) : (
             <Select
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
               onChange={(event) => {
                 setSelectedCategory(event);
               }}
@@ -601,60 +607,19 @@ const MoveTableChart = ({ columns, data, category }: any) => {
           /> */}
 
           <Select
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-            data={MovementTypes}
-            clearable
-          />
-
-          <TextInput
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
-            placeholder="Detalle"
-            value={detailSearch}
-            onChange={(event) => setDetailSearch(event.target.value)}
-          />
-
-          <TextInput
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            }}
-            placeholder="Codigo Interno"
-            value={codeSearch}
-            onChange={(event) => setCodeSearch(event.target.value)}
-          />
-
-          <TextInput
-            classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            }}
-            placeholder="Búsqueda"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-
-          <Select
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
             onChange={(event) => {
               setSelectedOrigin(event);
             }}
@@ -665,26 +630,71 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
           <TextInput
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="Detalle"
+            value={detailSearch}
+            onChange={(event) => setDetailSearch(event.target.value)}
+          />
+
+          <TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="Codigo Interno"
+            value={codeSearch}
+            onChange={(event) => setCodeSearch(event.target.value)}
+          />
+
+          <TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="Búsqueda"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+
+          <TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
             }}
             placeholder="Observaciones"
             value={observation}
             onChange={(event) => setObservation(event.target.value)}
           />
 
-            <ReloadTable path={paths.historyView} />
-
+          <ReloadTable path={paths.historyView} />
         </Group>
       </div>
 
-      <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+      <div
+        className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300">
-
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300"
+      >
         <CompactTable
           columns={columns}
           data={{ ...errorData, nodes: errorNodes }}

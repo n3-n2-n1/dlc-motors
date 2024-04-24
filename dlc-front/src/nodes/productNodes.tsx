@@ -33,7 +33,6 @@ export const useFetchNodes = () => {
         rubro: product.rubro,
         stockFuturo: product.stockFuturo,
       }));
-      console.log('esta chinga llega vacia?' + transformedNodes)
       setProductNodes(transformedNodes);
     }
   }, [products]);
@@ -109,8 +108,6 @@ export const MovesFetchNodes = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchMoves();
 
-        console.log("Data:", result.payload);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((product) => ({
             // Mapea tus datos como necesites
@@ -154,8 +151,6 @@ export const ErrorFetchNodes = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchErrors();
 
-        console.log("Data:", result);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((error) => ({
             // Mapea tus datos como necesites
@@ -194,8 +189,6 @@ export const DeliveryFetchNodes = () => {
       try {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchDelivery();
-
-        console.log("Data:", result);
 
         if (result.status === "success") {
           const transformedNodes = result.payload.map((delivery) => ({
@@ -243,8 +236,6 @@ export const ImportedCost = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchCosts();
 
-        console.log("Data:", result);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((delivery) => ({
             // Mapea tus datos como necesites
@@ -282,8 +273,6 @@ export const FabricCost = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchCosts();
 
-        console.log("Data:", result);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((fabric) => ({
             // Mapea tus datos como necesites
@@ -319,8 +308,6 @@ export const ResaleCost = () => {
       try {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchCosts();
-
-        console.log("Data:", result);
 
         if (result.status === "success") {
           const transformedNodes = result.payload.map((resale) => ({

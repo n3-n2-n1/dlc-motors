@@ -23,10 +23,9 @@ export default class ReturnsService {
     kit,
     observaciones,
     stockAnt,
-    usuario,
+    usuario
   ) {
     try {
-      console.log("DEVOLUCIÓN A CARGAR", cantidad, codOEM, codigoInt, desc, detalle, fecha, kit, observaciones, stockAnt, usuario);
       return await this.ReturnsDAO.createReturn(
         cantidad,
         codOEM,
@@ -37,7 +36,7 @@ export default class ReturnsService {
         kit,
         observaciones,
         stockAnt,
-        usuario,
+        usuario
       );
     } catch (error) {
       throw new Error("Error en el servicio:" + error.message);

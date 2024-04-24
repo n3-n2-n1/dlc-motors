@@ -1,3 +1,6 @@
+import { useAuth } from "../../contexts/AuthContext.tsx";
+import useRoleCheck from "../../hooks/useRoleCheck.tsx";
+
 const CostForm = ({
     costFound,
     providerName,
@@ -8,6 +11,9 @@ const CostForm = ({
     setActiveItemCode,
     setOrigin,
   }: any) => {
+    const { user } = useAuth();
+    const isOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
+
     return (
       <form
         onSubmit={(e) => {
@@ -39,12 +45,16 @@ const CostForm = ({
           onChange={(e) => setOrigin(e.target.value)}
           required
         >
-          <option className="text-black dark:text-white" value="Nacional">
-            Nacional
-          </option>
-          <option className="text-black dark:text-white" value="Importado">
-            Importado
-          </option>
+          {!isOperator && (
+            <>
+              <option className="text-black dark:text-white" value="Nacional">
+                Nacional
+              </option>
+              <option className="text-black dark:text-white" value="Importado">
+                Importado
+              </option>
+            </>
+          )}
           <option className="text-black dark:text-white" value="Fabrica">
             Fabrica
           </option>

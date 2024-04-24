@@ -7,10 +7,9 @@ import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 import { Link } from "react-router-dom";
 
-// Define la interfaz para los props del componente
 interface DeliveryFormProps {
   observationsList: string[];
-  products: any[]; // Reemplaza 'any' con el tipo de tus productos
+  products: any[];
   formName: string;
 }
 
@@ -34,7 +33,7 @@ const NumericInput = ({ field, form, ...props }) => {
     />
   );
 };
-// Define el esquema de validación con Yup
+
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
@@ -49,7 +48,7 @@ const validationSchema = Yup.object().shape({
   ),
 });
 
-// Componente funcional del formulario de inventario
+
 const DeliveryForm: React.FC<DeliveryFormProps> = ({
   observationsList,
   products,
@@ -82,7 +81,6 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
           stockAcumulado: values.cantidad + parseInt(values.stock),
         };
 
-        console.log(updatedValues);
         await createDelivery(updatedValues);
         toast.success("Pedido creado correctamente");
         formik.resetForm();

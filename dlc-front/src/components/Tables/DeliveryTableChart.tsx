@@ -19,11 +19,7 @@ import {
   DEFAULT_OPTIONS,
   getTheme,
 } from "@table-library/react-table-library/mantine";
-import {
-  Group,
-  TextInput,
-  Pagination,
-} from "@mantine/core";
+import { Group, TextInput, Pagination } from "@mantine/core";
 
 import SortIcon from "../icon/SortIcon/SortIcon";
 import { useUser } from "../../contexts/UserContext.tsx";
@@ -34,10 +30,8 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import Dashcards from "../Dashcards/Dashcards.tsx";
 
-
 DEFAULT_OPTIONS.highlightOnHover = true;
 DEFAULT_OPTIONS.striped = true;
-
 
 const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -53,7 +47,7 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  120px repeat(10, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  170px repeat(10, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -67,7 +61,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -87,7 +80,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -101,7 +93,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSearchChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -112,7 +103,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSearchDetail(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -122,7 +112,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -131,7 +120,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     onChange: onSearchNum,
   });
   function onSearchNum(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -145,7 +133,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onFilterChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -156,7 +143,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSelectChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Tree *//
@@ -172,14 +158,11 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
       treeIcon: {
         margin: "2px",
         iconDefault: null,
-        //  iconRight: <FaChevronRight />,
-        //  iconDown: <FaChevronDown />,
       },
     }
   );
 
   function onTreeChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Sort *//
@@ -212,7 +195,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   );
 
   function onSortChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Drawer *//
@@ -292,7 +274,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onImpoChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -319,7 +300,6 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     );
   }
 
-
   const [selectedDays, setSelectedDays] = useState<DateRange | undefined>();
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -327,43 +307,31 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | undefined>();
 
-  React.useEffect(() => {
-    console.log(selectedDays)
-  }, [selectedDays])
-
   if (startDate && endDate) {
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-  
     errorNodes = errorNodes.filter((node: any) => {
       if (!node.fecha) {
         return false;
       }
-  
-      const [date, time] = node.fecha.split(', ');
-      const [nodeDay, nodeMonth, nodeYear] = date.split('/').map(Number);
-      console.log("node.fecha", node.fecha);
-      console.log("Parsed day, month, year", nodeDay, nodeMonth, nodeYear);
-  
+
+      const [date, time] = node.fecha.split(", ");
+      const [nodeDay, nodeMonth, nodeYear] = date.split("/").map(Number);
+
       const nodeDate = new Date(nodeYear, nodeMonth - 1, nodeDay);
       nodeDate.setHours(0, 0, 0, 0);
-  
-      const [startDay, startMonth, startYear] = startDate.split('-').map(Number);
+
+      const [startDay, startMonth, startYear] = startDate
+        .split("-")
+        .map(Number);
       const start = new Date(startYear + 2000, startMonth - 1, startDay);
       start.setHours(0, 0, 0, 0);
-  
-      const [endDay, endMonth, endYear] = endDate.split('-').map(Number);
+
+      const [endDay, endMonth, endYear] = endDate.split("-").map(Number);
       const end = new Date(endYear + 2000, endMonth - 1, endDay);
       end.setHours(0, 0, 0, 0);
-  
-      console.log("nodeDate", nodeDate)
-      console.log("start", start)
-      console.log("end", end)
-  
+
       return nodeDate >= start && nodeDate <= end;
     });
   }
-
 
   const inputSelectStyle =
     "border border-gray-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500";
@@ -409,64 +377,63 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
     const year = date.getFullYear().toString().slice(-2);
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
-    console.log(parseInt(day) + 1);
     return `${parseInt(day) + 1}-${month}-${year}`;
   };
 
-  
   const edit = () => {
-    console.log("");
   };
 
   return (
     <>
       <div className="pt-4">
         <Group>
-        <div className="relative">
-          <button className={dropdownStyle} onClick={toggleDatePicker}>
-            {startDate && endDate
-              ? `${startDate} a ${endDate}`
-              : "Rango de fechas"}
-          </button>
-          {showDatePicker && (
-            <DayPicker
-              selected={selectedDays}
-              onSelect={(selectedDays) => {
-                setSelectedDays(selectedDays);
-                const startDate = selectedDays?.from
-                  ?.toISOString()
-                  .slice(0, 10);
-                const endDate = selectedDays?.to?.toISOString().slice(0, 10);
-                setStartDate(formatDate(startDate));
-                setEndDate(formatDate(endDate));
-              }}
-              mode="range"
-              locale={es}
-              formatters={{ formatDay, formatCaption, formatWeekdayName }}
-              footer={footer}
-              className ="absolute z-10 bg-gray-700 p-2 rounded-md shadow-lg mt-2"
-              classNames={{
-                caption: "font-gotham flex justify-center relative items-center py-1",
-                caption_label: "text-base font-bold text-gray-100",
-                nav: "flex items-center",
-                nav_button: "h-6 w-6 bg-transparent hover:bg-blue-600 p-1 rounded-full transition-colors duration-300",
-                nav_button_previous: "text-white absolute left-2",
-                nav_button_next: "text-white absolute right-2",
-                table: "w-full border-collapse",
-                head_row: "flex font-gotham text-green-400",
-                head_cell: "mx-0.5 w-7 font-gotham text-sm",
-                row: "flex w-full",
-                cell: "text-gray-300 rounded-full h-7 w-7 text-center text-sm p-0 mx-0.5 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-outside)]:bg-gray-700/30 [&:has([aria-selected].day-outside)]:text-gray-300 [&:has([aria-selected])]:bg-blue-600/70 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
-                day: "h-7 w-7 p-0 font-gotham font-bold text-white hover:text-blue-300",
-                day_range_end: "day-range-end",
-                day_today: "rounded-full bg-green-600 text-white",
-                day_outside: "day-outside text-gray-400 opacity-50",
-                day_disabled: "text-gray-600 opacity-50",
-                day_hidden: "invisible",
-              }}
-            />
-          )}
-        </div>
+          <div className="relative">
+            <button className={dropdownStyle} onClick={toggleDatePicker}>
+              {startDate && endDate
+                ? `${startDate} a ${endDate}`
+                : "Rango de fechas"}
+            </button>
+            {showDatePicker && (
+              <DayPicker
+                selected={selectedDays}
+                onSelect={(selectedDays) => {
+                  setSelectedDays(selectedDays);
+                  const startDate = selectedDays?.from
+                    ?.toISOString()
+                    .slice(0, 10);
+                  const endDate = selectedDays?.to?.toISOString().slice(0, 10);
+                  setStartDate(formatDate(startDate));
+                  setEndDate(formatDate(endDate));
+                }}
+                mode="range"
+                locale={es}
+                formatters={{ formatDay, formatCaption, formatWeekdayName }}
+                footer={footer}
+                className="absolute z-10 bg-gray-700 p-2 rounded-md shadow-lg mt-2"
+                classNames={{
+                  caption:
+                    "font-gotham flex justify-center relative items-center py-1",
+                  caption_label: "text-base font-bold text-gray-100",
+                  nav: "flex items-center",
+                  nav_button:
+                    "h-6 w-6 bg-transparent hover:bg-blue-600 p-1 rounded-full transition-colors duration-300",
+                  nav_button_previous: "text-white absolute left-2",
+                  nav_button_next: "text-white absolute right-2",
+                  table: "w-full border-collapse",
+                  head_row: "flex font-gotham text-green-400",
+                  head_cell: "mx-0.5 w-7 font-gotham text-sm",
+                  row: "flex w-full",
+                  cell: "text-gray-300 rounded-full h-7 w-7 text-center text-sm p-0 mx-0.5 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-outside)]:bg-gray-700/30 [&:has([aria-selected].day-outside)]:text-gray-300 [&:has([aria-selected])]:bg-blue-600/70 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
+                  day: "h-7 w-7 p-0 font-gotham font-bold text-white hover:text-blue-300",
+                  day_range_end: "day-range-end",
+                  day_today: "rounded-full bg-green-600 text-white",
+                  day_outside: "day-outside text-gray-400 opacity-50",
+                  day_disabled: "text-gray-600 opacity-50",
+                  day_hidden: "invisible",
+                }}
+              />
+            )}
+          </div>
           <TextInput
             placeholder="Busqueda"
             classNames={{
@@ -508,15 +475,15 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
             onChange={(event) => setImpoSearch(event.target.value)}
           />
 
-                  <Dashcards
-                    buttons={[
-                      {
-                        text: "Agregar masivamente",
-                        action: edit,
-                        link: "/massiveDelivery",
-                      },
-                    ]}
-                  />
+          <Dashcards
+            buttons={[
+              {
+                text: "Agregar masivamente",
+                action: edit,
+                link: "/massiveDelivery",
+              },
+            ]}
+          />
 
           <ReloadTable path={paths.historyView} />
         </Group>

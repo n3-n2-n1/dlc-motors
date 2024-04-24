@@ -10,9 +10,7 @@ interface Values {
 
 interface AuthContextProps {
   user: User | null;
-  // setUser: React.Dispatch<React.SetStateAction<User | null>>;
   token: string | null;
-  // setToken: React.Dispatch<React.SetStateAction<string | null>>;
   login: (values: Values) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
@@ -91,7 +89,6 @@ export const AuthProvider: React.FC = ({
 
   const checkUser = async (token: string) => {
     try {
-      console.log(token)
       const response = await fetch(`${URL}/api/v1/users/check`, {
         method: "GET",
         headers: {
@@ -100,7 +97,6 @@ export const AuthProvider: React.FC = ({
 
         },
       });
-      console.log(response)
       const data = await response.json();
 
       return data;

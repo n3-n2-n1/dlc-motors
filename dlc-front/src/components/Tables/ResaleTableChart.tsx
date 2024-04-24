@@ -81,7 +81,6 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -267,7 +266,7 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
 
   );
 
-  // // Hide columns
+  //  Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
 
   columns = columns.map((column) => ({
@@ -368,7 +367,6 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
         )}
 
           <Select
-            // value={search}
             onChange={(event) => {
               setSelectedBrand(event);
             }}

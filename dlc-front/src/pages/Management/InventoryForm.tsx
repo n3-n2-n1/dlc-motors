@@ -67,7 +67,6 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
         } else {
           // formik.resetForm();
           await createInventoryMovement(updatedValues);
-          console.log(updatedValues);
           toast.success("Movimiento creado con éxito");
         }
       } catch (error) {

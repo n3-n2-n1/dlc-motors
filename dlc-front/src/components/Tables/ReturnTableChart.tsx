@@ -10,7 +10,6 @@ import {
 import { useSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import {
-  fromTreeToList,
   findNodeById,
   insertNode,
 } from "@table-library/react-table-library/common";
@@ -21,27 +20,13 @@ import {
 import {
   Group,
   TextInput,
-  Checkbox,
-  Modal,
-  OptionsDropdown,
-  MultiSelect,
-  ActionIcon,
-  Button,
   Select,
-  Drawer,
-  Space,
   Pagination,
 } from "@mantine/core";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
-import { ProductOrigins } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
-import { MantineProvider, useMantineTheme } from "@mantine/core";
-import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
-import { toast } from "react-toastify";
-import {useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
-import { useEffect } from "react";
 import { paths } from "../../routes/paths.ts";
 import ReloadTable from "../Reload/Reload.tsx";
 
@@ -77,7 +62,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -343,7 +327,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
 
         <Select
           onChange={(event) => {
-            console.log(event);
             setSelectedUser(event);
           }}
           placeholder="Usuario"

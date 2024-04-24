@@ -45,6 +45,8 @@ const HistoryView = lazy(() => import("../pages/History/HistoryView"));
 
 const HandleFatal = lazy(() => import("../pages/404/404.tsx"));
 
+const Backoffice = lazy (() => import("../pages/Backoffice/BackofficeView"));
+
 export const DeliveriesObservations = ["Courier", "Pedido"];
 export const ProductOrigins = ["Fábrica", "Nacional", "Importado"];
 export const MovementTypes = ["Ingreso", "Egreso", "Inventario"];
@@ -67,6 +69,8 @@ const AppRoutes: React.FC = () => {
 
       <Route element={<ProtectedRoute redirectPath="/login" user={user} />}>
         <Route element={<Layout />}>
+          <Route path={paths.backoffice} element={<Backoffice />} />
+
           <Route path={paths.users} element={<Users />} />
           <Route path={paths.home} element={<Home />} />
           <Route path={paths.products} element={<Products />} />

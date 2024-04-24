@@ -15,10 +15,6 @@ export default class CostsService {
 
   async updateCosts(id, proveedores) {
     try {
-      console.log("id", id)
-      console.log("proveedores", proveedores)
-
-
       return await this.costDAO.updateCost(proveedores, id);
     } catch (error) {
       throw new Error("Error en el servicio:" + error.message);

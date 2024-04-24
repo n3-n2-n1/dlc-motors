@@ -93,7 +93,6 @@ const editProduct: React.FC<EditProductFormProps> = ({
     onSubmit: async (values) => {
       try {
         const imageUrl = await uploadImageToCloudinary(values.imagen);
-        console.log("URL de la imagen cargada:", imageUrl);
         toast.success("Imagen cargada con éxito");
 
         const updatedValues = {

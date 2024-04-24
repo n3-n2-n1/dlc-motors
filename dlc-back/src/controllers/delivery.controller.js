@@ -1,4 +1,3 @@
-// import db from "../database/db.js";
 import { deliveryService } from "../services/services.js";
 
 export const getDeliveries = async (req, res) => {
@@ -41,7 +40,6 @@ export const createDelivery = async (req, res) => {
 
     const estado = "En camino";
 
-    console.log(req.body);
 
     if (
       !cantidad ||
@@ -95,8 +93,6 @@ export const createDelivery = async (req, res) => {
 export const updateDeliveryStatus = async (req, res) => {
   try {
     const { numImpo, estado, cantidad, codigoInt } = req.body;
-
-    console.log(req.body);
 
     if (!numImpo || !estado || !cantidad || !codigoInt) {
       return res.status(400).send({

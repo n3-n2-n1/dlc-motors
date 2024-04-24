@@ -26,8 +26,3 @@
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
-
-
-//configurar el build de sitio para que se use en un subfolder
-// los archivos sueltos en public html borrar despues de actualizar porque esta instalado el root y necesita estar en una subcarpeta
-//

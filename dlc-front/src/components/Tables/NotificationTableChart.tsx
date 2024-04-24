@@ -78,9 +78,18 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-                --data-table-library_grid-template-columns:  120px repeat(10, minmax(0, 1fr));
+                --data-table-library_grid-template-columns:  120px repeat(8, minmax(0, 1fr));
           
                 margin: 16px 0px;
+                .animate {
+                  grid-column: 1 / -1;
+                  display: flex;
+                }
+            
+                .animate > div {
+                  flex: 1;
+                  display: flex;
+                }
               `,
   };
 
@@ -92,7 +101,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -126,7 +134,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   function onSearchChange(action: any, state: any) {
     console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   const [detailSearch, setDetailSearch] = React.useState("");
@@ -276,15 +283,13 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+      node.name?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
       node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
-      node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
       node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-      node.user?.toLowerCase().includes(search.toLowerCase()) ||
-      node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
-      node.marcasCompatibles?.includes(search.toLowerCase())
+      node.marcasCompatibles?.includes(search.toLowerCase()) ||
+      node.image?.includes(search.toLowerCase()) || 
+      node.oem?.includes(search.toLowerCase())
   );
 
   const [selectedCategory, setSelectedCategory] = React.useState("");
@@ -303,7 +308,7 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
 
@@ -322,11 +327,7 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   if (search) {
     errorNodes = errorNodes.filter(
       (node: any) =>
-        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-        node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-        node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
-        node.marcas?.toLowerCase().includes(search.toLowerCase())
+        node.name?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
@@ -419,7 +420,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
               "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
           }}
           onChange={(event) => {
-            console.log("Evento", event);
             setSelectedBrand(event);
           }}
           placeholder="Marcas"
@@ -427,19 +427,20 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
           clearable
         />
 
-        <TextInput
-          placeholder="Búsqueda"
-          value={search}
-          classNames={{
-            wrapper:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+          <TextInput
+            placeholder="Búsqueda"
+            value={search}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+
 
         <ReloadTable path={paths.notifications} />
       </Group>
@@ -465,6 +466,8 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
           }
         />
       </div>
+      <Group position="right" mx={10}>
+
       <Pagination
         total={pagination.state.getTotalPages(errorNodes)}
         page={pagination.state.page + 1}
@@ -480,6 +483,8 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
           rounded-full
         "
       />
+      </Group>
+
     </>
   );
 };

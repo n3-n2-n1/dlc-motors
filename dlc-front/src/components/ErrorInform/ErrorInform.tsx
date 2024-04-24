@@ -7,15 +7,12 @@ import { uploadImageToCloudinary } from "../../utils/cloudinaryTool";
 import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 import { useAuth } from "../../contexts/AuthContext";
-
-// Define la interfaz para los props del componente
 interface ErrorFormProps {
   observationsList: string[];
-  products: any[]; // Reemplaza 'any' con el tipo de tus productos
+  products: any[];
   formName: string;
 }
 
-// Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   detalle: Yup.string().required("Campo requerido"),
@@ -23,7 +20,7 @@ const validationSchema = Yup.object().shape({
     .min(0, "El stock real no puede ser menor a 0")
     .required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
-  imagen: Yup.mixed() // Opcional: Agrega validaciones específicas para la imagen, si es necesario
+  imagen: Yup.mixed()
     .required("Una imagen es requerida"),
   codOEM: Yup.string().test(
     "invalid",
@@ -32,7 +29,6 @@ const validationSchema = Yup.object().shape({
   ),
 });
 
-// Componente funcional del formulario de inventario
 const ErrorForm: React.FC<ErrorFormProps> = ({
   observationsList,
   products,
@@ -73,10 +69,8 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
           imagen: imageUrl,
           usuario: user?.name,
         };
-        console.log(updatedValues);
         formik.resetForm();
         await createError(updatedValues);
-        toast.success(`Reporte cargado con éxito: ${updatedValues}`);
         toast.success("Reporte cargado con éxito");
       } catch (error) {
         console.error("Error en el formulario:", error);
@@ -353,7 +347,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 />
               </div>
             )}
-            <div>
+            <div className="pb-6">
               {/* Botón de Agregar */}
               <button
                 type="submit"

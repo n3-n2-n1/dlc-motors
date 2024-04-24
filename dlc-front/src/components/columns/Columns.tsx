@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
 import { updateDelivery, updateError } from "../../utils/Handlers/Handlers.tsx";
@@ -11,12 +11,25 @@ const hiddenColumns = [""];
 
 const getColorClass = (estado: string) => {
   switch (estado) {
+    case "Cancelado":
+      return "bg-red-400";
+    case "Entregado":
+      return "bg-green-600";
+    case "En camino":
+      return "bg-yellow-400";
+    default:
+      return "bg-white";
+  }
+};
+
+const getColorClassError = (estado: string) => {
+  switch (estado) {
     case "a corregir":
-      return "bg-red-200";
+      return "bg-red-400";
     case "corregido":
-      return "bg-green-200";
+      return "bg-green-600";
     case "revision":
-      return "bg-yellow-200";
+      return "bg-yellow-400";
     default:
       return "bg-white";
   }
@@ -34,7 +47,10 @@ const ActionCell = ({ codigoInt }: any) => {
 
   return (
     <>
-      {!isClient && !isDepositOperator && !isFactoryOperator && !isSupervisor ? (
+      {!isClient &&
+      !isDepositOperator &&
+      !isFactoryOperator &&
+      !isSupervisor ? (
         <div className="flex flex-row gap-2 w-full">
           <Link to={`/productos/editar/${codigoInt}`}>
             <button className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}>
@@ -57,14 +73,13 @@ const ActionCell = ({ codigoInt }: any) => {
 
 const DeliveryEdit = ({ item }) => {
   const { user } = useAuth();
-  const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
   const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
   const [isCancelled, setIsCancelled] = useState(item.estado === "Cancelado");
 
   const handleStatusChange = (event) => {
     const newStatus = event.target.value;
     if (newStatus === "Cancelado") {
-      setIsCancelled(true); // Bloquea el selector cuando el estado es Cancelado
+      setIsCancelled(true);
     }
 
     const deliveryUpdates = {
@@ -76,12 +91,14 @@ const DeliveryEdit = ({ item }) => {
 
   return (
     <>
-      {!isAdmin ? (
+      {isAdmin ? (
         <select
-          className={`w-full border-[1px] rounded-[5px] text-[1rem] p-0.5 m-0 text-black ${getColorClass(item.estado)}`}
+          className={`w-full rounded-[5px] text-[1rem] p-0.5 m-0 text-black dark:text-white font-semibold ${getColorClass(
+            item.estado
+          )}`}
           value={item.estado}
           onChange={handleStatusChange}
-          disabled={isCancelled} // Deshabilita el selector si el estado es Cancelado
+          disabled={isCancelled}
         >
           <option value="En camino">En camino</option>
           <option value="Entregado">Entregado</option>
@@ -94,7 +111,6 @@ const DeliveryEdit = ({ item }) => {
   );
 };
 
-
 const ErrorEdit = ({ item }: any) => {
   const { user } = useAuth();
   const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
@@ -103,7 +119,7 @@ const ErrorEdit = ({ item }: any) => {
     <>
       {!isSupervisor ? (
         <select
-          className={`w-full border-[1px] rounded-[5px] text-[1rem] p-0.5 m-0 text-black ${getColorClass(
+          className={`w-full rounded-[5px] text-[1rem] p-0.5 m-0 text-black font-semibold ${getColorClassError(
             item.estado
           )}`}
           value={item.estado}
@@ -210,7 +226,6 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "Stock",
-    // renderCell: (item: any) => item.stock, <DeliveryEdit item={item} />
     renderCell: (item: any) => <RenderStockColumn item={item} />,
     resize,
     hide: hiddenColumns.includes("Stock"),
@@ -218,21 +233,19 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "StockFuturo",
-    // renderCell: (item: any) => item.stock, <DeliveryEdit item={item} />
-    renderCell: (item: any) => item.stockFuturo || '-',
+    renderCell: (item: any) => item.stockFuturo || "-",
     resize,
     sort: { sortKey: "STOCKfuturo" },
-
   },
   {
     label: "☑️",
     renderCell: (item: any) => {
       if (item.check === "Error") {
-        return "X"; // Si hay un error
+        return "X";
       } else if (item.check === "En revisión") {
-        return "?"; // Si hay un error en revisión
+        return "?";
       } else {
-        return "✔️"; // Si no hay errores
+        return "✔️";
       }
     },
     resize,
@@ -240,12 +253,11 @@ export const PRODUCTCOLUMNS = [
   },
 ];
 
-//Fecha/hora	Aviso	Imagen	Código interno	Descripción		OEM	Marca	Rubro	Origen	Stock
 export const NOTIFCOLUMNS = [
   {
     label: <div className="">Estado</div>,
     renderCell: (item: any) => {
-      let bgColorClass = ""; // Color de fondo por defecto
+      let bgColorClass = "";
       let bgColorText = "";
 
       if (item.message === "Stock bajo") {
@@ -273,7 +285,16 @@ export const NOTIFCOLUMNS = [
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.imagen || "-",
+    renderCell: (item: any) =>
+      (
+        <a
+          href={item.image}
+          target="_blank"
+          className="font-semibold text-blue-600 hover:text-blue-400"
+        >
+          {item.image}
+        </a>
+      ) || "-",
     resize,
   },
   {
@@ -311,20 +332,8 @@ export const NOTIFCOLUMNS = [
     renderCell: (item: any) => item.stock || "-",
     resize,
   },
-
-  {
-    label: "",
-    renderCell: (item: any) => "",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => "",
-    resize,
-  },
 ];
 
-// Fecha/hora	Observcación	Número de impo	Cantidad	Código interno	Descripción	OEM	Productos	Stock en depósito	Stock acumulado
 export const DELIVERYCOLUMNS = [
   {
     label: "Fecha",
@@ -382,7 +391,6 @@ export const DELIVERYCOLUMNS = [
   },
 ];
 
-//Usuario	Fecha/hora	Observcación	Detalle	Código interno	OEM	Descripción	Stock actual	Stock real 	Foto ficha	Revisión
 export const ERRORCOLUMNS = [
   {
     label: "Usuario",
@@ -431,16 +439,34 @@ export const ERRORCOLUMNS = [
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.img || "-",
+    renderCell: (item: any) =>
+      (
+        <div>
+          <Tooltip
+            withArrow
+            transitionProps={{ duration: 200, transition: "fade" }}
+            label={
+              <img src={item.img} alt="preview" style={{ width: "400px" }} />
+            }
+          >
+            <Link
+              to={item.img}
+              target="_blank"
+              className="font-semibold text-blue-600 hover:text-blue-400"
+            >
+              Ver Imagen
+            </Link>
+          </Tooltip>
+        </div>
+      ) || "-",
     resize,
   },
   {
     label: "Estado",
-    renderCell: (item: any) => <ErrorEdit item={item} />
+    renderCell: (item: any) => <ErrorEdit item={item} />,
   },
 ];
 
-//Fecha/hora	Usuario	Tipo de mov	Observcación	Courrier/pedido	Detalle	Cantidad	Kit	Código interno	Descripción	OEM	Marca	Rubro	Origen	Stock
 export const MOVESCOLUMNS = [
   {
     label: "Usuario",
@@ -517,7 +543,6 @@ export const HOMECOLUMNS = [
   },
 ];
 
-// Usuario	Fecha/hora	Observcación	Detalle	Código interno	OEM	Descripción	Cantidad	Kit	Stock actual	Contador de dev
 export const RETURNCOLUMNS = [
   {
     label: "Usuario",
@@ -570,8 +595,6 @@ export const RETURNCOLUMNS = [
     resize,
   },
 ];
-
-
 
 export const IMPORTEDCOLUMNS = [
   {

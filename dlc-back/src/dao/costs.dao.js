@@ -30,8 +30,15 @@ export class CostDAO {
     try {
       db.query(
         "INSERT INTO costos (`descripcion`, `codigo`, `marca`, `stock`, `proveedores`, `rubro`, `sku`) VALUES (?, ?, ?, ?, ?, ?, ?);",
-        // ! STRINGIFY PROVEEDORES?
-        [descripcion, codigo, marca, stock, JSON.stringify(proveedores), rubro, sku],
+        [
+          descripcion,
+          codigo,
+          marca,
+          stock,
+          JSON.stringify(proveedores),
+          rubro,
+          sku,
+        ],
         function (error) {
           if (error) {
             console.error("Error", error);
@@ -59,7 +66,6 @@ export class CostDAO {
     }
   }
 
-  // falta enlazar al array de proveedores y agregarlo ahi.
   async updateCost(proveedores, codigo) {
     const updateQuery = "UPDATE costos SET proveedores = ? WHERE codigo = ?";
 
@@ -75,8 +81,6 @@ export class CostDAO {
             );
             throw new Error("Error al actualizar el costo.");
           }
-
-          console.log(updateResults);
 
           return updateResults;
         }

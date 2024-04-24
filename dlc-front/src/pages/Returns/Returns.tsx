@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createReturns } from "../../utils/Handlers/Handlers";
-// import FiltroFloat from "../../components/SearchFloat/SearchFloat";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
@@ -71,7 +70,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
 
       try {
         await createReturns(updatedValues);
-        console.log(updatedValues);
+        (updatedValues);
         formik.resetForm();
       } catch (error) {
         console.error(error);
@@ -79,11 +78,6 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
       }
     },
   });
-
-  useEffect(() => {
-    console.log(formik.errors)
-    console.log(formik.values)
-  }, [formik.errors])
 
   const handleInputChange = (codigoInt: string) => {
     const product = products.find((product) => product.codigoInt === codigoInt);

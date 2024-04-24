@@ -19,8 +19,6 @@ const UserCard = ({ user }: any) => {
   const isSupervisor = useRoleCheck(loggedUser?.role, ["Supervisor"]);
   const isFactoryOperator = useRoleCheck(loggedUser?.role, ["Operador de fábrica"]);
 
-  console.log(userToUpdate);
-
   const handleEditUser = () => {
     setIsEditing(true);
   };
@@ -36,7 +34,6 @@ const UserCard = ({ user }: any) => {
   };
 
   const handleDeleteUser = (e: any) => {
-    console.log("Acá estas eliminando a:", userToUpdate);
     e.preventDefault();
     deleteUser(userToUpdate.username);
     setIsEditing(false);

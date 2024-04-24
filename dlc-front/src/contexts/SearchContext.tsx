@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { fetchProducts } from "../utils/Handlers/Handlers";
+import { fetchProducts, getCategories } from "../utils/Handlers/Handlers";
 interface SearchContextProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -33,13 +33,12 @@ export const SearchProvider: React.FC = ({
   const [categories, setCategories] = useState<string[]>([]);
 
   const itemsPerPage = 17;
-  // useEffect para obtener productos desde el backend
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         let data = await fetchProducts();
 
-        console.log('this isss',data)
         data = data.map((item: any) => ({
           ...item,
           kit: item.kit === "No" ? null : item.kit.split(",").map(Number),
@@ -60,10 +59,11 @@ export const SearchProvider: React.FC = ({
 
   useEffect(() => {
     try {
-      const uniqueCategories = [
-        ...new Set(products.map((product) => product.rubro)),
-      ];
-      setCategories(uniqueCategories);
+      const getCategoriesData = async () => {
+        const { categorias } = await getCategories();
+        setCategories(categorias.split(","));
+      };
+      getCategoriesData();
     } catch (error) {
       console.error("Error fetching categories:", error);
     }

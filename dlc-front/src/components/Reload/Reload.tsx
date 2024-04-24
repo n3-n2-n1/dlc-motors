@@ -7,7 +7,7 @@ interface ReloadTableProps {
 const ReloadTable: React.FC<ReloadTableProps> = ({ path }) => {
   const navigate = useNavigate();
   const handleReload = () => {
-    navigate(path);
+     window.location.reload();
   };
 
   return (

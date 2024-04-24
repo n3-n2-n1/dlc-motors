@@ -65,8 +65,6 @@ export const createProductError = async (req, res) => {
       imagen
     );
 
-    console.log(createdError)
-
     res.status(200).send({
       status: "success",
       payload: createdError,

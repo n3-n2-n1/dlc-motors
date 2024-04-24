@@ -81,7 +81,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -101,7 +100,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -115,8 +113,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSearchChange(action: any, state: any) {
-    console.log(action, state);
-    // pagination.fns.onSetPage(0);
   }
 
   const [detailSearch, setDetailSearch] = React.useState("");
@@ -126,8 +122,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSearchDetail(action: any, state: any) {
-    console.log(action, state);
-    // pagination.fns.onSetPage(0);
   }
 
   const [codeSearch, setCodeSearch] = React.useState("");
@@ -136,8 +130,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
-    // pagination.fns.onSetPage(0);
   }
 
 
@@ -148,7 +140,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onBrandChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Filter *//
@@ -161,8 +152,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onFilterChange(action: any, state: any) {
-    console.log(action, state);
-    // pagination.fns.onSetPage(0);
   }
 
   //* Select *//
@@ -172,7 +161,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSelectChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Tree *//
@@ -188,14 +176,11 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       treeIcon: {
         margin: "2px",
         iconDefault: null,
-        //  iconRight: <FaChevronRight />,
-        //  iconDown: <FaChevronDown />,
       },
     }
   );
 
   function onTreeChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Sort *//
@@ -228,7 +213,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   );
 
   function onSortChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Drawer *//

@@ -1,9 +1,8 @@
 import { User } from "../../Interfaces/User";
-import { Errors } from "../../components/ErrorCard/ErrorCard";
 import * as xlsx from "xlsx";
 import { toast } from "react-toastify";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL; // Así es como se accede en Vite.
 
 const token = localStorage.getItem("userJWT");
 
@@ -123,7 +122,6 @@ const fetchCosts = async () => {
   }
 };
 
-
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //---------------------CREATION HANDLERS-------------------------//
@@ -216,7 +214,6 @@ const createError = async (errorData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Error created sucessfully");
   } catch (error) {
     console.error("Error creating product:", error);
   }
@@ -224,7 +221,6 @@ const createError = async (errorData: any) => {
 
 const createReturns = async (returnData: any) => {
   try {
-    console.log(returnData)
     const response = await fetch(`${URL}/api/v1/returns`, {
       method: "POST",
       headers: {
@@ -331,8 +327,7 @@ const createCosts = async (costData: any) => {
   } catch (error) {
     console.error("Error creating product:");
   }
-
-}
+};
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -367,23 +362,19 @@ const modifyProduct = async (productToEdit: any) => {
 
 const modifyCosts = async (newCosts: any) => {
   try {
-    const response = await fetch(
-      `${URL}/api/v1/costs/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCosts),
-      }
-    );
+    const response = await fetch(`${URL}/api/v1/costs/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCosts),
+    });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
+      const costData = await response.json();
+      throw new Error(costData.error);
     }
 
-    const responseData = await response.json();
     toast.success("Modificacion de costo exitosa");
   } catch (error) {
     console.error("Error editing product:", error);
@@ -412,11 +403,8 @@ const updateError = async (errorUpdates: any) => {
   }
 };
 
-
 const updateDelivery = async (deliveryUpdates: any) => {
   try {
-    console.log(deliveryUpdates)
-
     const user = await checkUser();
 
     const parsedDeliveryUpdates = {
@@ -432,19 +420,15 @@ const updateDelivery = async (deliveryUpdates: any) => {
       stock: deliveryUpdates.stockDeposito,
       cantidad: deliveryUpdates.cantidad,
       stockAct: deliveryUpdates.stockAcumulado,
-    }
+    };
 
-    console.log(parsedDeliveryUpdates)
-
-    // ! Crear un objeto solo con el estado y el numImpo para hacer el fetch al update
+    // Crear un objeto solo con el estado y el numImpo para hacer el fetch al update
     const deliveryStatusUpdates = {
       estado: deliveryUpdates.estado,
       numImpo: deliveryUpdates.numImpo,
       cantidad: deliveryUpdates.cantidad,
       codigoInt: deliveryUpdates.codigoInt,
-    }
-
-    console.log(deliveryStatusUpdates)
+    };
 
     const response = await fetch(`${URL}/api/v1/delivery/`, {
       method: "PUT",
@@ -459,11 +443,8 @@ const updateDelivery = async (deliveryUpdates: any) => {
       throw new Error(errorData.error);
     }
 
-    // ! Acá evaluar el estado que trae deliveryUpdates, si es "Entregado" hacer el fetch para crear el nuevo movimiento de INGRESO enviando parsedDeliveryUpdates
-
     if (deliveryUpdates.estado === "Entregado") {
-      console.log("Ejecuto creación de movimiento de ingreso")
-      createMovement(parsedDeliveryUpdates)
+      createMovement(parsedDeliveryUpdates);
     }
 
     // const responseData = await response.json();
@@ -471,7 +452,7 @@ const updateDelivery = async (deliveryUpdates: any) => {
   } catch (error) {
     console.error("Error editing delivery:", error);
   }
-}
+};
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -561,8 +542,7 @@ const checkUser = async () => {
   } catch (error) {
     console.error(`Error checking user ${error}`);
   }
-
-}
+};
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
@@ -660,6 +640,88 @@ const fetchIncomeObservations = async () => {
   }
 };
 
+const updateObservations = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Observaciones actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las observaciones");
+  }
+};
+
+const updateBrands = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/brands`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Marcas actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las marcas");
+  }
+};
+
+const updateCategories = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/categories`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Categorias actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las categorias");
+  }
+};
+
+const getCategories = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/categories/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+  }
+};
+
 const createMultipleProducts = async (data: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
@@ -677,23 +739,21 @@ const createMultipleProducts = async (data: any) => {
   }
 };
 
-
 const createMultipleDelivery = async (data: any) => {
   try {
-    const response = await fetch(`${URL}/api/v1/delivery/createMultiple`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const response = await fetch(`${URL}/api/v1/delivery/createMultiple`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-      if (!response.ok){
-        throw new Error(`HTTP error`);
-      }
+    if (!response.ok) {
+      throw new Error(`HTTP error`);
+    }
   } catch (error) {
-    console.error("Error al enviar los datos al servidor", error)
+    console.error("Error al enviar los datos al servidor", error);
   }
 };
 
@@ -724,8 +784,12 @@ export {
   fetchOutcomeObservations,
   fetchReturnObservations,
   fetchIncomeObservations,
+  updateObservations,
   createMultipleProducts,
   createMultipleDelivery,
   modifyCosts,
-  createCosts
+  createCosts,
+  updateBrands,
+  updateCategories,
+  getCategories,
 };

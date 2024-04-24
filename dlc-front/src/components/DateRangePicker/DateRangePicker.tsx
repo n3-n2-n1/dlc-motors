@@ -59,7 +59,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ handleDateChange }) =
     const year = date.getFullYear().toString().slice(-2);
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
-    console.log(day);
     return `${parseInt(day) + 1}-${month}-${year}`;
   };
 
@@ -81,8 +80,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ handleDateChange }) =
           const endDate = selectedDays?.to?.toISOString().slice(0, 10);
           setStartDate(formatDate(startDate));
           setEndDate(formatDate(endDate));
-          // startDate && handleSearchChange("fechaInicio", startDate);
-          // endDate && handleSearchChange("fechaFin", endDate);
         }}
         mode="range"
         locale={es}

@@ -22,12 +22,6 @@ const Products = () => {
   const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
-  console.log(nodes);
-
-  const edit = () => {
-    console.log("");
-  };
-
   return (
     <>
       <PageTitle title="DLC Motors • Productos" />
@@ -43,7 +37,6 @@ const Products = () => {
                     buttons={[
                       {
                         text: "Agregar Producto",
-                        action: edit,
                         link: "/productos/agregar",
                       },
                     ]}

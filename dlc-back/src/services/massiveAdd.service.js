@@ -7,7 +7,7 @@ export default class MassiveAddService {
   async massiveAdd(data) {
     try {
       const workbook = xlsx.read(data, { type: "binary" });
-      const sheetName = workbook.SheetNames[0]; // Suponiendo que solo hay una hoja en el archivo Excel
+      const sheetName = workbook.SheetNames[0];
       const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
       // Itera sobre las filas del archivo Excel y guárdalas en la base de datos

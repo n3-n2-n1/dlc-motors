@@ -70,8 +70,6 @@ const Notifications = () => {
     return <Loader />;
   }
 
-  console.log(notifications)
-
   return (
     <>
       <PageTitle title="DLC Motors • Notificaciones" />
@@ -80,7 +78,7 @@ const Notifications = () => {
           title="Notificaciones"
           subtitle="Visualizá faltantes, egresos y stocks"
         />
-        <div className="mt-4 overflow-x-auto overflow-y-auto shadow-lg transition-colors duration-300">
+        <div className="mt-4 overflow-x-auto overflow-y-auto transition-colors duration-300">
           <NotificationTableChart columns={NOTIFCOLUMNS} data={notifications} />
         </div>
       </div>

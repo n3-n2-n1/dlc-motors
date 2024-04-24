@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { verifyRole } from '../middlewares/auth.js';
+import { verifyRole } from "../middlewares/auth.js";
 
 import {
   getProducts,
@@ -8,7 +8,7 @@ import {
   createProduct,
   editProduct,
   deleteProduct,
-  createMultipleProducts
+  createMultipleProducts,
 } from "../controllers/products.controller.js";
 
 const productsRouter = Router();
@@ -37,11 +37,8 @@ productsRouter.delete("/:pid", (req, res) => {
   deleteProduct(req, res);
 });
 
-
 productsRouter.post("/createMultiple", (req, res) => {
-  createMultipleProducts(req, res)
-})
-
-
+  createMultipleProducts(req, res);
+});
 
 export default productsRouter;

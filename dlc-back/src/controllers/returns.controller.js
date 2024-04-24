@@ -48,7 +48,6 @@ export const createReturn = async (req, res) => {
       !stockAnt ||
       !detalle ||
       !cantidad ||
-      !kit ||
       !usuario
     ) {
       return res.status(400).send({
@@ -92,7 +91,6 @@ export const createReturn = async (req, res) => {
 
 export const deleteReturn = async (req, res) => {
   try {
-    // ! Acá se toma el id de la Devolución a eliminar y se envía al service
 
     const returns = await returnsService.deleteReturn();
 

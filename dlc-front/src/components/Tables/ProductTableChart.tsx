@@ -55,7 +55,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const [tableData, setTableData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
 
-  console.log(category, "CATEGORIA");
 
   const {
     brands,
@@ -93,7 +92,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   };
 
   const handleDelete = async () => {
-    console.log("SE VA A ELIMINAR EL PRODUCTO", selectedCodigoInt);
     try {
       await toast.promise(deleteProducts(selectedCodigoInt), {
         pending: "Eliminando producto... 🕒",
@@ -286,6 +284,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
+
+  
 
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
@@ -490,7 +490,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
               "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
           }}
           onChange={(event) => {
-            console.log("Evento", event);
             setSelectedBrand(event);
           }}
           placeholder="Marcas"

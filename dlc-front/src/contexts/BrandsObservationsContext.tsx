@@ -86,7 +86,6 @@ export const BrandsObservationsProvider: React.FC = ({
     getIncomeObservations();
   }, []);
 
-    // TEST PARA DELETE BUTTON TABLE
     const [modalOpened, setModalOpened] = useState(false);
     const [selectedCodigoInt, setSelectedCodigoInt] = useState(null);
 

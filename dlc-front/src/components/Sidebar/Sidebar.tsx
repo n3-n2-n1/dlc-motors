@@ -28,6 +28,7 @@ import { useLocation } from "react-router-dom";
 import DarkProductIcon from "../icon/DarkProductIcon";
 
 import useRoleCheck from "../../hooks/useRoleCheck";
+import ReturnsIcon, { DarkReturnsIcon } from "../icon/ReturnsIcon/ReturnsIcon";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -47,8 +48,7 @@ export default function Sidebar() {
   const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
   const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
-
-  console.log(isSalesMan);
+  const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
 
   const handleLogout = async () => {
     try {
@@ -115,7 +115,7 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Productos</div>
           </SidebarButton>
 
-          {!isClient && !isFactoryOperator && (
+          {/* {!isClient && !isFactoryOperator && (
             <SidebarButton
               to={paths.categories}
               text={"Rubros"}
@@ -132,6 +132,24 @@ export default function Sidebar() {
               </div>
 
               <div className="ml-3 font-bold">Rubros</div>
+            </SidebarButton>
+          )} */}
+                    {isAdmin && (
+            <SidebarButton
+              to={paths.backoffice}
+              text={"Backoffice"}
+              isActive={currentPath === paths.backoffice}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <ReturnsIcon color="black" />
+                </div>
+                <div className="hidden dark:block">
+                  <DarkReturnsIcon />
+                </div>
+              </div>
+
+              <div className="ml-3 font-bold">Backoffice</div>
             </SidebarButton>
           )}
 
@@ -233,6 +251,9 @@ export default function Sidebar() {
             </SidebarButton>
           )}
 
+
+
+
           <section className={!isClient && `pt-12`}>
             <button
               className="flex items-center px-8 h-[60px] w-full hover:bg-[#3496CB] dark:hover:bg-gray-600 hover:text-white dark:hover:text-white p-4"
@@ -247,16 +268,16 @@ export default function Sidebar() {
               <div className="ml-2 font-bold">Salir</div>
             </button>
           </section>
+          
 
           <section className="p-10 px-6">
             <ThemeToggleButton />
           </section>
         </div>
-
         <div className="flex transition-colors duration-300 select-none">
           <button
             onClick={toggleSidebar}
-            className="p-1 rounded-full text-gray-700 dark:text-white"
+            className="p-1 text-gray-700 dark:text-white"
           >
             <div className="mb-6 hover:bg-blue-60 ml-5 ">
               <svg
@@ -287,6 +308,7 @@ export default function Sidebar() {
             </div>
           </button>
         </div>
+
       </div>
       <section className="dark:bg-gray-900 text-gray-700 justify-center  bg-gray-100 align-middle flex hover:bg-gray-200">
         {!isSidebarVisible && (

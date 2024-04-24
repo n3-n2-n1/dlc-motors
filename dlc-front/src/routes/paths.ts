@@ -26,4 +26,5 @@ export const paths = {
   fatal:"*",
   massive: "/massiveAdd",
   massiveDelivery: "/massiveDelivery",
+  backoffice: "/backoffice"
 };

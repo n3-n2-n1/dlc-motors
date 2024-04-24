@@ -124,15 +124,6 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     }
   }, [qrCode]);
 
-  useEffect(() => {
-    console.log(selectedProduct);
-  }, [selectedProduct]);
-
-  useEffect(() => {
-    console.log(formik.values.cantidad);
-    console.log(formik.values.kit);
-  }, [selectedProduct, formik.values.kit, formik.values.cantidad]);
-
   return (
     <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300">
       {isQrModalOpen && (

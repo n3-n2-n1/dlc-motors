@@ -27,7 +27,7 @@ const UserList: React.FC = () => {
   return (
     <>
       <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 dark:border-gray-800 h-screen overflow-y-auto lg:block p-6">
-        <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between transition-colors duration-300">
+        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row justify-between transition-colors duration-300">
           <Navbar title="Usuarios" subtitle="" />
           {!isSupervisor && !isFactoryOperator && (
             <div className="transition-colors duration-300">
@@ -46,7 +46,7 @@ const UserList: React.FC = () => {
         </div>
 
         <div
-          className={`pt-12 w-auto transition-all duration-500 ease-in-out ${
+          className={`w-auto transition-all duration-500 ease-in-out ${
             isExpanded ? "max-h-screen" : "max-h-0 overflow-hidden"
           }`}
         >
