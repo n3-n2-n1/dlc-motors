@@ -7,25 +7,28 @@ import { uploadImageToCloudinary } from "../../utils/cloudinaryTool";
 import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 import { useAuth } from "../../contexts/AuthContext";
-
-// Define la interfaz para los props del componente
 interface ErrorFormProps {
   observationsList: string[];
-  products: any[]; // Reemplaza 'any' con el tipo de tus productos
+  products: any[];
   formName: string;
 }
 
-// Define el esquema de validación con Yup
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   detalle: Yup.string().required("Campo requerido"),
-  stockReal: Yup.number().required("Campo requerido"),
+  stockReal: Yup.number()
+    .min(0, "El stock real no puede ser menor a 0")
+    .required("Campo requerido"),
   codigoInt: Yup.string().required("Campo requerido").uppercase(),
-  imagen: Yup.mixed() // Opcional: Agrega validaciones específicas para la imagen, si es necesario
+  imagen: Yup.mixed()
     .required("Una imagen es requerida"),
+  codOEM: Yup.string().test(
+    "invalid",
+    "Debe ingresar un código interno válido para continuar",
+    (value) => value !== undefined
+  ),
 });
 
-// Componente funcional del formulario de inventario
 const ErrorForm: React.FC<ErrorFormProps> = ({
   observationsList,
   products,
@@ -66,10 +69,8 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
           imagen: imageUrl,
           usuario: user?.name,
         };
-        console.log(updatedValues);
         formik.resetForm();
         await createError(updatedValues);
-        toast.success(`Reporte cargado con éxito: ${updatedValues}`);
         toast.success("Reporte cargado con éxito");
       } catch (error) {
         console.error("Error en el formulario:", error);
@@ -118,7 +119,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
   }, [qrCode]);
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-900 h-screen overflow-y-auto lg:block pt-4 transition-colors duration-300">
+    <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-900 h-full overflow-y-auto lg:block pt-4 transition-colors duration-300">
       {isQrModalOpen && (
         <div>
           {QrReaderComponent}
@@ -219,6 +220,11 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+              {formik.touched.codigoInt && formik.errors.codOEM ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.codOEM}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -292,7 +298,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.stockReal || ""}
+                value={formik.values.stockReal || 0}
               />
               {formik.touched.stockReal && formik.errors.stockReal ? (
                 <div className="text-red-500 text-sm mt-1">
@@ -341,7 +347,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 />
               </div>
             )}
-            <div>
+            <div className="pb-6">
               {/* Botón de Agregar */}
               <button
                 type="submit"

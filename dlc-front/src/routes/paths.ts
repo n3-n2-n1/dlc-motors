@@ -24,5 +24,7 @@ export const paths = {
   // management: "/gestion",
   historyView:"/historyView",
   fatal:"*",
-  massive: "/massiveAdd"
+  massive: "/massiveAdd",
+  massiveDelivery: "/massiveDelivery",
+  backoffice: "/backoffice"
 };

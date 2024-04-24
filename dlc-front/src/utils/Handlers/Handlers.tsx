@@ -1,9 +1,8 @@
 import { User } from "../../Interfaces/User";
-import { Errors } from "../../components/ErrorCard/ErrorCard";
 import * as xlsx from "xlsx";
 import { toast } from "react-toastify";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL; // Así es como se accede en Vite.
 
 const token = localStorage.getItem("userJWT");
 
@@ -215,7 +214,6 @@ const createError = async (errorData: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Error created sucessfully");
   } catch (error) {
     console.error("Error creating product:", error);
   }
@@ -309,6 +307,28 @@ const createDelivery = async (deliveryData: any) => {
   }
 };
 
+const createCosts = async (costData: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/costs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(costData),
+    });
+
+    if (!response.ok) {
+      const costData = await response.json();
+      throw new Error(costData.error);
+    }
+
+    const responseData = await response.json();
+    toast.success("Costo creado correctamente");
+  } catch (error) {
+    console.error("Error creating product:");
+  }
+};
+
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
 //-------------------------EDIT HANDLERS-------------------------//
@@ -340,6 +360,27 @@ const modifyProduct = async (productToEdit: any) => {
   }
 };
 
+const modifyCosts = async (newCosts: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/costs/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCosts),
+    });
+
+    if (!response.ok) {
+      const costData = await response.json();
+      throw new Error(costData.error);
+    }
+
+    toast.success("Modificacion de costo exitosa");
+  } catch (error) {
+    console.error("Error editing product:", error);
+  }
+};
+
 const updateError = async (errorUpdates: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/productErrors/`, {
@@ -359,6 +400,57 @@ const updateError = async (errorUpdates: any) => {
     toast.success("Error modificado correctamente");
   } catch (error) {
     console.error("Error editing errors data:", error);
+  }
+};
+
+const updateDelivery = async (deliveryUpdates: any) => {
+  try {
+    const user = await checkUser();
+
+    const parsedDeliveryUpdates = {
+      usuario: user.name,
+      date: new Date().toLocaleString(),
+      observaciones: "Importación",
+      tipoMov: "Ingreso",
+      codigoInt: deliveryUpdates.codigoInt,
+      codOEM: deliveryUpdates.codOEM,
+      desc: deliveryUpdates.desc,
+      detalle: deliveryUpdates.numImpo,
+      estado: deliveryUpdates.estado,
+      stock: deliveryUpdates.stockDeposito,
+      cantidad: deliveryUpdates.cantidad,
+      stockAct: deliveryUpdates.stockAcumulado,
+    };
+
+    // Crear un objeto solo con el estado y el numImpo para hacer el fetch al update
+    const deliveryStatusUpdates = {
+      estado: deliveryUpdates.estado,
+      numImpo: deliveryUpdates.numImpo,
+      cantidad: deliveryUpdates.cantidad,
+      codigoInt: deliveryUpdates.codigoInt,
+    };
+
+    const response = await fetch(`${URL}/api/v1/delivery/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(deliveryStatusUpdates),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    if (deliveryUpdates.estado === "Entregado") {
+      createMovement(parsedDeliveryUpdates);
+    }
+
+    // const responseData = await response.json();
+    toast.success("Delivery modificado correctamente");
+  } catch (error) {
+    console.error("Error editing delivery:", error);
   }
 };
 
@@ -429,6 +521,26 @@ const deleteUser = async (username: string) => {
     toast.success("Usuario eliminado correctamente");
   } catch (error) {
     console.error(`Error deleting user ${error}`);
+  }
+};
+
+const checkUser = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/users/check`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error checking user");
+    }
+
+    const userData = await response.json();
+    return userData.payload;
+  } catch (error) {
+    console.error(`Error checking user ${error}`);
   }
 };
 
@@ -528,6 +640,88 @@ const fetchIncomeObservations = async () => {
   }
 };
 
+const updateObservations = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Observaciones actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las observaciones");
+  }
+};
+
+const updateBrands = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/observations/brands`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Marcas actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las marcas");
+  }
+};
+
+const updateCategories = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/categories`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    toast.success("Categorias actualizadas correctamente");
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+    toast.error("Error al actualizar las categorias");
+  }
+};
+
+const getCategories = async () => {
+  try {
+    const response = await fetch(`${URL}/api/v1/categories/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return (data as any).payload[0];
+  } catch (error) {
+    console.error("Error al enviar datos al servidor", error);
+  }
+};
+
 const createMultipleProducts = async (data: any) => {
   try {
     const response = await fetch(`${URL}/api/v1/products/createMultiple`, {
@@ -545,11 +739,30 @@ const createMultipleProducts = async (data: any) => {
   }
 };
 
+const createMultipleDelivery = async (data: any) => {
+  try {
+    const response = await fetch(`${URL}/api/v1/delivery/createMultiple`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error`);
+    }
+  } catch (error) {
+    console.error("Error al enviar los datos al servidor", error);
+  }
+};
+
 export {
   fetchUser,
   fetchErrors,
   createError,
   updateError,
+  updateDelivery,
   fetchProducts,
   createProduct,
   modifyProduct,
@@ -571,5 +784,12 @@ export {
   fetchOutcomeObservations,
   fetchReturnObservations,
   fetchIncomeObservations,
+  updateObservations,
   createMultipleProducts,
+  createMultipleDelivery,
+  modifyCosts,
+  createCosts,
+  updateBrands,
+  updateCategories,
+  getCategories,
 };

@@ -42,6 +42,8 @@ import { toast } from "react-toastify";
 import {useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
 import { useEffect } from "react";
+import ReloadTable from "../Reload/Reload.tsx";
+import { paths } from "../../routes/paths.ts";
 
 
 const FabricTableChart = ({ columns, data, category }: any) => {
@@ -79,7 +81,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -99,7 +100,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -113,8 +113,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSearchChange(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   const [detailSearch, setDetailSearch] = React.useState("");
@@ -124,8 +122,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSearchDetail(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   const [codeSearch, setCodeSearch] = React.useState("");
@@ -134,8 +130,16 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
+  }
+
+
+  const [brandSearch, setBrandSearch] = React.useState("");
+  useCustom("brandSearch", errorData, {
+    state: { brandSearch },
+    onChange: onBrandChange,
+  });
+
+  function onBrandChange(action: any, state: any) {
   }
 
   //* Filter *//
@@ -148,8 +152,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onFilterChange(action: any, state: any) {
-    console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   //* Select *//
@@ -159,7 +161,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   });
 
   function onSelectChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Tree *//
@@ -175,14 +176,11 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       treeIcon: {
         margin: "2px",
         iconDefault: null,
-        //  iconRight: <FaChevronRight />,
-        //  iconDown: <FaChevronDown />,
       },
     }
   );
 
   function onTreeChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Sort *//
@@ -215,7 +213,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   );
 
   function onSortChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Drawer *//
@@ -253,8 +250,15 @@ const FabricTableChart = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-
-      node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase())
+      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+      node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+      node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
+      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+      node.user?.toLowerCase().includes(search.toLowerCase()) ||
+      node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
+      node.marcasCompatibles?.includes(brandSearch.toLowerCase())
   );
 
   // // Hide columns
@@ -268,75 +272,111 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
 
-  const [selectedBrand, setSelectedBrand] = React.useState("");
+
+  const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
+    errorNodes = errorNodes.filter((node: any) => {
+      // Convierte el arreglo marcasCompatibles a una cadena
+      const compatibleBrands = Array.isArray(node.marcasCompatibles)
+        ? node.marcasCompatibles.join(" / ").toLowerCase()
+        : (node.marcasCompatibles || "").toLowerCase();
+
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
+  }
+
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
+      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
+
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) 
+      // Incluye aquí otras propiedades por las que quieras buscar
+    );
+  }
+
 
   return (
     <>
       <div className="pt-4">
         <Group>
-          {category ? (
-            <Select
-              value={category || null}
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              placeholder="Rubro"
-              data={categories}
-              clearable
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-            />
-          ) : (
-            <Select
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              placeholder="Rubro"
-              data={categories}
-              clearable
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-            />
-          )}
-
+        {category ? (
           <Select
-            // value={search}
-            onChange={(event) => {
-              setSelectedOrigin(event);
-            }}
-            placeholder="Origen"
-            data={ProductOrigins}
-            clearable
+            value={category || null}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
           />
+        ) : (
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
+          />
+        )}
+
+        {/* <Select
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedOrigin(event);
+          }}
+          placeholder="Origen"
+          data={ProductOrigins}
+          clearable
+        /> */}
 
           <Select
             // value={search}
@@ -366,6 +406,9 @@ const FabricTableChart = ({ columns, data, category }: any) => {
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+          <ReloadTable path={paths.costs} />
+
         </Group>
       </div>
 
@@ -378,7 +421,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
 
       <CompactTable
         columns={columns}
-        data={{ ...errorData}}
+        data={{ ...errorData, nodes: errorNodes}}
         theme={theme}
         layout={{ custom: true }}
         select={select}

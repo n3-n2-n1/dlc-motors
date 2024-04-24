@@ -1,40 +1,160 @@
-import { Button } from "@mantine/core";
+import { Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext.tsx";
-import { updateError } from "../../utils/Handlers/Handlers.tsx";
+import { updateDelivery, updateError } from "../../utils/Handlers/Handlers.tsx";
+import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import useRoleCheck from "../../hooks/useRoleCheck";
 
 const resize = { resizerHighlight: "#dee2e6", minWidth: 100, innerWidth: 200 };
 const hiddenColumns = [""];
 
 const getColorClass = (estado: string) => {
   switch (estado) {
-    case 'a corregir':
-      return 'bg-red-200';
-    case 'corregido':
-      return 'bg-green-200';
-    case 'revision':
-      return 'bg-yellow-200';
+    case "Cancelado":
+      return "bg-red-400";
+    case "Entregado":
+      return "bg-green-600";
+    case "En camino":
+      return "bg-yellow-400";
     default:
-      return 'bg-white';
+      return "bg-white";
+  }
+};
+
+const getColorClassError = (estado: string) => {
+  switch (estado) {
+    case "a corregir":
+      return "bg-red-400";
+    case "corregido":
+      return "bg-green-600";
+    case "revision":
+      return "bg-yellow-400";
+    default:
+      return "bg-white";
   }
 };
 
 const ActionCell = ({ codigoInt }: any) => {
   const { handleDeleteModal } = useBrandsObservations();
 
+  const { user } = useAuth();
+
+  const isDepositOperator = useRoleCheck(user?.role, ["Operador de depósito"]);
+  const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
+  const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
+  const isClient = useRoleCheck(user?.role, ["Cliente"]);
+
   return (
-    <div className="flex flex-row gap-2 w-full">
-      <Link to={`/productos/editar/${codigoInt}`}>
-        <button className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}>🖋️</button>
-      </Link>
-      <button
-        className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}
-        onClick={() => handleDeleteModal(codigoInt)}
-      >
-        ❌
-      </button>
-    </div>
+    <>
+      {!isClient &&
+      !isDepositOperator &&
+      !isFactoryOperator &&
+      !isSupervisor ? (
+        <div className="flex flex-row gap-2 w-full">
+          <Link to={`/productos/editar/${codigoInt}`}>
+            <button className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}>
+              🖋️
+            </button>
+          </Link>
+          <button
+            className={`w-7 p-1 hover:bg-gray-200 rounded-3xl`}
+            onClick={() => handleDeleteModal(codigoInt)}
+          >
+            ❌
+          </button>
+        </div>
+      ) : (
+        <p className="text-center">-</p>
+      )}
+    </>
   );
+};
+
+const DeliveryEdit = ({ item }) => {
+  const { user } = useAuth();
+  const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
+  const [isCancelled, setIsCancelled] = useState(item.estado === "Cancelado");
+
+  const handleStatusChange = (event) => {
+    const newStatus = event.target.value;
+    if (newStatus === "Cancelado") {
+      setIsCancelled(true);
+    }
+
+    const deliveryUpdates = {
+      ...item,
+      estado: newStatus,
+    };
+    updateDelivery(deliveryUpdates);
+  };
+
+  return (
+    <>
+      {isAdmin ? (
+        <select
+          className={`w-full rounded-[5px] text-[1rem] p-0.5 m-0 text-black dark:text-white font-semibold ${getColorClass(
+            item.estado
+          )}`}
+          value={item.estado}
+          onChange={handleStatusChange}
+          disabled={isCancelled}
+        >
+          <option value="En camino">En camino</option>
+          <option value="Entregado">Entregado</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      ) : (
+        <p className="text-center text-white">{item.estado}</p>
+      )}
+    </>
+  );
+};
+
+const ErrorEdit = ({ item }: any) => {
+  const { user } = useAuth();
+  const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
+
+  return (
+    <>
+      {!isSupervisor ? (
+        <select
+          className={`w-full rounded-[5px] text-[1rem] p-0.5 m-0 text-black font-semibold ${getColorClassError(
+            item.estado
+          )}`}
+          value={item.estado}
+          onChange={(event) => {
+            const errorUpdates = {
+              id: item.id,
+              estado: event.target.value,
+            };
+            updateError(errorUpdates);
+          }}
+        >
+          <option value="a corregir">A corregir</option>
+          <option value="corregido">Corregido</option>
+          <option value="revision">En revisión</option>
+        </select>
+      ) : (
+        <p className="text-center text-white">{item.estado}</p>
+      )}
+    </>
+  );
+};
+
+const RenderStockColumn = ({ item }: any) => {
+  const { user } = useAuth();
+  const isClient = useRoleCheck(user?.role, ["Cliente"]);
+
+  return isClient
+    ? item.stock === 0
+      ? "no hay"
+      : item.stock > 1 && item.stock < 5
+      ? "poco stock"
+      : item.stock > 5
+      ? "hay stock"
+      : null
+    : item.stock;
 };
 
 export const PRODUCTCOLUMNS = [
@@ -105,34 +225,76 @@ export const PRODUCTCOLUMNS = [
     hide: hiddenColumns.includes("Contador Devoluciones"),
   },
   {
-    label: "☑️",
-    renderCell: (item: any) => (item.check ? "Sí" : "No"),
-    resize,
-    hide: hiddenColumns.includes("Check"),
-  },
-  {
     label: "Stock",
-    renderCell: (item: any) => item.stock || "-",
+    renderCell: (item: any) => <RenderStockColumn item={item} />,
     resize,
     hide: hiddenColumns.includes("Stock"),
     sort: { sortKey: "STOCK" },
   },
+  {
+    label: "StockFuturo",
+    renderCell: (item: any) => item.stockFuturo || "-",
+    resize,
+    sort: { sortKey: "STOCKfuturo" },
+  },
+  {
+    label: "☑️",
+    renderCell: (item: any) => {
+      if (item.check === "Error") {
+        return "X";
+      } else if (item.check === "En revisión") {
+        return "?";
+      } else {
+        return "✔️";
+      }
+    },
+    resize,
+    hide: hiddenColumns.includes("Check"),
+  },
 ];
 
-//Fecha/hora	Aviso	Imagen	Código interno	Descripción		OEM	Marca	Rubro	Origen	Stock
 export const NOTIFCOLUMNS = [
   {
-    label: <div className="">Aviso</div>,
-    renderCell: (item: any) => (
-      <div className="p-2 break-words text-sm text-gray-700 dark:text-gray-200">
-        {item.message || "-"}
-      </div>
-    ),
+    label: <div className="">Estado</div>,
+    renderCell: (item: any) => {
+      let bgColorClass = "";
+      let bgColorText = "";
+
+      if (item.message === "Stock bajo") {
+        bgColorClass = "bg-orange-300"; // Cambia a amarillo para "Stock bajo"
+        bgColorText = "text-black";
+      } else if (item.message === "Reposición") {
+        bgColorClass = "bg-green-200"; // Cambia a verde para "Reposición"
+        bgColorText = "text-black";
+      } else if (item.message === "No hay stock") {
+        bgColorClass = "bg-red-200"; // Cambia a rojo para "Stock vacío"
+        bgColorText = "text-black";
+      }
+
+      return (
+        <div>
+          <div
+            className={`pl-3 p-2 break-words text-sm text-gray-700 dark:text-gray-200 ${bgColorClass} rounded-md m-1`}
+          >
+            <p className={` ${bgColorText} font-bold`}>{item.message}</p>
+          </div>
+        </div>
+      );
+    },
     resize,
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.imagen || "-",
+    renderCell: (item: any) =>
+      (
+        <a
+          href={item.image}
+          target="_blank"
+          className="font-semibold text-blue-600 hover:text-blue-400"
+        >
+          {item.image}
+        </a>
+      ) || "-",
     resize,
   },
   {
@@ -170,20 +332,8 @@ export const NOTIFCOLUMNS = [
     renderCell: (item: any) => item.stock || "-",
     resize,
   },
-
-  {
-    label: "",
-    renderCell: (item: any) => "",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => "",
-    resize,
-  },
 ];
 
-// Fecha/hora	Observcación	Número de impo	Cantidad	Código interno	Descripción	OEM	Productos	Stock en depósito	Stock acumulado
 export const DELIVERYCOLUMNS = [
   {
     label: "Fecha",
@@ -236,13 +386,11 @@ export const DELIVERYCOLUMNS = [
     resize,
   },
   {
-    label: " ",
-    renderCell: (item: any) => "",
-    resize,
+    label: "Estado",
+    renderCell: (item: any) => <DeliveryEdit item={item} />,
   },
 ];
 
-//Usuario	Fecha/hora	Observcación	Detalle	Código interno	OEM	Descripción	Stock actual	Stock real 	Foto ficha	Revisión
 export const ERRORCOLUMNS = [
   {
     label: "Usuario",
@@ -291,42 +439,43 @@ export const ERRORCOLUMNS = [
   },
   {
     label: "Imagen",
-    renderCell: (item: any) => item.img || "-",
+    renderCell: (item: any) =>
+      (
+        <div>
+          <Tooltip
+            withArrow
+            transitionProps={{ duration: 200, transition: "fade" }}
+            label={
+              <img src={item.img} alt="preview" style={{ width: "400px" }} />
+            }
+          >
+            <Link
+              to={item.img}
+              target="_blank"
+              className="font-semibold text-blue-600 hover:text-blue-400"
+            >
+              Ver Imagen
+            </Link>
+          </Tooltip>
+        </div>
+      ) || "-",
     resize,
   },
   {
     label: "Estado",
-
-    renderCell: (item) => (
-      <select
-        className={`w-full border-[1px] rounded-[5px] text-[1rem] p-0.5 m-0 text-black ${getColorClass(item.estado)}`}
-        value={item.estado}
-        onChange={(event) => {
-          const errorUpdates = {
-            id: item.id,
-            estado: event.target.value,
-          };
-          updateError(errorUpdates);
-        }}
-      >
-        <option value="a corregir">A corregir</option>
-        <option value="corregido">Corregido</option>
-        <option value="revision">En revisión</option>
-      </select>
-    ),
+    renderCell: (item: any) => <ErrorEdit item={item} />,
   },
 ];
 
-//Fecha/hora	Usuario	Tipo de mov	Observcación	Courrier/pedido	Detalle	Cantidad	Kit	Código interno	Descripción	OEM	Marca	Rubro	Origen	Stock
 export const MOVESCOLUMNS = [
   {
     label: "Usuario",
-    renderCell: (item: any) => item.user || "-",
+    renderCell: (item: any) => <div className="ml-2">{item.user}</div> || "-",
     resize,
   },
   {
     label: "Fecha",
-    renderCell: (item: any) => <div className="p-2">{item.fecha}</div> || "-",
+    renderCell: (item: any) => <div className="">{item.fecha}</div> || "-",
     resize,
   },
   {
@@ -337,11 +486,6 @@ export const MOVESCOLUMNS = [
   {
     label: "Observacion",
     renderCell: (item: any) => item.observaciones || "-",
-    resize,
-  },
-  {
-    label: "Courier",
-    renderCell: (item: any) => item.det || "-",
     resize,
   },
   {
@@ -376,7 +520,15 @@ export const MOVESCOLUMNS = [
   },
   {
     label: "Stock",
-    renderCell: (item: any) => item.stock || "-",
+    renderCell: (item: any) => {
+      if (item.tipoMov === "Ingreso") {
+        return item.stock + item.cantidad;
+      } else if (item.tipoMov === "Egreso") {
+        return item.stock - item.cantidad;
+      } else {
+        return item.stock;
+      }
+    },
     resize,
   },
 ];
@@ -391,7 +543,6 @@ export const HOMECOLUMNS = [
   },
 ];
 
-// Usuario	Fecha/hora	Observcación	Detalle	Código interno	OEM	Descripción	Cantidad	Kit	Stock actual	Contador de dev
 export const RETURNCOLUMNS = [
   {
     label: "Usuario",
@@ -455,17 +606,17 @@ export const IMPORTEDCOLUMNS = [
   },
   {
     label: "Código",
-    renderCell: (item: any) => item.codigo || "-",
+    renderCell: (item: any) => item.codInterno || "-",
     resize,
   },
   {
     label: "Marca",
-    renderCell: (item: any) => item.marcas || "-",
+    renderCell: (item: any) => item.marcasCompatibles || "-",
     resize,
   },
   {
     label: "SKU",
-    renderCell: (item: any) => item.sku || "-",
+    renderCell: (item: any) => item.SKU || "-",
     resize,
   },
   {
@@ -481,26 +632,6 @@ export const IMPORTEDCOLUMNS = [
   {
     label: "Rubro",
     renderCell: (item: any) => item.rubro || "-",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => item.null || "",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => item.null || "",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => item.null || "",
-    resize,
-  },
-  {
-    label: "",
-    renderCell: (item: any) => item.null || "",
     resize,
   },
 ];

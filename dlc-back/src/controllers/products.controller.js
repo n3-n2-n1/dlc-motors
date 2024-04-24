@@ -1,11 +1,9 @@
 import { productService } from "../services/services.js";
 
-
 export const createMultipleProducts = async (req, res) => {
   try {
     const productList = req.body;
 
-    // Validar que productList no esté vacío y cada producto tenga los campos necesarios
     if (!Array.isArray(productList)) {
       return res.status(400).send({
         status: "error",
@@ -25,12 +23,10 @@ export const createMultipleProducts = async (req, res) => {
         stock,
         check,
         contadorDevoluciones,
-        kit
+        kit,
       } = product;
 
-      if (
-        !codigoInt
-      ) {
+      if (!codigoInt) {
         return res.status(400).send({
           status: "error",
           error: "Incomplete values in one or more products",
@@ -38,8 +34,9 @@ export const createMultipleProducts = async (req, res) => {
       }
     }
 
-    // Llama a un método que procesa la inserción masiva de los productos
-    const createdProducts = await productService.createMultipleProducts(productList);
+    const createdProducts = await productService.createMultipleProducts(
+      productList
+    );
 
     if (!createdProducts) {
       return res.status(404).send({
@@ -47,8 +44,6 @@ export const createMultipleProducts = async (req, res) => {
         error: "Failed to create products",
       });
     }
-
-    
 
     res.status(200).send({
       status: "success",
@@ -62,7 +57,6 @@ export const createMultipleProducts = async (req, res) => {
   }
 };
 
-//Obtener los productitos
 export const getProducts = async (req, res) => {
   try {
     const products = await productService.getProducts();
@@ -97,8 +91,9 @@ export const getProductsBySearchTerm = async (req, res) => {
       });
     }
 
-    // Usa 'await' para esperar a que la promesa se resuelva
-    const filteredProduct = await productService.getProductsBySearchTerm(searchTerm);
+    const filteredProduct = await productService.getProductsBySearchTerm(
+      searchTerm
+    );
 
     if (!filteredProduct || filteredProduct.length === 0) {
       return res.status(404).send({
@@ -120,7 +115,6 @@ export const getProductsBySearchTerm = async (req, res) => {
   }
 };
 
-//Crear productitos
 export const createProduct = async (req, res) => {
   try {
     const {
@@ -138,7 +132,6 @@ export const createProduct = async (req, res) => {
     } = req.body;
 
     if (
-
       !codigoInt ||
       !codOEM ||
       !SKU ||
@@ -165,7 +158,7 @@ export const createProduct = async (req, res) => {
       stock,
       imagen,
       contadorDevoluciones,
-      kit,
+      kit
     );
 
     if (!createdProduct || createdProduct.length === 0) {
@@ -187,7 +180,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-//Crear productitos
 export const editProduct = async (req, res) => {
   try {
     const {
@@ -231,7 +223,7 @@ export const editProduct = async (req, res) => {
       stock,
       imagen,
       contadorDevoluciones,
-      kit,
+      kit
     );
 
     if (!updatedProduct || updatedProduct.length === 0) {
@@ -253,7 +245,6 @@ export const editProduct = async (req, res) => {
   }
 };
 
-//Eliminar el productito
 export const deleteProduct = (req, res) => {
   try {
     const productId = req.params.pid;

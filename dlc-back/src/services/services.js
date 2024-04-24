@@ -9,6 +9,7 @@ import MovementService from "./movements.service.js";
 import ObservationService from "./observations.service.js";
 import ReturnsService from "./returns.service.js";
 import DeliveryService from "./delivery.service.js";
+import CategoryService from "./categories.service.js";
 
 
 
@@ -24,3 +25,4 @@ export const notificationsService = new NotificationService();
 export const observationsService = new ObservationService();
 export const movementService = new MovementService();
 export const returnsService = new ReturnsService()
+export const categoryService = new CategoryService();

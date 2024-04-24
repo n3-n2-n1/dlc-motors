@@ -17,8 +17,15 @@ interface InventoryFormProps {
 const validationSchema = Yup.object().shape({
   codigoInt: Yup.string().required("Campo requerido"),
   desc: Yup.string().required("Campo requerido"),
-  stockAct: Yup.number().required("Campo requerido"),
+  stockAct: Yup.number()
+    .min(0, "El stock arreglado no puede ser menor a 0")
+    .required("Campo requerido"),
   arreglo: Yup.number().required("Campo requerido"),
+  codOEM: Yup.string().test(
+    "invalid",
+    "Debe ingresar un código interno válido para continuar",
+    (value) => value !== undefined
+  ),
 });
 
 // Componente funcional del formulario de inventario
@@ -60,10 +67,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
         } else {
           // formik.resetForm();
           await createInventoryMovement(updatedValues);
-          console.log(updatedValues);
           toast.success("Movimiento creado con éxito");
         }
-
       } catch (error) {
         toast.error("Error al crear el movimiento");
         console.error(error);
@@ -199,6 +204,11 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+              {formik.touched.codigoInt && formik.errors.codOEM ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.codOEM}
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label

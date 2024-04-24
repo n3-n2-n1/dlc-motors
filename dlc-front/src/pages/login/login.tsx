@@ -45,29 +45,31 @@ function Login() {
     },
   });
 
-  useEffect(() => {
-    // Solo recarga si el token es "null" o inexistente
-    if (!user && (token === "null" || !token)) {
-      const timer = setTimeout(() => {
-        navigate('/login'); // Cambia a la ruta de login o recarga
-      }, 5000);
+  // useEffect(() => {
+  //   // Solo recarga si el token es "null" o inexistente
+  //   if (!user && (token === "null" || !token)) {
+  //     const timer = setTimeout(() => {
+  //       navigate('/login'); // Cambia a la ruta de login o recarga
+  //     }, 5000);
 
-      // Limpiar el temporizador al desmontar el componente
-      return () => clearTimeout(timer);
-    }
-  }, [user, token, navigate]);
+  //     // Limpiar el temporizador al desmontar el componente
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [user, token, navigate]);
 
   const styles = `
-  @keyframes gradientX {
-    0%, 100% { background-position: 0% 50%; }
+  @keyframes animateGradient {
+    0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradientX 15s ease infinite;
+  .animate-gradient {
+    background: linear-gradient(270deg, #833ab4, #fd1d1d, #fcb045);
+    background-size: 100% 200%;
+    animation: animateGradient 1s ease infinite;
   }
-  `;
+`;
 
   return (
     <>
@@ -147,7 +149,9 @@ function Login() {
           </div>
         </div>
 
-        <div className="w-full absolute bottom-0 pb-8 flex justify-center hover:opacity-25" onClick={()=>{alert('Contáctese a: krystalloquartz@gmail.com o 1132379661. Lun a Vie 09:00 - 20:00hs')}}>
+        <div className="w-full absolute bottom-0 pb-8 flex justify-center hover:opacity-25" onClick={()=>{toast.warn(`Ayuda: +54 011 3237-9661 || 
+
+        Lun a Vie 09:00 - 20:00hs`)}}>
           
           <div className="mr-4">
             

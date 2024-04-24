@@ -31,13 +31,6 @@ function TableList({ category }) {
     setConfirmationIndex(-1);
   }, [currentPage]);
 
-  // useEffect(() => {
-  //   console.log("Search Results:", searchResults);
-  //   console.log("Products:", products);
-  //   // Otros console.log si es necesario
-  // }, [searchResults, products, currentPage]);
-
-  // const itemsToDisplay = searchResults || products
   const itemsToDisplay = Array.isArray(searchResults)
     ? searchResults
     : Array.isArray(products)
@@ -46,7 +39,6 @@ function TableList({ category }) {
       : products
     : [];
 
-  console.log(itemsToDisplay);
 
   useEffect(() => {
     if (category) {
@@ -92,7 +84,6 @@ function TableList({ category }) {
   const handleEdit = (pageIndex: string) => {
     const indexInOriginalArray = (currentPage - 1) * itemsPerPage + pageIndex;
     const productToEdit = itemsToDisplay[indexInOriginalArray];
-    console.log(productToEdit);
     if (productToEdit) {
       const prodCod = productToEdit.codigoInt;
       navigate(`/productos/editar/${prodCod}`);
@@ -101,7 +92,6 @@ function TableList({ category }) {
 
   const handleDeleteConfirmation = (pageIndex: any) => {
     const indexInOriginalArray = (currentPage - 1) * itemsPerPage + pageIndex;
-    console.log("index", indexInOriginalArray);
     setConfirmationIndex(indexInOriginalArray);
     // setConfirmationIndex(index);
   };

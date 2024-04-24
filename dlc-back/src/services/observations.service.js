@@ -33,7 +33,6 @@ export default class ObservationService {
         if (error) {
           console.error("Error al obtener Income obs.");
           reject(new Error("Error al obtener Income Obs."));
-
         } else {
           resolve(results);
         }
@@ -47,7 +46,6 @@ export default class ObservationService {
         if (error) {
           console.error("Error al obtener las marcas");
           reject(new Error("Error al obtener marcas"));
-
         } else {
           resolve(results);
         }
@@ -61,36 +59,19 @@ export default class ObservationService {
         if (error) {
           console.error("Error");
           reject(new Error("Error al obtener Income Obs."));
-          
         } else {
           resolve(results);
-          
         }
       });
     });
   }
 
-  async updateOutcomeObservations() {
+  async updateErrorObservations(errorsObservations) {
     return new Promise((resolve, reject) => {
+      const errorsObservation = Object.values(errorsObservations).join(', ');
       db.query(
-        "UPDATE outcomeObservations SET ... WHERE ---",
-        [updatedObservation],
-        (error, results) => {
-          if (error) {
-            console.error(error);
-            reject(new Error("Error al editar el usuario"));
-          } else {
-            resolve(results);
-          }
-        }
-      );
-    });
-  }
-  async updateIncomeObservations() {
-    return new Promise((resolve, reject) => {
-      db.query(
-        "UPDATE incomeObservations SET ... WHERE ---",
-        [updatedObservation],
+        "UPDATE errorObservations SET observaciones = ?",
+        [errorsObservation],
         (error, results) => {
           if (error) {
             console.error(error);
@@ -103,11 +84,12 @@ export default class ObservationService {
     });
   }
 
-  async updateErrorObservations() {
+  async updateIncomeObservations(incomesObservations) {
     return new Promise((resolve, reject) => {
+      const incomeObservation = Object.values(incomesObservations).join(', ');
       db.query(
-        "UPDATE errorObservations SET ... WHERE ---",
-        [updatedObservation],
+        "UPDATE incomeObservations SET observaciones = ?",
+        [incomeObservation],
         (error, results) => {
           if (error) {
             console.error(error);
@@ -120,11 +102,13 @@ export default class ObservationService {
     });
   }
 
-  async updateReturnObservations() {
+  async updateOutcomeObservations(outcomesObservations) {
     return new Promise((resolve, reject) => {
+      const outcomesObservation = Object.values(outcomesObservations).join(', ');
+
       db.query(
-        "UPDATE returnObservations SET ... WHERE ---",
-        [updatedObservation],
+        "UPDATE outcomeObservations SET observaciones = ?",
+        [outcomesObservation],
         (error, results) => {
           if (error) {
             console.error(error);
@@ -137,11 +121,13 @@ export default class ObservationService {
     });
   }
 
-  async updateBrands() {
+  async updateReturnObservations(returnsObservations) {
     return new Promise((resolve, reject) => {
+      const returnObservation = Object.values(returnsObservations).join(', ');
+
       db.query(
-        "UPDATE marcas SET ... WHERE ---",
-        [updatedObservation],
+        "UPDATE returnsObservations SET observaciones = ?",
+        [returnObservation],
         (error, results) => {
           if (error) {
             console.error(error);
@@ -154,5 +140,21 @@ export default class ObservationService {
     });
   }
 
-
+  async updateBrands(brands) {
+    return new Promise((resolve, reject) => {
+      const brand = Object.values(brands).join(', ');
+      db.query(
+        "UPDATE marcas SET marcas = ?",
+        [brand],
+        (error, results) => {
+          if (error) {
+            console.error(error);
+            reject(new Error("Error al editar el usuario"));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  }
 }

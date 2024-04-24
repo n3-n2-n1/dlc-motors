@@ -10,7 +10,6 @@ import {
 import { useSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import {
-  fromTreeToList,
   findNodeById,
   insertNode,
 } from "@table-library/react-table-library/common";
@@ -21,27 +20,15 @@ import {
 import {
   Group,
   TextInput,
-  Checkbox,
-  Modal,
-  OptionsDropdown,
-  MultiSelect,
-  ActionIcon,
-  Button,
   Select,
-  Drawer,
-  Space,
   Pagination,
 } from "@mantine/core";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
-import { ProductOrigins } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
-import { MantineProvider, useMantineTheme } from "@mantine/core";
-import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
-import { toast } from "react-toastify";
-import {useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
-import { useEffect } from "react";
+import { paths } from "../../routes/paths.ts";
+import ReloadTable from "../Reload/Reload.tsx";
 
 DEFAULT_OPTIONS.highlightOnHover = true;
 DEFAULT_OPTIONS.striped = true;
@@ -75,7 +62,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -266,7 +252,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
       node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.estado.toLowerCase().includes(detailSearch.toLowerCase()) || 
       node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
       node.desc?.toLowerCase().includes(search.toLowerCase()) 
@@ -295,7 +280,7 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   const [selectedCode, setSelectedCode] = React.useState(false);
   if (selectedCode) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.codInterno.toLowerCase().includes(codeSearch.toLowerCase())
+      node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase())
     );
   }
 
@@ -304,14 +289,14 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
 
   const [selectedBrand, setSelectedBrand] = React.useState("");
   if (selectedBrand) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
+      node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
     );
   }
 
@@ -342,7 +327,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
 
         <Select
           onChange={(event) => {
-            console.log(event);
             setSelectedUser(event);
           }}
           placeholder="Usuario"
@@ -379,6 +363,9 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+          <ReloadTable path={paths.historyView} />
+
         </Group>
       </div>
       

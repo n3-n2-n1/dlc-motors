@@ -26,16 +26,10 @@ usersRouter.post(
 usersRouter.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
   getUsers
 );
 
-usersRouter.get(
-  "/check",
-  passport.authenticate("jwt", { session: false }),
-  // (req, res, next) => verifyRole(req, res, next, ['admin', 'vendedor', "Operador de depósito"]),
-  getUserWithToken
-);
+usersRouter.get("/check", getUserWithToken);
 
 usersRouter.put("/:username", (req, res) => {
   passport.authenticate("jwt", { session: false }), updateUser(req, res);

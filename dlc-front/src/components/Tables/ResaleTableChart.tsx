@@ -42,6 +42,8 @@ import { toast } from "react-toastify";
 import {useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
 import { useEffect } from "react";
+import { paths } from "../../routes/paths.ts";
+import ReloadTable from "../Reload/Reload.tsx";
 
 
 const ResaleTableChart = ({ columns, data, category }: any) => {
@@ -79,7 +81,6 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -260,17 +261,12 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
   errorNodes = errorNodes.filter(
     (node: any) =>
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.observaciones?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      (node.codInterno &&
-        node.codInterno.toLowerCase().includes(codeSearch.toLowerCase())) || // Asegúrate de que este filtro esté correcto
-      node.desc?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.user?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.det?.toLowerCase().includes(detailSearch.toLowerCase())
+      node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+      node.descripcion?.toLowerCase().includes(search.toLowerCase())
+
   );
 
-  // // Hide columns
+  //  Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
 
   columns = columns.map((column) => ({
@@ -288,19 +284,29 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
   const [selectedBrand, setSelectedBrand] = React.useState("");
   if (selectedBrand) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles.toLowerCase().includes(selectedBrand.toLowerCase())
+      node.marca.toLowerCase().includes(selectedBrand.toLowerCase())
+    );
+  }
+  
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  if (selectedCategory) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
 
     
+  const [value, setValue] = React.useState<Date | null>(null);
+
   if (search) {
     errorNodes = errorNodes.filter(
       (node: any) =>
         node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
         node.codigo?.toLowerCase().includes(search.toLowerCase()) ||
         node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-        node.sku?.toLowerCase().includes(search.toLowerCase()) ||
-        node.marca?.toLowerCase().includes(search.toLowerCase()) 
+        node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+        node.marca?.toLowerCase().includes(search.toLowerCase())
+
 
       // Incluye aquí otras propiedades por las que quieras buscar
     );
@@ -311,46 +317,56 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
     <>
       <div className="pt-4">
         <Group>
-          {category ? (
-            <Select
-              value={category || null}
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              placeholder="Rubro"
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-              data={categories}
-              clearable
-            />
-          ) : (
-            <Select
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-              placeholder="Rubro"
-              data={categories}
-              clearable
-            />
-          )}
 
+
+        {category ? (
+          <Select
+            value={category || null}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
+          />
+        ) : (
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
+          />
+        )}
 
           <Select
-            // value={search}
             onChange={(event) => {
               setSelectedBrand(event);
             }}
@@ -377,6 +393,9 @@ const ResaleTableChart = ({ columns, data, category }: any) => {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
+          
+          <ReloadTable path={paths.costs} />
+
         </Group>
       </div>
 

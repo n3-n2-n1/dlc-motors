@@ -38,35 +38,34 @@ export const getUsers = async (req, res) => {
 
 export const getUserWithToken = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1]
+    const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
       return res.status(400).send({
-        status: 'error',
-        error: 'Incomplete values'
-      })
+        status: "error",
+        error: "Incomplete values",
+      });
     }
 
-    const user = await userService.decodeUser(token)
+    const user = await userService.decodeUser(token);
 
     if (!user) {
       return res.status(404).send({
-        status: 'error',
-        error: 'Error obteniendo datos de usuario'
-      })
+        status: "error",
+        error: "Error obteniendo datos de usuario",
+      });
     }
 
     return res.status(200).send({
-      status: 'success',
-      payload: user
-    })
+      status: "success",
+      payload: user,
+    });
   } catch (error) {
-    console.error(`${error}`)
-    return res.status(500).send({ status: 'error', error: `${error}` })
+    console.error(`${error}`);
+    return res.status(500).send({ status: "error", error: `${error}` });
   }
-}
+};
 
-//Loguearse
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -94,18 +93,16 @@ export const loginUser = async (req, res) => {
     const token = userService.loginUser(user);
 
     if (!token) {
-      return res
-        .status(500)
-        .send({
-          status: "error",
-          error: "Error al generar token de autenticación",
-        });
+      return res.status(500).send({
+        status: "error",
+        error: "Error al generar token de autenticación",
+      });
     }
 
     return res.send({
       status: "success",
       message: "Logueado exitosamente",
-      token
+      token,
     });
   } catch (error) {
     console.error("Error al intentar iniciar sesión:", error);
@@ -189,14 +186,14 @@ export const deleteUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]
-  const { username } = await userService.decodeUser(token)
+  const token = req.headers.authorization.split(" ")[1];
+  const { username } = await userService.decodeUser(token);
 
   if (!username) {
     return res.status(500).send({
-      status: 'error',
-      error: 'Error al buscar el usuario a desloguear'
-    })
+      status: "error",
+      error: "Error al buscar el usuario a desloguear",
+    });
   }
-  return res.send({ status: 'success', message: 'Deslogueo correcto' })
-}
+  return res.send({ status: "success", message: "Deslogueo correcto" });
+};

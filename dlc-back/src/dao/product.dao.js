@@ -1,8 +1,88 @@
 import db from "../database/db.js";
+import { CostDAO } from "./costs.dao.js";
 
 export class ProductDAO {
   constructor(db) {
     this.db = db;
+  }
+
+  async createProduct(
+    codigoInt,
+    codOEM,
+    SKU,
+    descripcion,
+    rubro,
+    origen,
+    marcasCompatibles,
+    stock,
+    imagen,
+    contadorDevoluciones,
+    kit
+  ) {
+    try {
+      const marcasCompatiblesString = marcasCompatibles.join(", ");
+
+      let kitString = kit;
+      if (Array.isArray(kit)) {
+        kitString = kit.join(", ");
+      }
+
+      db.query(
+        "INSERT INTO productos (codigoInt, codOEM, SKU, descripcion, rubro, origen, marcasCompatibles, stock, imagen, contadorDevoluciones, kit) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          codigoInt,
+          codOEM,
+          SKU,
+          descripcion,
+          rubro,
+          origen,
+          marcasCompatiblesString,
+          stock,
+          imagen,
+          contadorDevoluciones,
+          kitString,
+        ],
+
+        function (error) {
+          if (error) {
+            console.error("An error occurred while executing the query", error);
+            throw new Error("Error al insertar el producto.");
+          } else {
+            const costDAO = new CostDAO();
+            const codigo = codigoInt;
+            const proveedores = "";
+            costDAO.createCosts(
+              descripcion,
+              codigo,
+              marcasCompatibles,
+              stock,
+              proveedores,
+              rubro,
+              SKU,
+              origen
+            );
+          }
+
+          db.query(
+            "SELECT * FROM productos WHERE codigoInt = ?",
+            [codigoInt],
+            function (error, results) {
+              if (error) {
+                console.error(
+                  "An error occurred while executing the query",
+                  error
+                );
+                throw new Error("Error al obtener el producto insertado.");
+              }
+
+              return results;
+            }
+          );
+        }
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createMultipleProducts(productList) {
@@ -72,69 +152,21 @@ export class ProductDAO {
       );
     });
   }
-  async createProduct(
-    codigoInt,
-    codOEM,
-    SKU,
-    descripcion,
-    rubro,
-    origen,
-    marcasCompatibles,
-    stock,
-    imagen,
-    contadorDevoluciones,
-    kit
-  ) {
-    try {
-      const marcasCompatiblesString = marcasCompatibles.join(", ");
-      let kitString = kit;
-      if (Array.isArray(kit)) {
-        kitString = kit.join(", ");
-      }
-
-      // Realizar la lógica para insertar un nuevo producto en la base de datos
+  async getProductByCodigoInt(codigoInt) {
+    return new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO productos (codigoInt, codOEM, SKU, descripcion, rubro, origen, marcasCompatibles, stock, imagen, contadorDevoluciones, kit) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          codigoInt,
-          codOEM,
-          SKU,
-          descripcion,
-          rubro,
-          origen,
-          marcasCompatiblesString,
-          stock,
-          imagen,
-          contadorDevoluciones,
-          kitString,
-        ],
-        function (error) {
+        "SELECT * FROM productos WHERE codigoInt = ?",
+        [codigoInt],
+        (error, results) => {
           if (error) {
             console.error("An error occurred while executing the query", error);
-            throw new Error("Error al insertar el producto.");
+            reject(new Error("Error al abrir la base de datos."));
+          } else {
+            resolve(results[0]);
           }
-
-          // Get the inserted product
-          db.query(
-            "SELECT * FROM productos WHERE codigoInt = ?",
-            [codigoInt],
-            function (error, results) {
-              if (error) {
-                console.error(
-                  "An error occurred while executing the query",
-                  error
-                );
-                throw new Error("Error al obtener el producto insertado.");
-              }
-
-              return results;
-            }
-          );
         }
       );
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   async editProduct(
@@ -210,6 +242,9 @@ export class ProductDAO {
 
           if (results.affectedRows === 0) {
             throw new Error("Producto no encontrado.");
+          } else {
+            const costDAO = new CostDAO();
+            costDAO.deleteCosts(productId);
           }
 
           return results;
@@ -218,5 +253,96 @@ export class ProductDAO {
     } catch (error) {
       throw error;
     }
+  }
+
+  async modifyStock(newStock, codigoInt) {
+    if (isNaN(newStock)) {
+      throw new Error("El valor de cantidad debe ser numérico");
+    }
+
+    return new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE productos SET stock = ? WHERE codigoInt = ?",
+        [newStock, codigoInt],
+        (error, results) => {
+          if (error) {
+            console.error("Error al modificar el stock: ", error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  }
+
+  async modifyStockOutcome(codigoInt, stockAct) {
+    const newStock = stockAct;
+
+    return new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE productos SET stock = stock - ? WHERE codigoInt = ?",
+        [newStock, codigoInt],
+        (error, results) => {
+          if (error) {
+            console.error("Error al modificar el stock: ", error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  }
+
+  async modifyCheck(estado, codigoInt) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE productos SET check = ? WHERE codigoInt = ?",
+        [estado, codigoInt],
+        (error, results) => {
+          if (error) {
+            console.error("Error al modificar el stock: ", error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  }
+
+  async updateFutureStock(codigoInt, newFutureStock) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE productos SET stockFuturo = ? WHERE codigoInt = ?",
+        [newFutureStock, codigoInt],
+        (error, results) => {
+          if (error) {
+            console.error("Error al modificar el stock:", error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  }
+
+  async decreaseFutureStock(newFutureStock, codigoInt) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "UPDATE productos SET stockFuturo = ? WHERE codigoInt = ?",
+        [newFutureStock, codigoInt],
+        (error, results) => {
+          if (error) {
+            console.error("Error al modificar el stock", error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
   }
 }

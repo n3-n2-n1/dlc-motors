@@ -1,5 +1,5 @@
-// MovementDAO.js
 import db from "../database/db.js";
+import { ProductDAO } from "./product.dao.js";
 
 export class MovementDAO {
   constructor(db) {
@@ -80,20 +80,8 @@ export class MovementDAO {
     tipoMov
   ) {
     return new Promise((resolve, reject) => {
-      console.log(
-        date,
-        observaciones,
-        codigoInt,
-        codOEM,
-        desc,
-        stock,
-        stockAct,
-        detalle,
-        cantidad,
-        kit,
-        usuario,
-        tipoMov
-      );
+      const productDao = new ProductDAO(db);
+
       db.query(
         "INSERT INTO movimientos (fecha, observaciones, codigoInt, codOEM, `desc`, stock, stockAct, det, cantidad, kit, user, tipoMov) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
         [
@@ -115,7 +103,27 @@ export class MovementDAO {
             console.error("An error occurred while executing the query", error);
             reject(new Error("Error al crear el ingreso/egreso."));
           } else {
+            if (tipoMov === "Ingreso") {
+              productDao.modifyStock(stockAct, codigoInt);
+            }
+
+            if (tipoMov === "Egreso") {
+              const stockAct = cantidad;
+
+              productDao.modifyStockOutcome(codigoInt, stockAct);
+            }
+            if (tipoMov === "Inventario") {
+              const stockAct = cantidad;
+
+              productDao.modifyStock(codigoInt, stockAct);
+            }
+
             resolve(results);
+            console.log(
+              "Stock Actualizado y movimiento añadido por movimiento de ingreso" +
+                cantidad +
+                tipoMov
+            );
           }
         }
       ),

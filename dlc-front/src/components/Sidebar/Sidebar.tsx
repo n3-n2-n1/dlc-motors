@@ -9,23 +9,30 @@ import { useAuth } from "../../contexts/AuthContext";
 import SidebarButton from "../SidebarButton/SidebarButton";
 
 import ProductsIcon from "../icon/ProductsIcon/ProductsIcon";
-import MovementsIcon, { DarkMovementsIcon } from "../icon/MovementsIcon/MovementsIcon";
+import MovementsIcon, {
+  DarkMovementsIcon,
+} from "../icon/MovementsIcon/MovementsIcon";
 import SearchIcon, { DarkSearchIcon } from "../icon/SearchIcon/SearchIcon";
 import CategoriesIcon, {
   CategoriesIconDark,
 } from "../icon/CategoriesIcon/CategoriesIcon";
 import UsersIcon, { DarkUsersIcon } from "../icon/UsersIcon/UsersIcon";
 import CostsIcon, { DarkCostsIcon } from "../icon/CostsIcon/CostsIcon";
-import NotificationsIcon, { DarkNotificationsIcon } from "../icon/NotificationsIcon/NotificationsIcon";
+import NotificationsIcon, {
+  DarkNotificationsIcon,
+} from "../icon/NotificationsIcon/NotificationsIcon";
 import LogoutIcon, { DarkLogoutIcon } from "../icon/LogoutIcon/LogoutIcon";
 import ThemeToggleButton from "../../utils/StyleToggle";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 import DarkProductIcon from "../icon/DarkProductIcon";
 
+import useRoleCheck from "../../hooks/useRoleCheck";
+import ReturnsIcon, { DarkReturnsIcon } from "../icon/ReturnsIcon/ReturnsIcon";
+
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const location = useLocation();
   const currentPath = location.pathname;
@@ -35,6 +42,13 @@ export default function Sidebar() {
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
+
+  const isSalesMan = useRoleCheck(user?.role, ["Vendedor"]);
+  const isDepositOperator = useRoleCheck(user?.role, ["Operador de depósito"]);
+  const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
+  const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
+  const isClient = useRoleCheck(user?.role, ["Cliente"]);
+  const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
 
   const handleLogout = async () => {
     try {
@@ -84,8 +98,11 @@ export default function Sidebar() {
 
         {/* //Botones */}
         <div className="flex flex-col dark:text-gray-400 text-gray-700 transition-colors duration-300">
-
-          <SidebarButton to={paths.products} text="Productos" isActive={currentPath === paths.products}>
+          <SidebarButton
+            to={paths.products}
+            text="Productos"
+            isActive={currentPath === paths.products}
+          >
             <div className="text-black dark:text-white">
               <div className="dark:hidden">
                 <ProductsIcon />
@@ -98,105 +115,152 @@ export default function Sidebar() {
             <div className="ml-3 font-bold">Productos</div>
           </SidebarButton>
 
-          <SidebarButton to={paths.categories} text={"Rubros"} isActive={currentPath === paths.categories}>
-            <div className="text-black dark:text-white">
-              
-              <div className="dark:hidden">
-                <CategoriesIcon />
+          {/* {!isClient && !isFactoryOperator && (
+            <SidebarButton
+              to={paths.categories}
+              text={"Rubros"}
+              isActive={currentPath === paths.categories}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <CategoriesIcon />
+                </div>
+
+                <div className="hidden dark:block">
+                  <CategoriesIconDark />
+                </div>
               </div>
 
-              <div className="hidden dark:block">
-                <CategoriesIconDark />
-              </div>
-            
-            </div>
-
-            <div className="ml-3 font-bold">Rubros</div>
-          </SidebarButton>
-
-          <SidebarButton to={paths.users} text={"Usuarios"} isActive={currentPath === paths.users}>
-            <div className="text-black dark:text-white">
-
-              <div className="dark:hidden">
-              <UsersIcon color="black" />
-
-              </div>
-            <div className="hidden dark:block">
-              <DarkUsersIcon />
-            </div>
-            
-            </div>
-
-            <div className="ml-3 font-bold">Usuarios</div>
-          </SidebarButton>
-
-          <SidebarButton to={paths.costs} text={"Costos"} isActive={currentPath === paths.costs}>
-            <div className="text-black dark:text-white">
-
-              <div className="dark:hidden">
-              <CostsIcon color="black" />
+              <div className="ml-3 font-bold">Rubros</div>
+            </SidebarButton>
+          )} */}
+                    {isAdmin && (
+            <SidebarButton
+              to={paths.backoffice}
+              text={"Backoffice"}
+              isActive={currentPath === paths.backoffice}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <ReturnsIcon color="black" />
+                </div>
+                <div className="hidden dark:block">
+                  <DarkReturnsIcon />
+                </div>
               </div>
 
-              <div className="hidden dark:block">
-                <DarkCostsIcon />
+              <div className="ml-3 font-bold">Backoffice</div>
+            </SidebarButton>
+          )}
+
+          {!isClient && !isSalesMan && !isDepositOperator && !isFactoryOperator && (
+            <SidebarButton
+              to={paths.users}
+              text={"Usuarios"}
+              isActive={currentPath === paths.users}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <UsersIcon color="black" />
+                </div>
+                <div className="hidden dark:block">
+                  <DarkUsersIcon />
+                </div>
               </div>
-            </div>
 
-            <div className="ml-3 font-bold">Costos</div>
-          </SidebarButton>
-          <SidebarButton to={paths.historyView} text={"Historial"} isActive={currentPath === paths.historyView}>
-            <div className="text-black dark:text-white">
+              <div className="ml-3 font-bold">Usuarios</div>
+            </SidebarButton>
+          )}
 
-              <div className="dark:hidden">
+          {!isClient && !isSalesMan && !isDepositOperator && (
+            <SidebarButton
+              to={paths.costs}
+              text={"Costos"}
+              isActive={currentPath === paths.costs}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <CostsIcon color="black" />
+                </div>
 
-              <SearchIcon color="black" />
+                <div className="hidden dark:block">
+                  <DarkCostsIcon />
+                </div>
               </div>
 
-              <div className="hidden dark:block">
-                <DarkSearchIcon />
+              <div className="ml-3 font-bold">Costos</div>
+            </SidebarButton>
+          )}
+
+          {!isClient && (
+            <SidebarButton
+              to={paths.historyView}
+              text={"Historial"}
+              isActive={currentPath === paths.historyView}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <SearchIcon color="black" />
+                </div>
+
+                <div className="hidden dark:block">
+                  <DarkSearchIcon />
+                </div>
               </div>
-            </div>
 
-            <div className="ml-3 font-bold">Historial</div>
-          </SidebarButton>
+              <div className="ml-3 font-bold">Historial</div>
+            </SidebarButton>
+          )}
 
-          <SidebarButton to={paths.moves} text={"Movimientos"} isActive={currentPath === paths.moves}>
-            <div className="text-black dark:text-white">
-              <div className="dark:hidden">
+          {!isClient && !isSupervisor && !isFactoryOperator && (
+            <SidebarButton
+              to={paths.moves}
+              text={"Movimientos"}
+              isActive={currentPath === paths.moves}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <MovementsIcon color="black" />
+                </div>
 
-              <MovementsIcon color="black" />
+                <div className="hidden dark:block">
+                  <DarkMovementsIcon />
+                </div>
               </div>
-            
-            <div className="hidden dark:block">
-              <DarkMovementsIcon />
-            </div>
-            </div>
 
-            <div className="ml-3 font-bold">Movimientos</div>
-          </SidebarButton>
+              <div className="ml-3 font-bold">Movimientos</div>
+            </SidebarButton>
+          )}
 
-          <SidebarButton to={paths.notifications} text={"Notificaciones"} isActive={currentPath === paths.notifications}>
-            <div className="text-black dark:text-white">
-              <div className="dark:hidden">
-
-              <NotificationsIcon color="black" />
+          {!isClient && (
+            <SidebarButton
+              to={paths.notifications}
+              text={"Notificaciones"}
+              isActive={currentPath === paths.notifications}
+            >
+              <div className="text-black dark:text-white">
+                <div className="dark:hidden">
+                  <NotificationsIcon color="black" />
+                </div>
+                <div className="hidden dark:block">
+                  <DarkNotificationsIcon />
+                </div>
               </div>
-            <div className="hidden dark:block">
-              <DarkNotificationsIcon/>
-            </div>
-            </div>
 
-            <div className="ml-3 font-bold">Notificaciones</div>
-          </SidebarButton>
+              <div className="ml-3 font-bold">Notificaciones</div>
+            </SidebarButton>
+          )}
 
-          <section className="pt-12">
+
+
+
+          <section className={!isClient && `pt-12`}>
             <button
               className="flex items-center px-8 h-[60px] w-full hover:bg-[#3496CB] dark:hover:bg-gray-600 hover:text-white dark:hover:text-white p-4"
               onClick={() => handleLogout()}
             >
               <div className="dark:hidden">
-
-              <LogoutIcon className="w-5 h-5 dark:text-white text-black" />
+                <LogoutIcon className="w-5 h-5 dark:text-white text-black" />
               </div>
               <div className="hidden dark:block">
                 <DarkLogoutIcon />
@@ -204,16 +268,16 @@ export default function Sidebar() {
               <div className="ml-2 font-bold">Salir</div>
             </button>
           </section>
+          
 
           <section className="p-10 px-6">
             <ThemeToggleButton />
           </section>
         </div>
-
         <div className="flex transition-colors duration-300 select-none">
           <button
             onClick={toggleSidebar}
-            className="p-1 rounded-full text-gray-700 dark:text-white"
+            className="p-1 text-gray-700 dark:text-white"
           >
             <div className="mb-6 hover:bg-blue-60 ml-5 ">
               <svg
@@ -244,6 +308,7 @@ export default function Sidebar() {
             </div>
           </button>
         </div>
+
       </div>
       <section className="dark:bg-gray-900 text-gray-700 justify-center  bg-gray-100 align-middle flex hover:bg-gray-200">
         {!isSidebarVisible && (

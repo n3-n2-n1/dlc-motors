@@ -78,7 +78,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -98,7 +97,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -112,7 +110,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   });
 
   function onSearchChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -123,7 +120,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   });
 
   function onSearchDetail(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -133,7 +129,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -147,7 +142,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   });
 
   function onFilterChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -158,7 +152,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   });
 
   function onSelectChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Tree *//
@@ -181,7 +174,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   );
 
   function onTreeChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Sort *//
@@ -214,7 +206,6 @@ const ScrollNot = ({ columns, data, category }: any) => {
   );
 
   function onSortChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Drawer *//

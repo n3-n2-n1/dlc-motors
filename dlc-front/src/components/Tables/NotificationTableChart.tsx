@@ -36,18 +36,32 @@ import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import { ProductOrigins } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
-import { MantineProvider, useMantineTheme } from "@mantine/core";
-import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
-import { toast } from "react-toastify";
-import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
-import { useEffect } from "react";
+import ReloadTable from "../Reload/Reload.tsx";
+import { paths } from "../../routes/paths.ts";
+
+import { useAuth } from "../../contexts/AuthContext";
+import useRoleCheck from "../../hooks/useRoleCheck";
 
 const NotificationTableChart = ({ columns, data, category }: any) => {
-  const [errorData, setErrorData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
   const { users } = useUser();
-  const userNames = users.map((user) => user.name);
+  const userNames = users?.map((user) => user.name);
+
+  const { user } = useAuth();
+  const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
+
+  // Filter data based on user role and node.origen
+  const filteredData = React.useMemo(() => {
+    if (isFactoryOperator) {
+      return data.filter((node: any) => node.origen !== "Importado");
+    }
+    return data;
+  }, [data, isFactoryOperator]);
+
+  const [errorData, setErrorData] = React.useState({ nodes: filteredData });
+
+  // const [errorData, setErrorData] = React.useState({ nodes: data });
   const {
     brands,
     handleDeleteModal,
@@ -64,9 +78,18 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-                --data-table-library_grid-template-columns:  100px repeat(10, minmax(0, 1fr));
+                --data-table-library_grid-template-columns:  120px repeat(8, minmax(0, 1fr));
           
                 margin: 16px 0px;
+                .animate {
+                  grid-column: 1 / -1;
+                  display: flex;
+                }
+            
+                .animate > div {
+                  flex: 1;
+                  display: flex;
+                }
               `,
   };
 
@@ -78,7 +101,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -92,14 +114,13 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   const pagination = usePagination(errorData, {
     state: {
       page: 0,
-      size: 12,
+      size: 13,
     },
     onChange: onPaginationChange,
   });
 
   function onPaginationChange(action: any, state: any) {
     console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   //* Search *//
@@ -113,7 +134,6 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   function onSearchChange(action: any, state: any) {
     console.log(action, state);
-    pagination.fns.onSetPage(0);
   }
 
   const [detailSearch, setDetailSearch] = React.useState("");
@@ -136,6 +156,17 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
+
+  const [brandSearch, setBrandSearch] = React.useState("");
+  useCustom("brandSearch", errorData, {
+    state: { brandSearch },
+    onChange: onBrandChange,
+  });
+
+  function onBrandChange(action: any, state: any) {
+    console.log(action, state);
+  }
+  //* Filter *//
 
   //* Filter *//
 
@@ -252,9 +283,14 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   errorNodes = errorNodes.filter(
     (node: any) =>
-      node.fecha?.toLowerCase()  === " "
+      node.name?.toLowerCase().includes(search.toLowerCase()) ||
+      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+      node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+      node.marcasCompatibles?.includes(search.toLowerCase()) ||
+      node.image?.includes(search.toLowerCase()) || 
+      node.oem?.includes(search.toLowerCase())
   );
-
 
   const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
@@ -263,143 +299,180 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
     );
   }
 
-
   // // Hide columns
 
   columns = columns.map((column) => ({
     ...column,
   }));
 
-  if (search) {
+  const [selectedOrigin, setSelectedOrigin] = React.useState("");
+  if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
-      node.marcasCompatibles?.toLowerCase().includes(search.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
+    );
+  }
+
+  const [selectedBrand, setSelectedBrand] = React.useState(false);
+  if (selectedBrand) {
+    errorNodes = errorNodes.filter((node: any) => {
+      // Convierte el arreglo marcasCompatibles a una cadena
+      const compatibleBrands = Array.isArray(node.marca)
+        ? node.marca.join(" / ").toLowerCase()
+        : (node.marca || "").toLowerCase();
+
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
+  }
+
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.name?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
-
   return (
     <>
-      <div className="pb-4">
-        <Group>
-          {category ? (
-            <Select
-              value={category || null}
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              placeholder="Rubro"
-              data={categories}
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-              clearable
-            />
-          ) : (
-            <Select
-              onChange={(event) => {
-                setSelectedCategory(event);
-              }}
-              placeholder="Rubro"
-              data={categories}
-              classNames={{
-                wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-                dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-                options: "bg-white dark:bg-gray-700",
-                option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-              }}
-              clearable
-            />
-          )}
-
+      <Group>
+        {category ? (
           <Select
-            // value={search}
-            onChange={(event) => {
-              setSelectedOrigin(event);
-            }}
-            placeholder="Origen"
-            data={ProductOrigins}
+            value={category || null}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
             clearable
           />
-
+        ) : (
           <Select
-            // value={search}
-            onChange={(event) => {
-              setSelectedBrand(event);
-            }}
-            placeholder="Marcas"
-            data={brands}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
             clearable
           />
+        )}
+
+        <Select
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedOrigin(event);
+          }}
+          placeholder="Origen"
+          data={ProductOrigins}
+          clearable
+        />
+
+        <Select
+          // value={search}
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedBrand(event);
+          }}
+          placeholder="Marcas"
+          data={brands}
+          clearable
+        />
 
           <TextInput
             placeholder="Búsqueda"
             value={search}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
-        </Group>
-      </div>
 
-      <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+
+        <ReloadTable path={paths.notifications} />
+      </Group>
+
+      <div
+        className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
-
-
-      <CompactTable
-        columns={columns}
-        data={{ ...errorData}}
-        theme={theme}
-        layout={{ custom: true }}
-        select={select}
-        tree={tree}
-        sort={sort}
-        pagination={pagination}
-        onChange={(event) =>
-          handleUpdate(event.target.value, errorData, "Descripción")
-        }
-      />
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0 transition-colors duration-300"
+      >
+        <CompactTable
+          columns={columns}
+          data={{ ...errorData, nodes: errorNodes }}
+          theme={theme}
+          layout={{ custom: true }}
+          select={select}
+          tree={tree}
+          sort={sort}
+          pagination={pagination}
+          onChange={(event) =>
+            handleUpdate(event.target.value, errorData, "Descripción")
+          }
+        />
       </div>
-
       <Group position="right" mx={10}>
-        <Pagination
-          total={pagination.state.getTotalPages(errorNodes)}
-          page={pagination.state.page + 1}
-          onChange={(page) => pagination.fns.onSetPage(page - 1)}
-          className="
+
+      <Pagination
+        total={pagination.state.getTotalPages(errorNodes)}
+        page={pagination.state.page + 1}
+        onChange={(page) => pagination.fns.onSetPage(page - 1)}
+        className="
           [&>div>*]:bg-gray-200 dark:[&>div>*]:bg-gray-700
           [&>div>*]:text-gray-800 dark:[&>div>*]:text-gray-200
           [&>div>*]:border border-gray-300 dark:border-gray-600
@@ -409,8 +482,9 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
           [&>div>.active]:text-white
           rounded-full
         "
-        />
+      />
       </Group>
+
     </>
   );
 };

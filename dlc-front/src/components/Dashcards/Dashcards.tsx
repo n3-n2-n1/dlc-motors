@@ -3,7 +3,7 @@ import HotButton from '../HotButton/hotButton'
 
 interface ButtonInfo {
   text: string;
-  action: () => void; // Función para cambiar el componente
+  action: () => void;
   link: string;
   isActive: boolean;
 }

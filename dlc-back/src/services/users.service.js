@@ -13,6 +13,8 @@ const {
 export default class UserService {
   constructor() {}
 
+  
+
   // Funcion para decodificar el JWT
   async decodeUser(token) {
     try {

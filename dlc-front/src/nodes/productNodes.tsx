@@ -31,6 +31,7 @@ export const useFetchNodes = () => {
         check: product.check,
         stock: product.stock,
         rubro: product.rubro,
+        stockFuturo: product.stockFuturo,
       }));
       setProductNodes(transformedNodes);
     }
@@ -107,8 +108,6 @@ export const MovesFetchNodes = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchMoves();
 
-        console.log("Data:", result.payload);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((product) => ({
             // Mapea tus datos como necesites
@@ -126,6 +125,7 @@ export const MovesFetchNodes = () => {
             det: product.det,
             stockAct: product.stockAct,
             stockReal: product.stockReal,
+            desc: product.desc
             // ...otros campos
           }));
           setMovesNodes(transformedNodes);
@@ -150,8 +150,6 @@ export const ErrorFetchNodes = () => {
       try {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchErrors();
-
-        console.log("Data:", result);
 
         if (result.status === "success") {
           const transformedNodes = result.payload.map((error) => ({
@@ -191,8 +189,6 @@ export const DeliveryFetchNodes = () => {
       try {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchDelivery();
-
-        console.log("Data:", result);
 
         if (result.status === "success") {
           const transformedNodes = result.payload.map((delivery) => ({
@@ -240,8 +236,6 @@ export const ImportedCost = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchCosts();
 
-        console.log("Data:", result);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((delivery) => ({
             // Mapea tus datos como necesites
@@ -279,8 +273,6 @@ export const FabricCost = () => {
         // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
         const result = await fetchCosts();
 
-        console.log("Data:", result);
-
         if (result.status === "success") {
           const transformedNodes = result.payload.map((fabric) => ({
             // Mapea tus datos como necesites
@@ -311,6 +303,34 @@ export const FabricCost = () => {
 export const ResaleCost = () => {
   const [resaleNodes, setResaleNodes] = useState([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchResaleData = async () => {
+      try {
+        // Suponiendo que fetchMoves es una función que ya procesa la respuesta y devuelve un JSON
+        const result = await fetchCosts();
+
+        if (result.status === "success") {
+          const transformedNodes = result.payload.map((resale) => ({
+            // Mapea tus datos como necesites
+            observaciones: resale.observaciones,
+            codigo: resale.codigo,
+            descripcion: resale.descripcion,
+            marca: resale.marca,
+            proveedores: resale.proveedores,
+            sku: resale.sku,
+            rubro: resale.rubro
+            // ...otros campos
+          }));
+          setResaleNodes(transformedNodes);
+        } else {
+          // Manejar situaciones donde el estado no es 'success'
+          throw new Error("La respuesta del servidor no fue de éxito.");
+        }
+      } catch (error) {
+        console.error("Hubo un error al recuperar los movimientos:", error);
+      }
+    };
+    fetchResaleData();
+  }, []);
   return resaleNodes;
 };

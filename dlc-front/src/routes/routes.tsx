@@ -11,6 +11,9 @@ import Layout from "../components/Layout/Layout";
 import PublicRoute from "./components/PublicRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
+import Loader from "../components/Loader/Loader";
+import DeliveryMassive from "../pages/Massive/DeliveryMassiveAdd.tsx";
+
 const Home = lazy(() => import("../pages/home/Home"));
 const Moves = lazy(() => import("../pages/Moves/Moves"));
 
@@ -36,12 +39,13 @@ const Notifications = lazy(
   () => import("../pages/Notifications/Notifications")
 );
 
-const MassiveAdd = lazy(() => import("../pages/Massive/MasiveAdd")
-);
+const MassiveAdd = lazy(() => import("../pages/Massive/MasiveAdd"));
 
 const HistoryView = lazy(() => import("../pages/History/HistoryView"));
 
 const HandleFatal = lazy(() => import("../pages/404/404.tsx"));
+
+const Backoffice = lazy (() => import("../pages/Backoffice/BackofficeView"));
 
 export const DeliveriesObservations = ["Courier", "Pedido"];
 export const ProductOrigins = ["Fábrica", "Nacional", "Importado"];
@@ -49,12 +53,13 @@ export const MovementTypes = ["Ingreso", "Egreso", "Inventario"];
 
 const AppRoutes: React.FC = () => {
   const { products, categories } = useSearchContext();
-  const { user } = useAuth();
-  const {
-    brands,
-    incomesObservations,
-    outcomesObservations,
-  } = useBrandsObservations();
+  const { user, loading } = useAuth();
+  const { brands, incomesObservations, outcomesObservations } =
+    useBrandsObservations();
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Routes>
@@ -64,11 +69,14 @@ const AppRoutes: React.FC = () => {
 
       <Route element={<ProtectedRoute redirectPath="/login" user={user} />}>
         <Route element={<Layout />}>
+          <Route path={paths.backoffice} element={<Backoffice />} />
+
           <Route path={paths.users} element={<Users />} />
           <Route path={paths.home} element={<Home />} />
           <Route path={paths.products} element={<Products />} />
           <Route path={`${paths.products}/:category`} element={<Products />} />
           <Route path={paths.massive} element={<MassiveAdd />} />
+          <Route path={paths.massiveDelivery} element={<DeliveryMassive />} />
           <Route
             path={paths.addProduct}
             element={<AddProduct categories={categories} brands={brands} />}

@@ -54,9 +54,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log(values);
         const imageUrl = await uploadImageToCloudinary(values.imagen);
-        console.log("URL de la imagen cargada:", imageUrl);
         toast.success("Imagen cargada con éxito");
 
         let updatedValues = {
@@ -71,7 +69,6 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
           };
         }
 
-        console.log("Valores del formulario actualizados:", updatedValues);
         createProduct(updatedValues);
 
         toast.success("Producto cargado con éxito");
@@ -96,8 +93,10 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
       <div className="flex flex-col space-y-6 md:space-y-0 justify-between bg-dark-gray">
         <div className="mr-6 flex-row transition-all du">
           <section className="pb-2">
-          <Navbar title={"Agregar Producto"} subtitle={"Agrega productos con sus propiedades."} />
-
+            <Navbar
+              title={"Agregar Producto"}
+              subtitle={"Agrega productos con sus propiedades."}
+            />
           </section>
           <form
             onSubmit={formik.handleSubmit}
@@ -394,7 +393,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                     name="newKitNumber"
                     onChange={formik.handleChange}
                     className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
-                    />
+                  />
                   <button
                     type="button"
                     className="bg-blue-500 text-white w-full max-w-xs ml-2 py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
@@ -467,7 +466,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
 
             {/* Previsualización de la imagen */}
             {imagePreview && (
-              <div className="flex flex-col items-center mb-4 rounded-lg gap-1">
+              <div className="flex flex-col mb-4 rounded-lg gap-1">
                 <h1 className="block text-lg font-semibold text-gray-600 dark:text-gray-100">
                   Imagen a cargar:
                 </h1>

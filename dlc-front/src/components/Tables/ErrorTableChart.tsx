@@ -39,6 +39,8 @@ import SortIcon from "../icon/SortIcon/SortIcon";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
 import { useUser } from "../../contexts/UserContext.tsx";
+import { paths } from "../../routes/paths.ts";
+import ReloadTable from "../Reload/Reload.tsx";
 
 const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -68,7 +70,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
-          console.log(updatedNode);
           return updatedNode;
         } else {
           return node;
@@ -88,7 +89,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -102,7 +102,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSearchChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -113,7 +112,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSearchDetail(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -124,7 +122,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSearchCode(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -138,7 +135,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onFilterChange(action: any, state: any) {
-    console.log(action, state);
     pagination.fns.onSetPage(0);
   }
 
@@ -149,7 +145,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   });
 
   function onSelectChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Tree *//
@@ -165,14 +160,11 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
       treeIcon: {
         margin: "2px",
         iconDefault: null,
-        //  iconRight: <FaChevronRight />,
-        //  iconDown: <FaChevronDown />,
       },
     }
   );
 
   function onTreeChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Sort *//
@@ -205,7 +197,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
   );
 
   function onSortChange(action: any, state: any) {
-    console.log(action, state);
   }
 
   //* Drawer *//
@@ -299,7 +290,6 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
         <Group>
           <Select
             onChange={(event) => {
-              console.log(event);
               setSelectedUser(event);
             }}
             classNames={{
@@ -358,6 +348,9 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+          <ReloadTable path={paths.historyView} />
+
         </Group>
       </div>
 

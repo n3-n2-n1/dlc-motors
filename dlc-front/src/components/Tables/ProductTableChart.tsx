@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { CompactTable } from "@table-library/react-table-library/compact";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useCustom } from "@table-library/react-table-library/table";
@@ -42,11 +43,18 @@ import SortIcon from "../icon/SortIcon/SortIcon";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import { useCallback } from "react";
+import ReloadTable from "../Reload/Reload.tsx";
+import { paths } from "../../routes/paths.ts";
+
+// import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
+// import { format } from "date-fns";
+// import { es } from "date-fns/locale";
 
 const ProductTableChart = ({ columns, data, category }: any) => {
   const [tableData, setTableData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
-  console.log(category, "CATEGORIA");
+
 
   const {
     brands,
@@ -63,10 +71,11 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   });
   const customTheme = {
     Table: `
-        --data-table-library_grid-template-columns: 70px 1fr 1fr 1fr 4.5fr 1fr 1fr repeat(4, 0.3fr);
-        margin: 16px 0px;
-      `,
+    --data-table-library_grid-template-columns:  80px repeat(11, minmax(0, 1fr));
+    margin: 16px 0px;
+    `,
   };
+  
   const theme = useTheme([mantineTheme, customTheme]);
   const handleUpdate = (value: any, id: any, property: any) => {
     setTableData((state) => ({
@@ -83,7 +92,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   };
 
   const handleDelete = async () => {
-    console.log("SE VA A ELIMINAR EL PRODUCTO", selectedCodigoInt);
     try {
       await toast.promise(deleteProducts(selectedCodigoInt), {
         pending: "Eliminando producto... 🕒",
@@ -106,7 +114,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const pagination = usePagination(tableData, {
     state: {
       page: 0,
-      size: 13,
+      size: 14,
     },
     onChange: onPaginationChange,
   });
@@ -209,7 +217,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           ),
         ORIGEN: (array) =>
           array.sort((a, b) => a.origen.localeCompare(b.origen)),
-        STOCK: (array) => array.sort((a, b) => a.stock.localeCompare(b.stock)),
+        STOCK: (array) => array.sort((a, b) => a.stock && b.stock ? a.stock.localeCompare(b.stock) : 0),
         RUBRO: (array) => array.sort((a, b) => a.rubro.localeCompare(b.rubro)),
       },
     }
@@ -262,7 +270,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       node.origen?.toLowerCase().includes(search.toLowerCase()) ||
       node.user?.toLowerCase().includes(search.toLowerCase()) ||
       node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
-      node.marcasCompatibles?.includes(brandSearch.toLowerCase()) 
+      node.marcasCompatibles?.includes(brandSearch.toLowerCase())
   );
 
   // filter
@@ -276,6 +284,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
+
+  
 
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
@@ -306,10 +316,10 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   if (selectedBrand) {
     modifiedNodes = modifiedNodes.filter((node: any) => {
       // Convierte el arreglo marcasCompatibles a una cadena
-      const compatibleBrands = Array.isArray(node.marcasCompatibles) 
+      const compatibleBrands = Array.isArray(node.marcasCompatibles)
         ? node.marcasCompatibles.join(" / ").toLowerCase()
         : (node.marcasCompatibles || "").toLowerCase();
-  
+
       return compatibleBrands.includes(selectedBrand.toLowerCase());
     });
   }
@@ -325,6 +335,11 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
+
+  const reload = useCallback(() => {
+    window.location.reload();
+  }, []);
+
 
   return (
     <>
@@ -374,19 +389,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       </div>
 
       <Group>
-        <DateInput
-          classNames={{
-            wrapper:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-          }}
-          value={value}
-          onChange={setValue}
-          placeholder="Selecciona fechas"
-        />
+        
 
         <TextInput
           classNames={{
@@ -487,7 +490,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
               "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
           }}
           onChange={(event) => {
-            console.log('Evento', event)
             setSelectedBrand(event);
           }}
           placeholder="Marcas"
@@ -501,6 +503,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
           checked={selectedCheck}
           onChange={(event) => setSelectedCheck(event.currentTarget.checked)}
         />
+
+        <ReloadTable path="/productos" />
       </Group>
 
       <div
