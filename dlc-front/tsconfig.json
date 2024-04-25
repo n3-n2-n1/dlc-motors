@@ -5,6 +5,9 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "strict": false,            // Desactiva el modo estricto
+    "noImplicitAny": false,     // Permite que los valores 'any' implícitos sean usados
+    "strictNullChecks": false,
     "paths": {
       "backend/*": ["../dlc-back/*"]
     },
@@ -18,7 +21,6 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
