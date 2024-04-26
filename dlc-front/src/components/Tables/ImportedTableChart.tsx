@@ -324,8 +324,15 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   if (search) {
     errorNodes = errorNodes.filter(
       (node: any) =>
-        node.descripcion?.toLowerCase().includes(search.toLowerCase())
-      // Incluye aquí otras propiedades por las que quieras buscar
+        node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+        node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+        node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
+        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+        node.user?.toLowerCase().includes(search.toLowerCase()) ||
+        node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
+        node.marcasCompatibles?.includes(brandSearch.toLowerCase())
     );
   }
 

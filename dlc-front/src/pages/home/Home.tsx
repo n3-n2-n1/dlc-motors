@@ -55,7 +55,7 @@ function Home() {
 
     const fetchSaleData = async () => {
       try {
-        const response = await fetchErrors();
+        const response = await fetchMoves();
         setSaleStats(response.payload);
       } catch (error) {
         console.error("Error fetching", error);
