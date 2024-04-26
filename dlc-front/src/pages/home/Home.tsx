@@ -218,7 +218,6 @@ function Home() {
         <section className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
           <section className="flex flex-row dark:text-white">
             <div className="">
-              <RubroChart />
             </div>
           </section>
           <section className="flex flex-row p-4 gap-5 text-gray-700 bg-gray-100 dark:bg-gray-700 rounded-xl">
