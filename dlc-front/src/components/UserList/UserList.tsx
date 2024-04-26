@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import { useAuth } from "../../contexts/AuthContext";
 import UserForm from "../../pages/users/UserForm";
 import Navbar from "../Navbar/Navbar";
 import UserCard from "./UserCard";
-import { useState } from "react";
 import Dashcards from "../Dashcards/Dashcards";
 import useRoleCheck from "../../hooks/useRoleCheck";
+import Loader from "../Loader/Loader";
 
 const UserList: React.FC = () => {
   const { users } = useUser();
@@ -13,16 +14,24 @@ const UserList: React.FC = () => {
 
   const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
   const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
-
+  const [loading, setLoading] = useState(true);  // Cambiado de isLoading a setLoading y inicializado como true
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedButton, setSelectedButton] = useState<string | null>(null);
 
-  // Función para alternar la visibilidad
   const toggleVisibility = () => {
     setIsExpanded(!isExpanded);
     setSelectedButton(isExpanded ? null : "addUser");
   };
-  // const filteredUsers = users?.filter((user) => user.role)
+
+  useEffect(() => {
+    if (users) {
+      setLoading(false);  // Cambiar el estado de loading cuando los datos están listos
+    }
+  }, [users]);  // Depender del estado de users
+
+  if (loading) {
+    return <Loader />;  // Asegurarse de retornar el Loader correctamente
+  }
 
   return (
     <>
@@ -33,28 +42,18 @@ const UserList: React.FC = () => {
             <div className="transition-colors duration-300">
               <Dashcards
                 buttons={[
-                  {
-                    text: "Agregar usuario",
-                    action: toggleVisibility,
-                    link: "",
-                    isActive: selectedButton === "addUser",
-                  },
+                  { text: "Agregar usuario", action: toggleVisibility, link: "", isActive: selectedButton === "addUser" },
                 ]}
               />
             </div>
           )}
         </div>
 
-        <div
-          className={`w-auto transition-all duration-500 ease-in-out ${
-            isExpanded ? "max-h-screen" : "max-h-0 overflow-hidden"
-          }`}
-        >
+        <div className={`w-auto transition-all duration-500 ease-in-out ${isExpanded ? "max-h-screen" : "max-h-0 overflow-hidden"}`}>
           <UserForm user={users} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-3">
-          {users &&
-            users?.map((user, index) => <UserCard user={user} key={index} />)}
+          {users.map((user, index) => <UserCard user={user} key={index} />)}
         </div>
       </div>
     </>
