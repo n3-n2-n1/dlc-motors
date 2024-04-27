@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CompactTable } from "@table-library/react-table-library/compact";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useCustom } from "@table-library/react-table-library/table";
@@ -51,10 +51,13 @@ import { paths } from "../../routes/paths.ts";
 // import { format } from "date-fns";
 // import { es } from "date-fns/locale";
 
-const ProductTableChart = ({ columns, data, category }: any) => {
+const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
   const [tableData, setTableData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
 
+  useEffect(() => {
+    console.log("tableData", tableData);
+  }, [tableData])
 
   const {
     brands,
@@ -256,7 +259,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
   //* Custom Modifiers *//
 
-  let modifiedNodes = tableData.nodes;
+  // let modifiedNodes = tableData.nodes;
+  modifiedNodes = tableData.nodes;
 
   // search
 
