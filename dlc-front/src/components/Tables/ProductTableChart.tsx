@@ -84,8 +84,10 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       nodes: state.nodes.map((node: any) => {
         if (node.id === id) {
           const updatedNode = { ...node, [property]: value };
+          console.log("updatedNode", updatedNode);
           return updatedNode;
         } else {
+          console.log("node", node);
           return node;
         }
       }),
@@ -262,11 +264,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
   let modifiedNodes = tableData.nodes;
 
-  useEffect(() => {
-    console.log("modifiedNodes", modifiedNodes);
-    console.log("data que va a la tabla supuestamente", { ...tableData, nodes: modifiedNodes })
-  }, [modifiedNodes, tableData]);
-
   // search
 
   modifiedNodes = modifiedNodes.filter(
@@ -346,6 +343,11 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const reload = useCallback(() => {
     window.location.reload();
   }, []);
+
+  useEffect(() => {
+    console.log("modifiedNodes", modifiedNodes);
+    console.log("data que va a la tabla supuestamente", { ...tableData, nodes: modifiedNodes })
+  }, [modifiedNodes, tableData]);
 
   return (
     <>
