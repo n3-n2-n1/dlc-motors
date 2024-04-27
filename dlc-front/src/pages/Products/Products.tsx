@@ -22,8 +22,6 @@ const Products = () => {
   const isSupervisor = useRoleCheck(user?.role, ["Supervisor"]);
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
-  let modifiedNodes;
-
   return (
     <>
       <PageTitle title="DLC Motors • Productos" />
@@ -50,7 +48,7 @@ const Products = () => {
                       </h3>
                     </div>
                   </Link>
-                  <ExportButton modifiedNodes={modifiedNodes} />
+                  {/* <ExportButton /> */}
                   <AnualExport />
                 </section>
               )}
@@ -61,7 +59,6 @@ const Products = () => {
                   columns={PRODUCTCOLUMNS}
                   data={nodes}
                   category={category}
-                  modifiedNodes={modifiedNodes}
                 />
               ) : (
                 <div className="bg-gray-900">
