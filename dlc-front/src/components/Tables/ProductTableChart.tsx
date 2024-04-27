@@ -343,12 +343,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const reload = useCallback(() => {
     window.location.reload();
   }, []);
-
-  useEffect(() => {
-    console.log("modifiedNodes", modifiedNodes);
-    console.log("data que va a la tabla supuestamente", { ...tableData, nodes: modifiedNodes })
-  }, [modifiedNodes, tableData]);
-
+  
   return (
     <>
       <Modal

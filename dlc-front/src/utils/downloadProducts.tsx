@@ -8,9 +8,9 @@ const ExportButton = ({ modifiedNodes }) => {
     try {
       console.log("modifiedNodes", modifiedNodes);
       const products = await fetchProducts();
-      const ws = XLSX.utils.json_to_sheet(
-        modifiedNodes ? modifiedNodes : products
-      );
+      const data = (modifiedNodes && Object.keys(modifiedNodes).length > 0) ? modifiedNodes : products;
+
+      const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Productos");
       XLSX.writeFile(wb, "productos.xlsx");
@@ -25,7 +25,7 @@ const ExportButton = ({ modifiedNodes }) => {
       className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 dark:hover:bg-blue-800 hover:bg-gray-700 hover:text-white dark:bg-blue-600 select-none"
     >
       <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white select-none">
-        Descargar productos
+        Descargar filtrados
       </h3>
     </button>
   );
