@@ -264,7 +264,8 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
   useEffect(() => {
     console.log("modifiedNodes", modifiedNodes);
-  }, [modifiedNodes]);
+    console.log("data que va a la tabla supuestamente", { ...tableData, nodes: modifiedNodes })
+  }, [modifiedNodes, tableData]);
 
   // search
 
