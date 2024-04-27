@@ -52,7 +52,7 @@ const Stats = ({ title, value, percentage, icon, link }) => {
       <div className="pt-2">
         <span
           className={`inline-block px-2 text-sm ${
-            percentage <= 50 ? "bg-green-300" : "bg-red-300"
+            percentage <= 50 ? "bg-red-300" : "bg-green-300"
           } text-gray-900 font-bold rounded`}
         >
           {percentage}%

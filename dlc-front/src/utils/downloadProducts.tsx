@@ -3,11 +3,14 @@ import * as XLSX from "xlsx";
 import React from "react";
 import { toast } from "react-toastify";
 
-const ExportButton = () => {
+const ExportButton = ({ modifiedNodes }) => {
   const handleExport = async () => {
     try {
+      console.log("modifiedNodes", modifiedNodes);
       const products = await fetchProducts();
-      const ws = XLSX.utils.json_to_sheet(products);
+      const ws = XLSX.utils.json_to_sheet(
+        modifiedNodes ? modifiedNodes : products
+      );
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Productos");
       XLSX.writeFile(wb, "productos.xlsx");
