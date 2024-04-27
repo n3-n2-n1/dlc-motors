@@ -47,17 +47,15 @@ import { useCallback } from "react";
 import ReloadTable from "../Reload/Reload.tsx";
 import { paths } from "../../routes/paths.ts";
 
+import ExportButton from "../../utils/downloadProducts";
+
 // import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
 // import { format } from "date-fns";
 // import { es } from "date-fns/locale";
 
-const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
+const ProductTableChart = ({ columns, data, category }: any) => {
   const [tableData, setTableData] = React.useState({ nodes: data });
   const { categories } = useSearchContext();
-
-  useEffect(() => {
-    console.log("tableData", tableData);
-  }, [tableData])
 
   const {
     brands,
@@ -78,7 +76,7 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
     margin: 16px 0px;
     `,
   };
-  
+
   const theme = useTheme([mantineTheme, customTheme]);
   const handleUpdate = (value: any, id: any, property: any) => {
     setTableData((state) => ({
@@ -220,7 +218,10 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
           ),
         ORIGEN: (array) =>
           array.sort((a, b) => a.origen.localeCompare(b.origen)),
-        STOCK: (array) => array.sort((a, b) => a.stock && b.stock ? a.stock.localeCompare(b.stock) : 0),
+        STOCK: (array) =>
+          array.sort((a, b) =>
+            a.stock && b.stock ? a.stock.localeCompare(b.stock) : 0
+          ),
         RUBRO: (array) => array.sort((a, b) => a.rubro.localeCompare(b.rubro)),
       },
     }
@@ -259,8 +260,11 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
 
   //* Custom Modifiers *//
 
-  // let modifiedNodes = tableData.nodes;
-  modifiedNodes = tableData.nodes;
+  let modifiedNodes = tableData.nodes;
+
+  useEffect(() => {
+    console.log("modifiedNodes", modifiedNodes);
+  }, [modifiedNodes]);
 
   // search
 
@@ -288,8 +292,6 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
       node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
-
-  
 
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
@@ -344,7 +346,6 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
     window.location.reload();
   }, []);
 
-
   return (
     <>
       <Modal
@@ -393,8 +394,6 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
       </div>
 
       <Group>
-        
-
         <TextInput
           classNames={{
             wrapper:
@@ -509,6 +508,7 @@ const ProductTableChart = ({ columns, data, category, modifiedNodes }: any) => {
         />
 
         <ReloadTable path="/productos" />
+        <ExportButton modifiedNodes={modifiedNodes}/>
       </Group>
 
       <div
