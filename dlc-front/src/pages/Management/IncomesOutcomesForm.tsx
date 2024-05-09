@@ -19,7 +19,6 @@ interface IncomesOutcomesFormProps {
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
   desc: Yup.string().required("Campo requerido"),
-  detalle: Yup.string().required("Campo requerido"),
   cantidad: Yup.number()
     .min(1, "La cantidad no puede ser menor a 1")
     .required("Campo requerido"),
@@ -139,7 +138,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
               {formName}s
             </h1>
             <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
-              <Link to="/historyView">
+              <Link to="/historyView/Return">
                 <button className="p-3 text-md font-bold text-white">
                   Historial
                 </button>
@@ -293,7 +292,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.detalle}
+                value={formik.values.detalle.trim() === '' ? 'Predeterminado' : formik.values.detalle}
               />
               {formik.touched.detalle && formik.errors.detalle ? (
                 <div className="text-red-500 text-sm mt-1">

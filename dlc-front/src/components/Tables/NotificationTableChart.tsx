@@ -21,17 +21,11 @@ import {
 import {
   Group,
   TextInput,
-  Checkbox,
-  Modal,
-  OptionsDropdown,
-  MultiSelect,
-  ActionIcon,
-  Button,
   Select,
-  Drawer,
-  Space,
   Pagination,
 } from "@mantine/core";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import { ProductOrigins } from "../../routes/routes";
@@ -39,9 +33,14 @@ import SortIcon from "../icon/SortIcon/SortIcon";
 import { useUser } from "../../contexts/UserContext.tsx";
 import ReloadTable from "../Reload/Reload.tsx";
 import { paths } from "../../routes/paths.ts";
-
+import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
 import { useAuth } from "../../contexts/AuthContext";
 import useRoleCheck from "../../hooks/useRoleCheck";
+import { useState } from "react";
+
+
+
+
 
 const NotificationTableChart = ({ columns, data, category }: any) => {
   const { categories } = useSearchContext();
@@ -78,7 +77,7 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-                --data-table-library_grid-template-columns:  120px repeat(8, minmax(0, 1fr));
+                --data-table-library_grid-template-columns:  120px repeat(9, minmax(0, 1fr));
           
                 margin: 16px 0px;
                 .animate {
@@ -327,14 +326,150 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
   if (search) {
     errorNodes = errorNodes.filter(
       (node: any) =>
-        node.name?.toLowerCase().includes(search.toLowerCase())
+        node.name?.toLowerCase().includes(search.toLowerCase()) || 
+        node.oem?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
+  const [selectedDays, setSelectedDays] = useState<DateRange | undefined>();
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [startDate, setStartDate] = useState<string | undefined>();
+  const [endDate, setEndDate] = useState<string | undefined>();
+
+  if (startDate && endDate) {
+    errorNodes = errorNodes.filter((node: any) => {
+      if (!node.fecha) {
+        return false;
+      }
+
+      const [date, time] = node.fecha.split(", ");
+      const [nodeDay, nodeMonth, nodeYear] = date.split("/").map(Number);
+
+      const nodeDate = new Date(nodeYear, nodeMonth - 1, nodeDay);
+      nodeDate.setHours(0, 0, 0, 0);
+
+      const [startDay, startMonth, startYear] = startDate
+        .split("-")
+        .map(Number);
+      const start = new Date(startYear + 2000, startMonth - 1, startDay);
+      start.setHours(0, 0, 0, 0);
+
+      const [endDay, endMonth, endYear] = endDate.split("-").map(Number);
+      const end = new Date(endYear + 2000, endMonth - 1, endDay);
+      end.setHours(0, 0, 0, 0);
+
+      return nodeDate >= start && nodeDate <= end;
+    });
+  }
+
+  const inputSelectStyle =
+    "border border-gray-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500";
+  const dropdownStyle = `${inputSelectStyle} w-40 h-10`;
+
+  const toggleDatePicker = () => {
+    setShowDatePicker((prevState) => !prevState);
+  };
+
+  let footer = <p className="text-white">Elegí el primer día.</p>;
+  if (selectedDays?.from) {
+    if (!selectedDays.to) {
+      footer = <p>{format(selectedDays.from, "PPP", { locale: es })}</p>;
+    } else if (selectedDays.to) {
+      footer = (
+        <p>
+          {format(selectedDays.from, "PPP", { locale: es })} a
+          <br />
+          {format(selectedDays.to, "PPP", { locale: es })}
+        </p>
+      );
+    }
+  }
+
+  const formatDay: DateFormatter = (day) => format(day, "d", { locale: es });
+
+  const formatCaption: DateFormatter = (date, options) => {
+    const y = date.getFullYear();
+    const m = format(date, "LLLL", { locale: options?.locale });
+    return `${m} ${y}`.toUpperCase();
+  };
+
+  const formatWeekdayName: (day: Date, options?: { locale?: any }) => string = (
+    day,
+    options
+  ) => {
+    return format(day, "EEEEE", { locale: options?.locale }).toUpperCase();
+  };
+
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return undefined;
+    const date = new Date(dateString);
+    const year = date.getFullYear().toString().slice(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${parseInt(day) + 1}-${month}-${year}`;
+  };
+
+  const [selectedOEM, setSelectedOEM] = React.useState("");
+  if (selectedOEM) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.OEM.toLowerCase().includes(selectedOEM.toLowerCase())
+    );
+  }
+
+
   return (
     <>
       <Group>
+      <div className="relative">
+            <button className={dropdownStyle} onClick={toggleDatePicker}>
+              {startDate && endDate
+                ? `${startDate} a ${endDate}`
+                : "Rango de fechas"}
+            </button>
+            {showDatePicker && (
+              <DayPicker
+                selected={selectedDays}
+                onSelect={(selectedDays) => {
+                  setSelectedDays(selectedDays);
+                  const startDate = selectedDays?.from
+                    ?.toISOString()
+                    .slice(0, 10);
+                  const endDate = selectedDays?.to?.toISOString().slice(0, 10);
+                  setStartDate(formatDate(startDate));
+                  setEndDate(formatDate(endDate));
+                }}
+                mode="range"
+                locale={es}
+                formatters={{ formatDay, formatCaption, formatWeekdayName }}
+                footer={footer}
+                className="absolute z-10 bg-gray-700 p-2 rounded-md shadow-lg mt-2"
+                classNames={{
+                  caption:
+                    "font-gotham flex justify-center relative items-center py-1",
+                  caption_label: "text-base font-bold text-gray-100",
+                  nav: "flex items-center",
+                  nav_button:
+                    "h-6 w-6 bg-transparent hover:bg-blue-600 p-1 rounded-full transition-colors duration-300",
+                  nav_button_previous: "text-white absolute left-2",
+                  nav_button_next: "text-white absolute right-2",
+                  table: "w-full border-collapse",
+                  head_row: "flex font-gotham text-green-400",
+                  head_cell: "mx-0.5 w-7 font-gotham text-sm",
+                  row: "flex w-full",
+                  cell: "text-gray-300 rounded-full h-7 w-7 text-center text-sm p-0 mx-0.5 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-outside)]:bg-gray-700/30 [&:has([aria-selected].day-outside)]:text-gray-300 [&:has([aria-selected])]:bg-blue-600/70 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
+                  day: "h-7 w-7 p-0 font-gotham font-bold text-white hover:text-blue-300",
+                  day_range_end: "day-range-end",
+                  day_today: "rounded-full bg-green-600 text-white",
+                  day_outside: "day-outside text-gray-400 opacity-50",
+                  day_disabled: "text-gray-600 opacity-50",
+                  day_hidden: "invisible",
+                }}
+              />
+            )}
+          </div>
         {category ? (
           <Select
             value={category || null}
@@ -381,6 +516,34 @@ const NotificationTableChart = ({ columns, data, category }: any) => {
             clearable
           />
         )}
+
+<TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="Codigo Interno"
+            value={codeSearch}
+            onChange={(event) => setCodeSearch(event.target.value)}
+          />
+
+<TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="OEM"
+            value={search}
+            onChange={(event) => setSelectedOEM(event.target.value)}
+          />
 
         <Select
           classNames={{

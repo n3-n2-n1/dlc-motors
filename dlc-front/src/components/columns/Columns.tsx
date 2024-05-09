@@ -172,6 +172,8 @@ export const PRODUCTCOLUMNS = [
     ),
     resize,
     hide: hiddenColumns.includes("Código Interno"),
+    sort: { sortKey: "Código Interno" },
+
   },
   {
     label: "SKU",
@@ -185,6 +187,8 @@ export const PRODUCTCOLUMNS = [
     renderCell: (item: any) => item.rubro || "-",
     resize,
     hide: hiddenColumns.includes("Rubro"),
+    sort: { sortKey: "Rubro" }
+
   },
   {
     label: "Descripción",
@@ -209,6 +213,8 @@ export const PRODUCTCOLUMNS = [
     },
     resize,
     hide: hiddenColumns.includes("Marcas Compatibles"),
+    sort: { sortKey: "Marcas" },
+
   },
   {
     label: "Kit",
@@ -217,11 +223,14 @@ export const PRODUCTCOLUMNS = [
     },
     resize,
     hide: hiddenColumns.includes("Kit"),
+    sort: { sortKey: "Kit" }
+
   },
   {
     label: "Dev",
     renderCell: (item: any) => item.contadorDevoluciones || "-",
     resize,
+    sort: { sortKey: "Dev" },
     hide: hiddenColumns.includes("Contador Devoluciones"),
   },
   {
@@ -229,16 +238,22 @@ export const PRODUCTCOLUMNS = [
     renderCell: (item: any) => <RenderStockColumn item={item} />,
     resize,
     hide: hiddenColumns.includes("Stock"),
-    sort: { sortKey: "STOCK" },
+    sort: { sortKey: "Stock" },
   },
   {
     label: "StockFuturo",
-    renderCell: (item: any) => item.stockFuturo || "-",
+    renderCell: (item: any) => item.stockFuturo.length > 0 ? 'Si' : 'No',
     resize,
-    sort: { sortKey: "STOCKfuturo" },
+    sort: { sortKey: "Stockfuturo" },
   },
   {
-    label: "☑️",
+    label: "OEM",
+    renderCell: (item: any) => item.OEM || "-",
+    resize,
+    sort: { sortKey: "OEM" },
+  },
+  {
+    label: "Check",
     renderCell: (item: any) => {
       if (item.check === "Error") {
         return "X";
@@ -255,13 +270,13 @@ export const PRODUCTCOLUMNS = [
 
 export const NOTIFCOLUMNS = [
   {
-    label: <div className="">Estado</div>,
+    label:"Estado",
     renderCell: (item: any) => {
       let bgColorClass = "";
       let bgColorText = "";
 
       if (item.message === "Stock bajo") {
-        bgColorClass = "bg-orange-300"; // Cambia a amarillo para "Stock bajo"
+        bgColorClass = "bg-yellow-300"; // Cambia a amarillo para "Stock bajo"
         bgColorText = "text-black";
       } else if (item.message === "Reposición") {
         bgColorClass = "bg-green-200"; // Cambia a verde para "Reposición"
@@ -282,6 +297,13 @@ export const NOTIFCOLUMNS = [
       );
     },
     resize,
+    sort: { sortKey: "Estado" },
+
+  },
+  {
+    label: "Fecha",
+    renderCell: (item: any) => item.fecha || "-",
+    resize,
   },
   {
     label: "Imagen",
@@ -301,36 +323,43 @@ export const NOTIFCOLUMNS = [
     label: "Codigo Interno",
     renderCell: (item: any) => item.codigoInt || "-",
     resize,
+    sort: { sortKey: "Codigo Interno" },
   },
   {
     label: "Descripción",
     renderCell: (item: any) => item.name || "-",
     resize,
+    sort: { sortKey: "Descripción" },
   },
   {
     label: "OEM",
     renderCell: (item: any) => item.codOEM || "-",
     resize,
+    sort: { sortKey: "OEM" },
   },
   {
     label: "Marca",
     renderCell: (item: any) => item.marca || "-",
     resize,
+    sort: { sortKey: "Marca" },
   },
   {
     label: "Rubro",
     renderCell: (item: any) => item.rubro || "-",
     resize,
+    sort: { sortKey: "Rubro" },
   },
   {
     label: "Origen",
     renderCell: (item: any) => item.origen || "-",
     resize,
+    sort: { sortKey: "Origen" },
   },
   {
     label: "Stock",
     renderCell: (item: any) => item.stock || "-",
     resize,
+    sort: { sortKey: "Stock" },
   },
 ];
 
@@ -396,46 +425,61 @@ export const ERRORCOLUMNS = [
     label: "Usuario",
     renderCell: (item: any) => <div className="p-2">{item.user}</div> || "-",
     resize,
+    sort: { sortKey: "Usuario" }
   },
   {
     label: "Fecha",
     renderCell: (item: any) => item.fecha || "-",
     resize,
+    sort: { sortKey: "Fecha" }
   },
   {
     label: "Observación",
     renderCell: (item: any) => item.observaciones || "-",
     resize,
+    sort: { sortKey: "Observación" }
   },
   {
     label: "Detalle",
     renderCell: (item: any) => item.det || "-",
     resize,
+    sort: { sortKey: "Detalle" }
   },
   {
     label: "Código Interno",
     renderCell: (item: any) => item.codInterno || "-",
     resize,
+    sort: { sortKey: "Código Interno" }
+  },
+  {
+    label: "Rubro",
+    renderCell: (item: any) => item.rubro || "-",
+    resize,
+    sort: { sortKey: "Rubro" }
   },
   {
     label: "OEM",
     renderCell: (item: any) => item.codOEM || "-",
     resize,
+    sort: { sortKey: "OEM" }
   },
   {
     label: "Descripción",
     renderCell: (item: any) => item.desc || "-",
     resize,
+    sort: { sortKey: "Descripción" }
   },
   {
     label: "Stock Actual",
     renderCell: (item: any) => item.stock || "-",
     resize,
+    sort: { sortKey: "Stock Actual" }
   },
   {
     label: "Stock Real",
     renderCell: (item: any) => item.stockReal || "-",
     resize,
+    sort: { sortKey: "Stock Real" }
   },
   {
     label: "Imagen",
@@ -464,6 +508,8 @@ export const ERRORCOLUMNS = [
   {
     label: "Estado",
     renderCell: (item: any) => <ErrorEdit item={item} />,
+    sort: { sortKey: "Estado" }
+
   },
 ];
 
@@ -472,51 +518,61 @@ export const MOVESCOLUMNS = [
     label: "Usuario",
     renderCell: (item: any) => <div className="ml-2">{item.user}</div> || "-",
     resize,
+    sort: { sortKey: "Usuario" }
   },
   {
     label: "Fecha",
     renderCell: (item: any) => <div className="">{item.fecha}</div> || "-",
     resize,
+    sort: { sortKey: "Fecha" }
   },
   {
     label: "Movimiento",
     renderCell: (item: any) => item.tipoMov || "-",
     resize,
+    sort: { sortKey: "Movimiento" }
   },
   {
     label: "Observacion",
     renderCell: (item: any) => item.observaciones || "-",
     resize,
+    sort: { sortKey: "Observacion" }
   },
   {
     label: "Detalle",
     renderCell: (item: any) => item.det || "-",
     resize,
+    sort: { sortKey: "Detalle" }
   },
   {
     label: "Cantidad",
     renderCell: (item: any) => item.cantidad || "-",
     resize,
+    sort: { sortKey: "Cantidad" }
   },
   {
     label: "Kit",
     renderCell: (item: any) => item.kit || "-",
     resize,
+    sort: { sortKey: "Kit" }
   },
   {
     label: "Codigo Interno",
     renderCell: (item: any) => item.codigoInt,
     resize,
+    sort: { sortKey: "Codigo Interno" }
   },
   {
     label: "Descripcion",
     renderCell: (item: any) => item.desc || "-",
     resize,
+    sort: { sortKey: "Descripcion" }
   },
   {
     label: "OEM",
     renderCell: (item: any) => item.codOEM || "-",
     resize,
+    sort: { sortKey: "OEM" }
   },
   {
     label: "Stock",
@@ -530,6 +586,7 @@ export const MOVESCOLUMNS = [
       }
     },
     resize,
+    sort: { sortKey: "Stock" }
   },
 ];
 
@@ -548,51 +605,84 @@ export const RETURNCOLUMNS = [
     label: "Usuario",
     renderCell: (item: any) => <div className="p-2">{item.user}</div> || "-",
     resize,
+    sort: { sortKey: "Stock" }
   },
+  
   {
     label: "Fecha",
     renderCell: (item: any) => item.fecha || "-",
     resize,
+    sort: { sortKey: "Fecha" }
   },
+  
   {
     label: "Observacion",
     renderCell: (item: any) => item.observaciones || "-",
     resize,
+    sort: { sortKey: "Observacion" }
   },
+  
   {
     label: "Detalle",
     renderCell: (item: any) => item.detalle || "-",
     resize,
+    sort: { sortKey: "Detalle" }
   },
+  
   {
     label: "Codigo Interno",
     renderCell: (item: any) => item.codIntermp || "-",
     resize,
+    sort: { sortKey: "Codigo Interno" }
   },
+  
   {
     label: "OEM",
     renderCell: (item: any) => item.codOEM || "-",
     resize,
+    sort: { sortKey: "OEM" }
   },
+  
   {
     label: "Descripcion",
     renderCell: (item: any) => item.desc || "-",
     resize,
+    sort: { sortKey: "Descripcion" }
   },
+  
+  {
+    label: "Rubro",
+    renderCell: (item: any) => item.rubro || "-",
+    resize,
+    sort: { sortKey: "Rubro" }
+  },
+  
+  {
+    label: "Stock",
+    renderCell: (item: any) => item.rubro || "-",
+    resize,
+    sort: { sortKey: "Stock" }
+  },
+  
   {
     label: "Cantidad",
     renderCell: (item: any) => item.cantidad || "-",
     resize,
+    sort: { sortKey: "Cantidad" }
   },
+  
   {
     label: "Kit",
     renderCell: (item: any) => item.kit || "-",
     resize,
+    sort: { sortKey: "Kit" }
   },
+  
   {
     label: "Contador Dev",
     renderCell: (item: any) => item.contador || "-",
     resize,
+    sort: { sortKey: "Contador Dev" }
   },
 ];
 
@@ -603,36 +693,50 @@ export const IMPORTEDCOLUMNS = [
     renderCell: (item: any) =>
       <div className="p-2">{item.descripcion}</div> || "-",
     resize,
+    sort: { sortKey: "Descripcion" },
+
+    
   },
   {
-    label: "Código",
+    label: "Código Interno",
     renderCell: (item: any) => item.codInterno || "-",
     resize,
+    sort: { sortKey: "Código Interno" },
+    
   },
   {
     label: "Marca",
     renderCell: (item: any) => item.marcasCompatibles || "-",
     resize,
+    sort: { sortKey: "Marca" },
+
   },
   {
     label: "SKU",
     renderCell: (item: any) => item.SKU || "-",
     resize,
+    sort: { sortKey: "SKU" },
+
   },
   {
     label: "Proveedores",
     renderCell: (item: any) => item.proveedores || "-",
     resize,
+    sort: { sortKey: "Proveedores" },
+    
   },
   {
     label: "Stock",
     renderCell: (item: any) => item.stock || "-",
     resize,
+    sort: { sortKey: "Stock" },
+
   },
   {
     label: "Rubro",
     renderCell: (item: any) => item.rubro || "-",
     resize,
+    sort: { sortKey: "Rubro" },
   },
 ];
 

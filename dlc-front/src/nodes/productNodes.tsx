@@ -32,6 +32,7 @@ export const useFetchNodes = () => {
         stock: product.stock,
         rubro: product.rubro,
         stockFuturo: product.stockFuturo,
+        OEM: product.codOEM
       }));
       setProductNodes(transformedNodes);
     }

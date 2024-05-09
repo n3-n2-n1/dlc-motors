@@ -20,7 +20,6 @@ const validationSchema = Yup.object({
     .of(Yup.string().required("Requerido"))
     .min(1, "Se requiere al menos una marca compatible")
     .required("Requerido"),
-  stock: Yup.number().required("Requerido"),
   imagen: Yup.mixed(),
   contadorDevoluciones: Yup.number(),
   esKit: Yup.boolean(),
@@ -366,11 +365,6 @@ const editProduct: React.FC<EditProductFormProps> = ({
                 value={formik.values.stock}
                 disabled
               />
-              {formik.touched.stock && formik.errors.stock ? (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.stock}
-                </div>
-              ) : null}
             </div>
 
             {/* // Campo para subir imágen */}

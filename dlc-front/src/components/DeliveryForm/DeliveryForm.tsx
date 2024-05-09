@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useQRCodeScanner } from "../../hooks/useQrCodeScanner";
 import { Link } from "react-router-dom";
-
+import Dashcards from "../Dashcards/Dashcards";
 interface DeliveryFormProps {
   observationsList: string[];
   products: any[];
@@ -126,6 +126,8 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     }
   }, [qrCode]);
 
+  const edit = () => {}
+
   return (
     <div className="bg-gray-100 dark:bg-gray-900 xl:w-768 w-full flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto lg:block transition-colors duration-300 pt-6">
       {isQrModalOpen && (
@@ -140,13 +142,30 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
             <h1 className="text-3xl mb-2 text-gray-600 dark:text-gray-100 font-weight-300">
               Pedidos
             </h1>
-            <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6">
-              <Link to="/historyView">
-                <button className="p-3 text-md font-bold text-white">
-                  Historial
-                </button>
-              </Link>
+            <div className="flex row dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center ">
+            <Dashcards
+            buttons={[
+              {
+                text: "Historial",
+                action: edit,
+                link: "/historyView/Delivery",
+              },
+            ]}
+          />
+
+              <div className="ml-8">
+            <Dashcards
+            buttons={[
+              {
+                text: "Agregar masivamente",
+                action: edit,
+                link: "/massiveDelivery",
+              },
+            ]}
+          />
             </div>
+            </div>
+
           </div>
           <form
             onSubmit={formik.handleSubmit}

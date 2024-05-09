@@ -17,28 +17,23 @@ import {
   DEFAULT_OPTIONS,
   getTheme,
 } from "@table-library/react-table-library/mantine";
-import {
-  Group,
-  TextInput,
-  Select,
-  Pagination,
-} from "@mantine/core";
+import { Group, TextInput, Select, Pagination } from "@mantine/core";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import SortIcon from "../icon/SortIcon/SortIcon";
 import { useUser } from "../../contexts/UserContext.tsx";
 import { paths } from "../../routes/paths.ts";
 import ReloadTable from "../Reload/Reload.tsx";
-
+import { ProductOrigins } from "../../routes/routes.tsx";
 DEFAULT_OPTIONS.highlightOnHover = true;
 DEFAULT_OPTIONS.striped = true;
 
 const ReturnTableChart = ({ columns, data, category }: any) => {
-const [errorData, setErrorData] = React.useState({ nodes: data });
-  const {categories} = useSearchContext();
+  const [errorData, setErrorData] = React.useState({ nodes: data });
+  const { categories } = useSearchContext();
   const { users } = useUser();
   const userNames = users.map((user) => user.name);
-  const {brands} = useBrandsObservations();
+  const { brands } = useBrandsObservations();
 
   const mantineTheme = getTheme({
     ...DEFAULT_OPTIONS,
@@ -47,8 +42,8 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   });
 
   const customTheme = {
-    Table:  `
-    --data-table-library_grid-template-columns:  120px repeat(9, minmax(0, 1fr));
+    Table: `
+    --data-table-library_grid-template-columns:  120px repeat(11, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -109,7 +104,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
-
 
   const [detailSearch, setDetailSearch] = React.useState("");
   useCustom("det", errorData, {
@@ -247,14 +241,14 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   errorNodes = errorNodes.filter(
     (node: any) =>
       node.fecha?.toLowerCase().includes(detailSearch.toLowerCase()) ||
-      node.detalle?.toLowerCase().includes(detailSearch.toLowerCase()) || 
+      node.detalle?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase()) ||
       node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(search.toLowerCase()) ||
       node.estado?.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.desc?.toLowerCase().includes(search.toLowerCase()) 
+      node.desc?.toLowerCase().includes(search.toLowerCase())
   );
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
@@ -272,8 +266,8 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   }
 
   if (observation) {
-    errorNodes = errorNodes.filter(
-      (node: any) => node.observaciones?.toLowerCase().includes(observation.toLowerCase())
+    errorNodes = errorNodes.filter((node: any) =>
+      node.observaciones?.toLowerCase().includes(observation.toLowerCase())
     );
   }
 
@@ -283,8 +277,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
       node.codInterno?.toLowerCase().includes(codeSearch.toLowerCase())
     );
   }
-
-
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
@@ -296,7 +288,9 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
   const [selectedBrand, setSelectedBrand] = React.useState("");
   if (selectedBrand) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles?.toLowerCase().includes(selectedBrand.toLowerCase())
+      node.marcasCompatibles
+        ?.toLowerCase()
+        .includes(selectedBrand.toLowerCase())
     );
   }
 
@@ -307,48 +301,152 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
     );
   }
 
-  if (search) {
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.det?.toLowerCase().includes(search.toLowerCase())
+      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
+    );
+  }
+
+  if (search) {
+    errorNodes = errorNodes.filter(
+      (node: any) =>
+        node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
+        node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
+        node.det?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
-
-
   return (
     <>
-
-<div className="pt-4">
+      <div className="pt-4">
         <Group>
+          {category ? (
+            <Select
+              value={category || null}
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              clearable
+            />
+          ) : (
+            <Select
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              clearable
+            />
+          )}
 
-        <Select
-          onChange={(event) => {
-            setSelectedUser(event);
-          }}
-          placeholder="Usuario"
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-          data={userNames}
-          clearable
-        />
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedOrigin(event);
+            }}
+            placeholder="Origen"
+            data={ProductOrigins}
+            clearable
+          />
+
+          <Select
+            // value={search}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedBrand(event);
+            }}
+            placeholder="Marcas"
+            data={brands}
+            clearable
+          />
+
+          <Select
+            onChange={(event) => {
+              setSelectedUser(event);
+            }}
+            placeholder="Usuario"
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            data={userNames}
+            clearable
+          />
 
           <TextInput
             placeholder="Observaciones"
             value={observation}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
             }}
             onChange={(event) => setObservation(event.target.value)}
           />
@@ -357,39 +455,41 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
             placeholder="Búsqueda"
             value={search}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
 
           <ReloadTable path={paths.historyView} />
-
         </Group>
       </div>
-      
-      <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+
+      <div
+        className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
-
-      <CompactTable
-        columns={columns}
-        data={{ ...errorData, nodes: errorNodes }}
-        theme={theme}
-        layout={{ custom: true }}
-        select={select}
-        tree={tree}
-        sort={sort}
-        pagination={pagination}
-        onChange={(event) =>
-          handleUpdate(event.target.value, errorData, "Descripción")
-        }
-      />
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0"
+      >
+        <CompactTable
+          columns={columns}
+          data={{ ...errorData, nodes: errorNodes }}
+          theme={theme}
+          layout={{ custom: true }}
+          select={select}
+          tree={tree}
+          sort={sort}
+          pagination={pagination}
+          onChange={(event) =>
+            handleUpdate(event.target.value, errorData, "Descripción")
+          }
+        />
       </div>
-
 
       <Group position="right" mx={10}>
         <Pagination
@@ -410,6 +510,6 @@ const [errorData, setErrorData] = React.useState({ nodes: data });
       </Group>
     </>
   );
-}
+};
 
-export default ReturnTableChart
+export default ReturnTableChart;
