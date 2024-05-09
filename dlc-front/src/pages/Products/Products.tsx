@@ -10,7 +10,6 @@ import Loader from "../../components/Loader/Loader";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import ExportButton from "../../utils/downloadProducts";
 import { useAuth } from "../../contexts/AuthContext";
-import { AnualExport } from "../../utils/downloadProducts";
 import useRoleCheck from "../../hooks/useRoleCheck";
 
 const Products = () => {
@@ -48,8 +47,8 @@ const Products = () => {
                       </h3>
                     </div>
                   </Link>
-                  {/* <ExportButton /> */}
-                  <AnualExport />
+                  <ExportButton />
+                  {/* <AnualExport /> */}
                 </section>
               )}
             </div>

@@ -48,7 +48,7 @@ import {
   modifyCosts,
   createCosts,
 } from "../../utils/Handlers/Handlers.tsx";
-
+import { ProductOrigins } from "../../routes/routes.tsx";
 import CostForm from "../CostForm/CostForm.tsx";
 
 const ImportedTableChart = ({ columns, data, category }: any) => {
@@ -332,7 +332,10 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
         node.origen?.toLowerCase().includes(search.toLowerCase()) ||
         node.user?.toLowerCase().includes(search.toLowerCase()) ||
         node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
-        node.marcasCompatibles?.includes(brandSearch.toLowerCase())
+        node.marcasCompatibles?.includes(brandSearch.toLowerCase()) ||
+        node.marcas?.includes(brandSearch.toLowerCase()) ||
+        node.desc?.includes(brandSearch.toLowerCase()) ||
+        node.categoria?.includes(brandSearch.toLowerCase())
     );
   }
 
@@ -508,47 +511,60 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
                     {proveedores.map((cost, index) => {
                       return (!isOperator && cost.origen === "Fabrica") ||
                         isAdmin ? (
-                        <div key={index} className="p-2 border-b-2 border-b-slate-600 pb-2">
+                        <div
+                          key={index}
+                          className="p-2 border-b-2 border-b-slate-600 pb-2"
+                        >
                           <div className="flex flex-row gap-3 px-1 align-middle items-center">
-                            <h3 className="text-black dark:text-white font-extrabold py-1">• {cost.nombre}</h3>
+                            <h3 className="text-black dark:text-white font-extrabold py-1">
+                              • {cost.nombre}
+                            </h3>
                             <div>|</div>
-                            <p className="text-black dark:text-white font-semibold">Valor:</p>
-                            <p className="text-black dark:text-white">{cost.valor}</p>
+                            <p className="text-black dark:text-white font-semibold">
+                              Valor:
+                            </p>
+                            <p className="text-black dark:text-white">
+                              {cost.valor}
+                            </p>
                             <div>-</div>
-                            <p className="text-black dark:text-white font-semibold">Origen:</p>
-                            <p className="text-black dark:text-white">{cost.origen}</p>
-
+                            <p className="text-black dark:text-white font-semibold">
+                              Origen:
+                            </p>
+                            <p className="text-black dark:text-white">
+                              {cost.origen}
+                            </p>
 
                             <div className="">
-                            <button
-                              className="rounded-full bg-red-700 flex px-4 py-2 hover:bg-red-500"
-                              onClick={() => {
-                                setModalOpened(true);
-                                setProviderName(cost.nombre);
-                                setCostFoundToFilter(costFound);
-                                setDeletingCost(cost);
-                              }}
-                            >
-                              <p className="text-gray-200 dark:text-white">Borrar</p>
-                              
-                            </button>
+                              <button
+                                className="rounded-full bg-red-700 flex px-4 py-2 hover:bg-red-500"
+                                onClick={() => {
+                                  setModalOpened(true);
+                                  setProviderName(cost.nombre);
+                                  setCostFoundToFilter(costFound);
+                                  setDeletingCost(cost);
+                                }}
+                              >
+                                <p className="text-gray-200 dark:text-white">
+                                  Borrar
+                                </p>
+                              </button>
                             </div>
                             <div>
-                              
-                            <button
-                              className="rounded-full bg-black flex px-4 py-2 hover:bg-gray-400"
-                              onClick={() => {
-                                setEditingCost(cost);
-                                setActiveItemCode(item.codigoInt);
-                                setProviderName(cost.nombre);
-                                setCost(cost.valor);
-                                setOrigin(cost.origen);
-                              }}
-                            >
-                              <p className="text-gray-200 dark:text-white">Editar</p>
-                            </button>
+                              <button
+                                className="rounded-full bg-black flex px-4 py-2 hover:bg-gray-400"
+                                onClick={() => {
+                                  setEditingCost(cost);
+                                  setActiveItemCode(item.codigoInt);
+                                  setProviderName(cost.nombre);
+                                  setCost(cost.valor);
+                                  setOrigin(cost.origen);
+                                }}
+                              >
+                                <p className="text-gray-200 dark:text-white">
+                                  Editar
+                                </p>
+                              </button>
                             </div>
-
                           </div>
                         </div>
                       ) : null;
@@ -731,6 +747,28 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
               option:
                 "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
+          />
+
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedOrigin(event);
+            }}
+            placeholder="Origen"
+            data={ProductOrigins}
+            clearable
           />
 
           <TextInput

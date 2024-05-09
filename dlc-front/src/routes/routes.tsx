@@ -94,7 +94,7 @@ const AppRoutes: React.FC = () => {
           <Route path={paths.errors} element={<Errors />} />
           <Route path={paths.moves} element={<Moves />} />
           <Route path={paths.notifications} element={<Notifications />} />
-          <Route path={paths.historyView} element={<HistoryView />} />
+          <Route path="/historyView/:tableType?" element={<HistoryView />} />
           <Route
             path={paths.upload}
             element={

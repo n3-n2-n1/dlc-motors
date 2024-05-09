@@ -137,7 +137,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
               Inventario
             </h1>
             <div className="bg-black dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center hover:bg-gray-800 mr-6 transition-colors duration-300">
-              <Link to="/historyView">
+              <Link to="/historyView/Inventory">
                 <button className="p-3 text-md font-bold text-white">
                   Historial
                 </button>

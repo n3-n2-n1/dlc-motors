@@ -22,21 +22,12 @@ import {
 import {
   Group,
   TextInput,
-  Checkbox,
-  Modal,
-  OptionsDropdown,
-  MultiSelect,
-  ActionIcon,
-  Button,
   Select,
-  Drawer,
-  Space,
   Pagination,
 } from "@mantine/core";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import { ProductOrigins } from "../../routes/routes";
-import { MovementTypes } from "../../routes/routes";
 import SortIcon from "../icon/SortIcon/SortIcon";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
@@ -44,7 +35,7 @@ import { useUser } from "../../contexts/UserContext.tsx";
 import { DateInput } from "@mantine/dates";
 import ReloadTable from "../Reload/Reload.tsx";
 import { paths } from "../../routes/paths.ts";
-
+import { MovementTypes } from "../../routes/routes";
 import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -139,6 +130,17 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     onChange: onSearchCode,
   });
   function onSearchCode(action: any, state: any) {
+    console.log(action, state);
+    pagination.fns.onSetPage(0);
+  }
+
+
+  const [OEMSearch, setOEMSearch] = React.useState("");
+  useCustom("OEM", errorData, {
+    state: { OEMSearch },
+    onChange: onSearchOEM,
+  });
+  function onSearchOEM(action: any, state: any) {
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
@@ -346,6 +348,13 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     );
   }
 
+  const [selectedOEM, setSelectedOEM] = React.useState("");
+  if (selectedOEM) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.OEM.toLowerCase().includes(selectedOEM.toLowerCase())
+    );
+  }
+
   const [observation, setObservation] = React.useState("");
   useCustom("det", errorData, {
     state: { observation },
@@ -355,6 +364,15 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     console.log(action, state);
     pagination.fns.onSetPage(0);
   }
+
+
+  const [selectedMove, setSelectedMove] = React.useState("");
+  if (selectedMove) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.tipoMov?.toLowerCase().includes(selectedMove.toLowerCase())
+    );
+  }
+
 
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
@@ -377,6 +395,12 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   if (selectedCode) {
     errorNodes = errorNodes.filter((node: any) =>
       node.codigoInt?.toLowerCase().includes(selectedCode.toLowerCase())
+    );
+  }
+
+  if (OEMSearch) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.OEM?.toLowerCase().includes(selectedOEM.toLowerCase())
     );
   }
 
@@ -628,6 +652,50 @@ const MoveTableChart = ({ columns, data, category }: any) => {
             clearable
           />
 
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedMove(event);
+            }}
+            placeholder="Tipo de Movimiento"
+            data={MovementTypes}
+            clearable
+          />
+
+            <Select
+            onChange={(event) => {
+              setSelectedUser(event);
+            }}
+            placeholder="Usuario"
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            data={userNames}
+            clearable
+          />
+
           <TextInput
             classNames={{
               wrapper:
@@ -668,6 +736,20 @@ const MoveTableChart = ({ columns, data, category }: any) => {
             placeholder="Búsqueda"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
+          />
+
+          <TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="OEM"
+            value={OEMSearch}
+            onChange={(event) => setSelectedOEM(event.target.value)}
           />
 
           <TextInput

@@ -475,15 +475,7 @@ const DeliveryTableChart = ({ columns, data, tableFilters }: any) => {
             onChange={(event) => setImpoSearch(event.target.value)}
           />
 
-          <Dashcards
-            buttons={[
-              {
-                text: "Agregar masivamente",
-                action: edit,
-                link: "/massiveDelivery",
-              },
-            ]}
-          />
+
 
           <ReloadTable path={paths.historyView} />
         </Group>
