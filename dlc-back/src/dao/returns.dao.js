@@ -33,11 +33,13 @@ export class ReturnsDAO {
     observaciones,
     stockAnt,
     usuario,
+    origen,
+    marcasCompatibles,
   ) {
     try {
       return new Promise((resolve, reject) => {
         db.query(
-          "INSERT INTO devoluciones (fecha, observaciones, codInterno, codOEM, `desc`, stock, detalle, cantidad, kit, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT INTO devoluciones (fecha, observaciones, codInterno, codOEM, `desc`, stock, detalle, cantidad, kit, user, origen, marcasCompatibles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             fecha,
             observaciones,
@@ -49,6 +51,8 @@ export class ReturnsDAO {
             cantidad,
             kit,
             usuario,
+            origen,
+            marcasCompatibles,
           ],
           function (error, results) {
             if (error) {

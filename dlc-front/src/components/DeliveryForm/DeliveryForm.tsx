@@ -143,6 +143,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
               Pedidos
             </h1>
             <div className="flex row dark:bg-blue-500 hover:dark:bg-blue-600 text-white dark:text-gray-600 rounded-full justify-center ">
+              <div onClick={() => console.log("hi")}>
             <Dashcards
             buttons={[
               {
@@ -151,7 +152,8 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
                 link: "/historyView/Delivery",
               },
             ]}
-          />
+            />
+            </div>
 
               <div className="ml-8">
             <Dashcards

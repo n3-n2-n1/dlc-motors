@@ -36,6 +36,9 @@ export const createProductError = async (req, res) => {
       detalle,
       stockReal,
       imagen,
+      origen,
+      rubro,
+      marcasCompatibles,
     } = req.body;
 
     if (
@@ -45,13 +48,16 @@ export const createProductError = async (req, res) => {
       !codigoInt ||
       !codOEM ||
       !desc ||
-      !detalle ||
-      !imagen
+      !imagen ||
+      !origen
     ) {
       return res
         .status(400)
         .send({ status: "error", error: "Incomplete values" });
     }
+
+    console.log(origen, rubro, marcasCompatibles)
+
     const createdError = await errorService.createProductError(
       usuario,
       fecha,
@@ -62,7 +68,10 @@ export const createProductError = async (req, res) => {
       stock,
       detalle,
       stockReal,
-      imagen
+      imagen,
+      origen,
+      rubro,
+      marcasCompatibles,
     );
 
     res.status(200).send({

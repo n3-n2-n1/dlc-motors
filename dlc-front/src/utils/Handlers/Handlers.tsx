@@ -354,7 +354,6 @@ const modifyProduct = async (productToEdit: any) => {
     }
 
     const responseData = await response.json();
-    toast.success("Modificacion de producto exitosa");
   } catch (error) {
     console.error("Error editing product:", error);
   }

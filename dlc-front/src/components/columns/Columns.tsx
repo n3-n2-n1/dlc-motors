@@ -253,6 +253,30 @@ export const PRODUCTCOLUMNS = [
     sort: { sortKey: "OEM" },
   },
   {
+    label: "Imagen",
+    renderCell: (item: any) =>
+      (
+        <div>
+          <Tooltip
+            withArrow
+            transitionProps={{ duration: 200, transition: "fade" }}
+            label={
+              <img src={item.img} alt="preview" style={{ width: "400px" }} />
+            }
+          >
+            <Link
+              to={item.img}
+              target="_blank"
+              className="font-semibold text-blue-600 hover:text-blue-400"
+            >
+              Ver
+            </Link>
+          </Tooltip>
+        </div>
+      ) || "-",
+    resize,
+  },
+  {
     label: "Check",
     renderCell: (item: any) => {
       if (item.check === "Error") {
@@ -464,6 +488,24 @@ export const ERRORCOLUMNS = [
     sort: { sortKey: "OEM" }
   },
   {
+    label: "Origen",
+    renderCell: (item: any) => item.origen || "-",
+    resize,
+    sort: { sortKey: "Origen" }
+  },
+  {
+    label: "Rubro",
+    renderCell: (item: any) => item.rubro || "-",
+    resize,
+    sort: { sortKey: "Rubro" }
+  },
+  {
+    label: "Marcas",
+    renderCell: (item: any) => item.marcasCompatibles || "-",
+    resize,
+    sort: { sortKey: "Marcas" }
+  },
+  {
     label: "Descripción",
     renderCell: (item: any) => item.desc || "-",
     resize,
@@ -575,12 +617,25 @@ export const MOVESCOLUMNS = [
     sort: { sortKey: "OEM" }
   },
   {
+    label: "Marcas",
+    renderCell: (item: any) => item.marcasCompatibles || "-",
+    resize,
+    sort: { sortKey: "Marcas" }
+  },
+  
+  {
+    label: "Rubro",
+    renderCell: (item: any) => item.rubro || "-",
+    resize,
+    sort: { sortKey: "Rubro" }
+  },
+  {
     label: "Stock",
     renderCell: (item: any) => {
       if (item.tipoMov === "Ingreso") {
-        return item.stock + item.cantidad;
+        return parseInt(item.stock) + parseInt(item.cantidad);
       } else if (item.tipoMov === "Egreso") {
-        return item.stock - item.cantidad;
+        return parseInt(item.stock) - parseInt(item.cantidad);
       } else {
         return item.stock;
       }
@@ -642,12 +697,25 @@ export const RETURNCOLUMNS = [
     resize,
     sort: { sortKey: "OEM" }
   },
+  {
+    label: "Origen",
+    renderCell: (item: any) => item.origen || "-",
+    resize,
+    sort: { sortKey: "Origen" }
+  },
   
   {
     label: "Descripcion",
     renderCell: (item: any) => item.desc || "-",
     resize,
     sort: { sortKey: "Descripcion" }
+  },
+
+  {
+    label: "Marcas",
+    renderCell: (item: any) => item.marcasCompatibles || "-",
+    resize,
+    sort: { sortKey: "Marcas" }
   },
   
   {

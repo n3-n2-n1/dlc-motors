@@ -27,12 +27,14 @@ export class MovementDAO {
     stockAct,
     arreglo,
     usuario,
-    tipoMov
+    tipoMov,
+    rubro,
+    marcasCompatibles,
   ) {
     return new Promise((resolve, reject) => {
       try {
         db.query(
-          "INSERT INTO movimientos (fecha, codigoInt, codOEM, `desc`, stock, stockAct, arreglo, user,tipoMov) VALUES (?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO movimientos (fecha, codigoInt, codOEM, `desc`, stock, stockAct, arreglo, user, tipoMov, rubro, marcasCompatibles) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
           [
             fecha,
             codigoInt,
@@ -43,6 +45,8 @@ export class MovementDAO {
             arreglo,
             usuario,
             tipoMov,
+            rubro,
+            marcasCompatibles,
           ],
           function (error, results) {
             if (error) {
@@ -77,13 +81,15 @@ export class MovementDAO {
     cantidad,
     kit,
     usuario,
-    tipoMov
+    tipoMov,
+    rubro,
+    marcasCompatibles,
   ) {
     return new Promise((resolve, reject) => {
       const productDao = new ProductDAO(db);
 
       db.query(
-        "INSERT INTO movimientos (fecha, observaciones, codigoInt, codOEM, `desc`, stock, stockAct, det, cantidad, kit, user, tipoMov) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO movimientos (fecha, observaciones, codigoInt, codOEM, `desc`, stock, stockAct, det, cantidad, kit, user, tipoMov, rubro, marcasCompatibles) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
           date,
           observaciones,
@@ -97,6 +103,8 @@ export class MovementDAO {
           kit,
           usuario,
           tipoMov,
+          rubro,
+          marcasCompatibles,
         ],
         function (error, results) {
           if (error) {

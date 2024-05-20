@@ -98,10 +98,9 @@ const editProduct: React.FC<EditProductFormProps> = ({
           ...values,
           imagen: imageUrl,
         };
-        modifyProduct(updatedValues);
+        await modifyProduct(updatedValues);
 
         toast.success("Producto editado con éxito");
-        formik.resetForm();
       } catch (error) {
         console.error("Error en el formulario:", error);
         toast.error("Error al cargar la imagen: " + error);

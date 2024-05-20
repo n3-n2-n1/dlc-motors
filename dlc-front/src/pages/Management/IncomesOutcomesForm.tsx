@@ -46,8 +46,11 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     codOEM: null,
     tipoMov: "",
     desc: "",
+    stockActual: 0,
+    marcasCompatibles: "",
+    rubro: "",
     detalle: "",
-    cantidad: null,
+    cantidad: 1,
     kit: null,
     stockAct: 0,
   };
@@ -61,6 +64,8 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
           ...values,
           usuario: user?.name,
         };
+
+        console.log(updatedValues)
         if (updatedValues.stockAct < 0) {
           toast.error("No se puede realizar el movimiento, stock insuficiente");
           return;
@@ -103,14 +108,16 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
     formik.setFieldValue("tipoMov", formName);
     formik.setFieldValue("codOEM", selectedProduct?.codOEM);
     formik.setFieldValue("desc", selectedProduct?.descripcion);
-    formik.setFieldValue("stock", selectedProduct?.stock);
+    formik.setFieldValue("stock", selectedProduct?.stock || 0);
+    formik.setFieldValue("rubro", selectedProduct?.rubro);
+    formik.setFieldValue("marcasCompatibles", selectedProduct?.marcasCompatibles.join(' / '));
 
     formik.setFieldValue(
       "stockAct",
       formName === "Ingreso"
-        ? (parseInt(selectedProduct?.stock) ?? 0) +
+        ? (parseInt(selectedProduct?.stock || 0) ?? 0) +
             (parseInt(formik.values.cantidad) ?? 0)
-        : (parseInt(selectedProduct?.stock) ?? 0) -
+        : (parseInt(selectedProduct?.stock || 0) ?? 0) -
             (parseInt(formik.values.cantidad) * (formik.values.kit || 1) ?? 0)
     );
   }, [selectedProduct, formik.values.cantidad]);
@@ -276,6 +283,38 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 disabled
               />
             </div>
+            <div className="mb-4">
+              <label
+                htmlFor="rubro"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Rubro
+              </label>
+              <input
+                type="text"
+                id="rubro"
+                name="rubro"
+                value={selectedProduct?.rubro || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="marcas"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Marcas Compatibles
+              </label>
+              <input
+                type="text"
+                id="marcas"
+                name="marcas"
+                value={selectedProduct?.marcasCompatibles.join(' / ') || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
 
             {/* Campo para ingresar el detalle del movimiento */}
             <div className="mb-4">
@@ -373,8 +412,8 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 value={
                   formName === "Ingreso"
                     ? (Number(formik.values.cantidad) ?? 0) +
-                      (parseInt(selectedProduct?.stock) ?? 0)
-                    : (parseInt(selectedProduct?.stock) ?? 0) -
+                      (parseInt(selectedProduct?.stock || 0) ?? 0)
+                    : (parseInt(selectedProduct?.stock || 0) ?? 0) -
                       (parseInt(formik.values.cantidad) *
                         (formik.values.kit || 1) ?? 0)
                 }

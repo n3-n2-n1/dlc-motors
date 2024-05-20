@@ -260,7 +260,7 @@ export default function Sidebar() {
               onClick={() => handleLogout()}
             >
               <div className="dark:hidden">
-                <LogoutIcon className="w-5 h-5 dark:text-white text-black" />
+                <LogoutIcon className="w-3 h-3 dark:text-white text-black" />
               </div>
               <div className="hidden dark:block">
                 <DarkLogoutIcon />

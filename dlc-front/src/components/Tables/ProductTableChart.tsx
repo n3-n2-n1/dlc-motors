@@ -65,17 +65,20 @@ const ProductTableChart = ({ columns, data, category }: any) => {
     selectedCodigoInt,
   } = useBrandsObservations();
 
+
   const mantineTheme = getTheme({
     ...DEFAULT_OPTIONS,
     striped: true,
     highlightOnHover: true,
   });
+  
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  90px repeat(12, minmax(0, 1fr));
-    margin: 16px 0px;
+      --data-table-library_grid-template-columns: 70px 100px 100px 100px 300px repeat(9, minmax(0, 1fr));
+      margin: 16px 0px;
     `,
   };
+  
 
   const theme = useTheme([mantineTheme, customTheme]);
   const handleUpdate = (value: any, id: any, property: any) => {

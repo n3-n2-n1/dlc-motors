@@ -38,6 +38,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     codOEM: null,
     tipoMov: "",
     codigoInt: "",
+    marcasCompatibles: "",
+    rubro: "",
     desc: "",
     stockAct: null,
     arreglo: null,
@@ -95,7 +97,7 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
   } = useQRCodeScanner();
 
   // Estado para manejar el producto seleccionado
-  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [inputValue, setInputValue] = useState("");
 
   // Establecer el valor de 'date' y 'updatedStock' en el estado de Formik
@@ -105,6 +107,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
     formik.setFieldValue("codOEM", selectedProduct?.codOEM);
     formik.setFieldValue("desc", selectedProduct?.descripcion);
     formik.setFieldValue("stock", selectedProduct?.stock);
+    formik.setFieldValue("rubro", selectedProduct?.rubro);
+    formik.setFieldValue("marcasCompatibles", selectedProduct?.marcasCompatibles.join(' / '));
   }, [selectedProduct]);
 
   useEffect(() => {
@@ -238,6 +242,38 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ products }) => {
                 id="stockAnterior"
                 name="stockAnterior"
                 value={selectedProduct?.stock || 0}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="rubro"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Rubro
+              </label>
+              <input
+                type="text"
+                id="rubro"
+                name="rubro"
+                value={selectedProduct?.rubro || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="marcas"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Marcas Compatibles
+              </label>
+              <input
+                type="text"
+                id="marcas"
+                name="marcas"
+                value={selectedProduct?.marcasCompatibles.join(' / ') || ''}
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />

@@ -29,7 +29,7 @@ enum TableType {
   Delivery,
 }
 
-
+import { useFilterValues } from "../../contexts/FilterContext";
 
 import { useAuth } from "../../contexts/AuthContext";
 import useRoleCheck from "../../hooks/useRoleCheck";
@@ -37,11 +37,12 @@ import useRoleCheck from "../../hooks/useRoleCheck";
 const HistoryView = () => {
 
   const { user } = useAuth();
+  const { currentTable, setCurrentTable } = useFilterValues();
 
   const isSalesMan = useRoleCheck(user?.role, ["Vendedor"]);
   const isDepositOperator = useRoleCheck(user?.role, ["Operador de depósito"]);
   const isFactoryOperator = useRoleCheck(user?.role, ["Operador de fábrica"]);
-  const [currentTable, setCurrentTable] = useState<TableType | null>(null);
+  // const [currentTable, setCurrentTable] = useState<TableType | null>(null);
   const [selectedButton, setSelectedButton] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -60,7 +61,7 @@ const HistoryView = () => {
     [TableType.Error]: ErrorFetchNodes,
     [TableType.Return]: ReturnsFetchNodes,
     [TableType.Inventory]: MovesFetchNodes,
-    [TableType.Delivery]: DeliveryFetchNodes,
+    [TableType.Delivery]: DeliveryFetchNodes, 
   };
 
   useEffect(() => {

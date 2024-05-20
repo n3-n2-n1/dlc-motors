@@ -25,6 +25,8 @@ export default class MovementService {
         arreglo,
         usuario,
         tipoMov,
+        rubro,
+        marcasCompatibles,
       } = movement;
 
       return await this.movementDAO.createMovementInventory(
@@ -36,7 +38,9 @@ export default class MovementService {
         stockAct,
         arreglo,
         usuario,
-        tipoMov
+        tipoMov,
+        rubro,
+        marcasCompatibles,
       );
     } catch (error) {
       throw new Error("Error en el servicio: " + error.message);
@@ -58,6 +62,8 @@ export default class MovementService {
         kit,
         usuario,
         tipoMov,
+        rubro,
+        marcasCompatibles,
       } = movement;
 
       return await this.movementDAO.createIncomeOutcome(
@@ -72,7 +78,9 @@ export default class MovementService {
         cantidad,
         kit,
         usuario,
-        tipoMov
+        tipoMov,
+        rubro,
+        marcasCompatibles,
       );
     } catch (error) {
       throw new Error("Error en el servicio: " + error.message);

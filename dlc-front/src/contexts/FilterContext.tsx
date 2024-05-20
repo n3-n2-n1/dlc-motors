@@ -6,17 +6,33 @@ interface FilterProviderProps {
   children: ReactNode;
 }
 
+enum TableType {
+  Error,
+  Return,
+  Inventory,
+  Delivery,
+}
+
 const FilterValuesContext = createContext<FilterContextProps | undefined>(
   undefined
 );
+
+import {
+  ErrorFetchNodes,
+  MovesFetchNodes,
+  DeliveryFetchNodes,
+  ReturnsFetchNodes,
+} from "../nodes/productNodes";
 
 export const FilterValuesProvider: React.FC<FilterProviderProps> = ({
   children,
 }) => {
 
+  const [currentTable, setCurrentTable] = useState<TableType | null>(null);
+
   return (
     <FilterValuesContext.Provider
-      value={{}}
+      value={{currentTable, setCurrentTable}}
     >
       {children}
     </FilterValuesContext.Provider>

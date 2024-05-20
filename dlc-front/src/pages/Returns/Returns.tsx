@@ -22,6 +22,7 @@ const validationSchema = Yup.object().shape({
     "Debe ingresar un código interno válido para continuar",
     (value) => value !== undefined
   ),
+  origen: Yup.string().required("Campo requerido"),
 });
 
 interface IProduct {
@@ -51,8 +52,10 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
     desc: "",
     detalle: "",
     stockAnt: null,
-    cantidad: null,
+    marcasCompatibles: "",
+    cantidad: 1,
     kit: null,
+    origen: null
   };
 
   const formik = useFormik({
@@ -70,7 +73,6 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
 
       try {
         await createReturns(updatedValues);
-        (updatedValues);
         formik.resetForm();
       } catch (error) {
         console.error(error);
@@ -102,6 +104,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
     formik.setFieldValue("desc", selectedProduct?.descripcion || "");
     formik.setFieldValue("stockAnt", selectedProduct?.stock || 0);
     formik.setFieldValue("codOEM", selectedProduct?.codOEM);
+    formik.setFieldValue("marcasCompatibles", selectedProduct?.marcasCompatibles.join(' / ') || '');
   }, [selectedProduct, formik.values?.stockAnt]);
 
   useEffect(() => {
@@ -261,6 +264,49 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 disabled
               />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="marcas"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Marcas Compatibles
+              </label>
+              <input
+                type="text"
+                id="marcas"
+                name="marcas"
+                value={selectedProduct?.marcasCompatibles.join(' / ') || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+
+            {/* Campo de Origen */}
+            <div className="mb-4">
+              <label
+                htmlFor="origen"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Origen
+              </label>
+              <select
+                id="origen"
+                name="origen"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="">Seleccione...</option>
+                <option value="Importado">Importado</option>
+                <option value="Reventa">Reventa</option>
+                <option value="Fabrica">Fabrica</option>
+              </select>
+              {formik.touched.origen && formik.errors.origen ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.origen}
+                </div>
+              ) : null}
             </div>
 
             {/* Campo de Detalle */}

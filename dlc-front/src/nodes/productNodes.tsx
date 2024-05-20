@@ -32,7 +32,8 @@ export const useFetchNodes = () => {
         stock: product.stock,
         rubro: product.rubro,
         stockFuturo: product.stockFuturo,
-        OEM: product.codOEM
+        OEM: product.codOEM,
+        img: product.imagen,
       }));
       setProductNodes(transformedNodes);
     }
@@ -89,6 +90,8 @@ export const ReturnsFetchNodes = () => {
           kit: product.kit,
           contador: product.contador,
           user: product.user,
+          origen: product.origen,
+          marcasCompatibles: product.marcasCompatibles
         }));
         setReturnNodes(transformedNodes);
       } catch (error) {
@@ -126,7 +129,8 @@ export const MovesFetchNodes = () => {
             det: product.det,
             stockAct: product.stockAct,
             stockReal: product.stockReal,
-            desc: product.desc
+            desc: product.desc,
+            marcasCompatibles: product.marcasCompatibles,
             // ...otros campos
           }));
           setMovesNodes(transformedNodes);
@@ -167,6 +171,9 @@ export const ErrorFetchNodes = () => {
             user: error.user,
             estado: error.estado,
             det: error.det,
+            origen: error.origen,
+            rubro: error.rubro,
+            marcasCompatibles: error.marcasCompatibles,
             // ...otros campos
           }));
           setErrorNodes(transformedNodes);

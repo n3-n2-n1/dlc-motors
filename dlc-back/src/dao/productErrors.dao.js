@@ -32,11 +32,14 @@ export class productErrorsDAO {
     stock,
     detalle,
     stockReal,
-    imagen
+    imagen,
+    origen,
+    rubro,
+    marcasCompatibles,
   ) {
     return new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO errores (user, fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO errores (user, fecha, observaciones, codInterno, codOEM, `desc`, stock, det, stockReal, img, origen, rubro, marcasCompatibles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           usuario,
           fecha,
@@ -48,6 +51,9 @@ export class productErrorsDAO {
           detalle,
           stockReal,
           imagen,
+          origen,
+          rubro,
+          marcasCompatibles,
         ],
         function (error, results) {
           if (error) {

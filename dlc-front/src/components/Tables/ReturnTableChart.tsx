@@ -43,7 +43,7 @@ const ReturnTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  120px repeat(11, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(13, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
