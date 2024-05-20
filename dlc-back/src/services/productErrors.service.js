@@ -23,7 +23,10 @@ export default class ErrorService {
     stock,
     detalle,
     stockReal,
-    imagen
+    imagen,
+    origen,
+    rubro,
+    marcasCompatibles,
   ) {
     try {
       return await this.productErrorsDAO.createProductError(
@@ -36,7 +39,10 @@ export default class ErrorService {
         stock,
         detalle,
         stockReal,
-        imagen
+        imagen,
+        origen,
+        rubro,
+        marcasCompatibles,
       );
     } catch (error) {
       throw new Error("Error en el servicio" + error.message);

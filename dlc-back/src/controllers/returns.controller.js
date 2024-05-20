@@ -36,25 +36,32 @@ export const createReturn = async (req, res) => {
       kit,
       observaciones,
       stockAnt,
-      usuario
+      usuario,
+      origen,
+      marcasCompatibles,
     } = req.body;
 
+    console.log(marcasCompatibles)
+
+    console.log(cantidad, codOEM, codigoInt, desc, detalle, fecha, kit, observaciones, stockAnt, usuario, origen, marcasCompatibles)
+
     if (
+      !cantidad ||
+      !codOEM ||
+      !codigoInt ||
+      !desc ||
+      !detalle ||
       !fecha ||
       !observaciones ||
-      !codigoInt ||
-      !codOEM ||
-      !desc ||
-      !stockAnt ||
-      !detalle ||
-      !cantidad ||
-      !usuario
+      !usuario ||
+      !origen
     ) {
       return res.status(400).send({
         status: "error",
         error: "Incomplete Values",
       });
     }
+
 
     const returns = await returnsService.createReturn(
       cantidad,
@@ -66,7 +73,9 @@ export const createReturn = async (req, res) => {
       kit,
       observaciones,
       stockAnt,
-      usuario
+      usuario,
+      origen,
+      marcasCompatibles,
     );
 
     if (!returns || returns.length === 0) {

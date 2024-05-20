@@ -15,7 +15,7 @@ interface ErrorFormProps {
 
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
-  detalle: Yup.string().required("Campo requerido"),
+  detalle: Yup.string(),
   stockReal: Yup.number()
     .min(0, "El stock real no puede ser menor a 0")
     .required("Campo requerido"),
@@ -27,6 +27,7 @@ const validationSchema = Yup.object().shape({
     "Debe ingresar un código interno válido para continuar",
     (value) => value !== undefined
   ),
+  origen: Yup.string().required("Campo requerido"),
 });
 
 const ErrorForm: React.FC<ErrorFormProps> = ({
@@ -44,9 +45,12 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     codOEM: null,
     desc: "",
     stock: 0,
+    marcasCompatibles: "",
+    rubro: "",
     detalle: "",
     stockReal: null,
     imagen: null,
+    origen: null,
   };
 
   interface IProduct {
@@ -97,8 +101,12 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
     QrReaderButton,
   } = useQRCodeScanner();
 
-  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    console.log(selectedProduct)
+  }, [selectedProduct])  
 
   useEffect(() => {
     formik.setFieldValue("fecha", new Date().toLocaleString());
@@ -108,6 +116,8 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
       "stock",
       selectedProduct?.stock === "" ? 0 : selectedProduct?.stock
     );
+    formik.setFieldValue("rubro", selectedProduct?.rubro);
+    formik.setFieldValue("marcasCompatibles", selectedProduct?.marcasCompatibles.join(' / '));
   }, [selectedProduct, formik.values.stockReal]);
 
   useEffect(() => {
@@ -258,6 +268,65 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 disabled
               />
             </div>
+            <div className="mb-4">
+              <label
+                htmlFor="rubro"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Rubro
+              </label>
+              <input
+                type="text"
+                id="rubro"
+                name="rubro"
+                value={selectedProduct?.rubro || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="marcas"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Marcas Compatibles
+              </label>
+              <input
+                type="text"
+                id="marcas"
+                name="marcas"
+                value={selectedProduct?.marcasCompatibles.join(' / ') || ''}
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                disabled
+              />
+            </div>
+
+            {/* Campo de Origen */}
+            <div className="mb-4">
+              <label
+                htmlFor="origen"
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300"
+              >
+                Origen
+              </label>
+              <select
+                id="origen"
+                name="origen"
+                className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="">Seleccione...</option>
+                <option value="Importado">Importado</option>
+                <option value="Reventa">Reventa</option>
+                <option value="Fabrica">Fabrica</option>
+              </select>
+              {formik.touched.origen && formik.errors.origen ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.origen}
+                </div>
+              ) : null}
+            </div>
 
             {/* Campo para ingresar el detalle del movimiento */}
             <div className="mb-4">
@@ -265,7 +334,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 htmlFor="detalle"
                 className="block text-sm font-medium text-gray-600 dark:text-gray-300"
               >
-                Detalle
+                Detalle (No obligatorio)
               </label>
               <input
                 type="text"

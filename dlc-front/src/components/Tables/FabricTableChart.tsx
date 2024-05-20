@@ -96,12 +96,12 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       page: 0,
       size: 12,
     },
-    onChange: onPaginationChange,
+    // onChange: onPaginationChange,
   });
 
-  function onPaginationChange(action: any, state: any) {
-    pagination.fns.onSetPage(0);
-  }
+  // function onPaginationChange(action: any, state: any) {
+  //   pagination.fns.onSetPage(0);
+  // }
 
   //* Search *//
 

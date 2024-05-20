@@ -22,7 +22,7 @@ const ExportButton = ({ modifiedNodes }) => {
   return (
     <button
       onClick={handleExport}
-      className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-xl px-4 dark:hover:bg-blue-800 hover:bg-gray-700 hover:text-white dark:bg-blue-600 select-none"
+      className="flex flex-col items-center justify-center bg-black text-white rounded-full shadow-lg md:shadow-lg px-4 dark:hover:bg-blue-800 hover:bg-gray-700 hover:text-white dark:bg-blue-600 select-none"
     >
       <h3 className="text-m font-semibold my-2 rounded-2xl hover:text-white select-none">
         Descargar filtrados
