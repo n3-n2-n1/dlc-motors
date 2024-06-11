@@ -20,7 +20,7 @@ export async function uploadImageToCloudinary(file) {
   formData.append('signature', signature);
 
   try {
-    const response = await fetch(`https://api.cloudinary.com/v1_1/dripemmbb/image/upload`, {
+    const response = await fetch(`https://api.cloudinary.com/v1_1/dlc-new/image/upload`, {
       method: 'POST',
       body: formData,
     });
