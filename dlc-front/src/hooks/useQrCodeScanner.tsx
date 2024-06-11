@@ -26,7 +26,7 @@ export const useQRCodeScanner = () => {
     QrReaderComponent: (
       <div style={{ width: "100%" }}>
         <QrReader
-          constraints={{ facingMode: "user" }}
+          constraints={{ facingMode: "environment" }}
           scanDelay={1000}
           onResult={handleScan}
         />

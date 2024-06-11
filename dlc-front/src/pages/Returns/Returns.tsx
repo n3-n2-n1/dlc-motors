@@ -11,17 +11,15 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
-  codigoInt: Yup.string().required("Campo requerido"),
-  detalle: Yup.string().required("Campo requerido"),
   cantidad: Yup.number()
     .min(1, "Las devoluciones no pueden ser menores a 1")
     .required("Campo requerido"),
   kit: Yup.number().nullable(),
-  codOEM: Yup.string().test(
-    "invalid",
-    "Debe ingresar un código interno válido para continuar",
-    (value) => value !== undefined
-  ),
+  // codOEM: Yup.string().test(
+  //   "invalid",
+  //   "Debe ingresar un código interno válido para continuar",
+  //   (value) => value !== undefined
+  // ),
   origen: Yup.string().required("Campo requerido"),
 });
 

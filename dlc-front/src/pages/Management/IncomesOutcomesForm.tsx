@@ -25,11 +25,11 @@ const validationSchema = Yup.object().shape({
   codigoInt: Yup.string().required("Campo requerido"),
   kit: Yup.number().nullable(),
   stockAct: Yup.number().min(0, "El stock restante no puede ser menor a 0"),
-  codOEM: Yup.string().test(
-    "invalid",
-    "Debe ingresar un código interno válido para continuar",
-    (value) => value !== undefined
-  ),
+  // codOEM: Yup.string().test(
+  //   "invalid",
+  //   "Debe ingresar un código interno válido para continuar",
+  //   (value) => value !== undefined
+  // ),
 });
 
 const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({

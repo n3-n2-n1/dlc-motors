@@ -91,7 +91,7 @@ const Horizontal = () => {
   };
 
   return (
-    <div style={{ width: '1200px', height: '380px', color: 'black'}}>
+    <div style={{ width: '1320px', height: '600px', color: 'black'}}>
       <Bar data={chartData} options={options} />
     </div>
   );

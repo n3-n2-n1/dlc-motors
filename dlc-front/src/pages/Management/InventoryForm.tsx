@@ -21,11 +21,11 @@ const validationSchema = Yup.object().shape({
     .min(0, "El stock arreglado no puede ser menor a 0")
     .required("Campo requerido"),
   arreglo: Yup.number().required("Campo requerido"),
-  codOEM: Yup.string().test(
-    "invalid",
-    "Debe ingresar un código interno válido para continuar",
-    (value) => value !== undefined
-  ),
+  // codOEM: Yup.string().test(
+  //   "invalid",
+  //   "Debe ingresar un código interno válido para continuar",
+  //   (value) => value !== undefined
+  // ),
 });
 
 // Componente funcional del formulario de inventario

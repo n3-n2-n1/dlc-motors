@@ -36,16 +36,15 @@ const NumericInput = ({ field, form, ...props }) => {
 
 const validationSchema = Yup.object().shape({
   observaciones: Yup.string().required("Campo requerido"),
-  codigoInt: Yup.string().required("Campo requerido").uppercase(),
   numImpo: Yup.string().required("Campo requerido"),
   cantidad: Yup.number()
     .min(1, "La cantidad no puede ser menor a 1")
     .required("Campo requerido"),
-  codOEM: Yup.string().test(
-    "invalid",
-    "Debe ingresar un código interno válido para continuar",
-    (value) => value !== undefined
-  ),
+  // codOEM: Yup.string().test(
+  //   "invalid",
+  //   "Debe ingresar un código interno válido para continuar",
+  //   (value) => value !== undefined
+  // ),
 });
 
 
