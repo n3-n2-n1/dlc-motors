@@ -47,8 +47,6 @@ export const createReturn = async (req, res) => {
 
     if (
       !cantidad ||
-      !codOEM ||
-      !codigoInt ||
       !desc ||
       !detalle ||
       !fecha ||
