@@ -34,7 +34,7 @@ export async function uploadImageToCloudinary(file) {
   const formData = await createFormData(file, timestamp, apiKey, uploadPreset, signature);
 
   try {
-    const response = await fetch('https://api.cloudinary.com/v1_1/dlc-new/image/upload', {
+    const response = await fetch('https://api.cloudinary.com/v1_1/dripemmbb/image/upload', {
       method: 'POST',
       body: formData,
     });
