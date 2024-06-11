@@ -132,8 +132,6 @@ export const createProduct = async (req, res) => {
     } = req.body;
 
     if (
-      !codigoInt ||
-      !codOEM ||
       !SKU ||
       !descripcion ||
       !rubro ||

@@ -42,14 +42,7 @@ export const createProductError = async (req, res) => {
     } = req.body;
 
     if (
-      !usuario ||
-      !fecha ||
-      !observaciones ||
-      !codigoInt ||
-      !codOEM ||
-      !desc ||
-      !imagen ||
-      !origen
+      !usuario
     ) {
       return res
         .status(400)

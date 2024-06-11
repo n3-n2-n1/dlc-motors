@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
     .min(1, "Se requiere al menos una marca compatible")
     .required("Requerido"),
   stock: Yup.number().required("Requerido"),
-  imagen: Yup.mixed(),
+  // imagen: Yup.mixed(),
   contadorDevoluciones: Yup.number(),
   esKit: Yup.boolean(),
   kit: Yup.array().of(Yup.number()),
@@ -456,11 +456,11 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 }}
                 className="mt-1 block w-full p-2 border text-white border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500"
               />
-              {formik.touched.imagen && formik.errors.imagen ? (
+              {/* {formik.touched.imagen && formik.errors.imagen ? (
                 <div className="text-red-500 text-sm mt-1">
                   {formik.errors.imagen}
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
 
             {/* Previsualización de la imagen */}
