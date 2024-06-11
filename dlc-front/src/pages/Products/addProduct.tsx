@@ -9,7 +9,6 @@ import Navbar from "../../components/Navbar/Navbar";
 
 const validationSchema = Yup.object({
   codigoInt: Yup.string().required("Requerido"),
-  codOEM: Yup.string().required("Requerido"),
   SKU: Yup.string().required("Requerido"),
   descripcion: Yup.string().required("Requerido"),
   rubro: Yup.string().required("Requerido"),
@@ -268,7 +267,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
                 </select>
                 <button
                   type="button"
-                  className="w-full max-w-xs ml-2 rounded-full bg-black font-semibold font-m dark:bg-blue-500 hover:bg-gray-800 dark:text-gray-200 text-white py-2 px-4 dark:hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
+                  className="w-full max-w-xs ml-2 rounded-full bg-black font-semibold font-m dark:bg-blue-500 hover:bg-gray-800 dark:text-gray-400 text-white py-2 px-4 dark:hover:bg-blue-600 disabled:bg-gray-500 disabled:text-gray-800"
                   onClick={() => {
                     if (formik.values.newCompatibleBrand) {
                       formik.setFieldValue("marcasCompatibles", [
@@ -284,7 +283,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
               </div>
               {formik.values.marcasCompatibles.map((marca, index) => (
                 <div key={index} className="flex gap-1 mb-1 ml-2">
-                  <p className="block text-sm font-semibold text-gray-100 dark:text-gray-300 w-32">
+                  <p className="block text-sm font-semibold text-gray-400 dark:text-gray-300 w-32">
                     {index + 1} - {marca}
                   </p>
                   <button

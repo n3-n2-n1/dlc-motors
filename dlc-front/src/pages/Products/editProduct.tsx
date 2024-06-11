@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 
 const validationSchema = Yup.object({
   codigoInt: Yup.string().required("Requerido"),
-  codOEM: Yup.string().required("Requerido"),
   SKU: Yup.string().required("Requerido"),
   descripcion: Yup.string().required("Requerido"),
   rubro: Yup.string().required("Requerido"),

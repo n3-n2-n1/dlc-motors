@@ -1,5 +1,4 @@
 import CryptoJS from 'crypto-js';
-
 export async function uploadImageToCloudinary(file) {
   if (!file) {
     throw new Error('No se proporcionó un archivo.');
