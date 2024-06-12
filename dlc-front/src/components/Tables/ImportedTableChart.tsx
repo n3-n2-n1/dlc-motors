@@ -396,18 +396,22 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   
       // Scenario 1: costFound.proveedores already exists, so append newCost to it
       newCosts = {
-        id: activeItemCode,
-        ...costFound,
+        descripcion: newCostItem?.descripcion || '',
+        codigo: newCostItem?.codigoInt || '',
+        marca: newCostItem?.marca || '',
+        stock: newCostItem?.stock !== undefined ? newCostItem.stock : 0,
         proveedores: [...parsedProveedores, newCost],
+        rubro: newCostItem?.rubro || '',
+        sku: newCostItem?.SKU || '',
       };
-      await modifyCosts(newCosts);
+      await createCosts(newCosts);
     } else {
       // Scenario 2: costFound.proveedores doesn't exist, so create a new array with newCost as its first element
       const itemData = {
         descripcion: newCostItem?.descripcion || '',
         codigo: newCostItem?.codigoInt || '',
         marca: newCostItem?.marca || '',
-        stock: newCostItem?.stock || 0,
+        stock: newCostItem?.stock !== undefined ? newCostItem.stock : 0,
         rubro: newCostItem?.rubro || '',
         sku: newCostItem?.SKU || '',
       };
@@ -421,6 +425,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     setCost('');
     setOrigin('');
   };
+  
   
 
   const handleEditCost = (e: any, costFound: any) => {
