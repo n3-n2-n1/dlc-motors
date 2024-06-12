@@ -19,14 +19,14 @@ const validationSchema = Yup.object().shape({
   stockReal: Yup.number()
     .min(0, "El stock real no puede ser menor a 0")
     .required("Campo requerido"),
-  codigoInt: Yup.string().required("Campo requerido").uppercase(),
+  // codigoInt: Yup.string().required("Campo requerido").uppercase(),
   imagen: Yup.mixed()
     .required("Una imagen es requerida"),
-  codOEM: Yup.string().test(
-    "invalid",
-    "Debe ingresar un código interno válido para continuar",
-    (value) => value !== undefined
-  ),
+  // codOEM: Yup.string().test(
+  //   "invalid",
+  //   "Debe ingresar un código interno válido para continuar",
+  //   (value) => value !== undefined
+  // ),
   origen: Yup.string().required("Campo requerido"),
 });
 
