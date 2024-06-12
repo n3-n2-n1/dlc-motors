@@ -5,7 +5,7 @@ export async function uploadImageToCloudinary(file) {
     throw new Error('No se proporcionó un archivo.');
   }
 
-  const apiKey = "142862488479222"
+  const apiKey = "75136931975783"
   const uploadPreset = "ml_default"
   const apiSecret = "Sv87nV_eizZlsN4lIxvP66fp09o"
 
@@ -21,7 +21,7 @@ export async function uploadImageToCloudinary(file) {
   formData.append('signature', signature);
 
   try {
-    const response = await fetch(`https://api.cloudinary.com/v1_1/dv1tzyaki/upload`, {
+    const response = await fetch(`https://api.cloudinary.com/v1_1/dripemmbb/upload`, {
       method: 'POST',
       body: formData,
     });
