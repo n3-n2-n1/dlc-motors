@@ -308,22 +308,21 @@ const createDelivery = async (deliveryData: any) => {
 };
 
 const createCosts = async (costData) => {
-  // Proporcionar valores por defecto para los campos faltantes
   const defaultCostData = {
     descripcion: costData.descripcion || '',
     codigo: costData.codigo || '',
     marca: costData.marca || '',
-    stock: costData.stock || 0,
-    proveedores: costData.proveedores || [],
+    stock: costData.stock !== undefined ? costData.stock : 0,
+    proveedores: Array.isArray(costData.proveedores) ? costData.proveedores : [],
     rubro: costData.rubro || '',
-    sku: costData.sku || ''
+    sku: costData.sku || '',
   };
 
   try {
     const response = await fetch(`${URL}/api/v1/costs`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(defaultCostData),
     });
@@ -334,12 +333,13 @@ const createCosts = async (costData) => {
     }
 
     const responseData = await response.json();
-    toast.success("Costo creado correctamente");
+    toast.success('Costo creado correctamente');
   } catch (error) {
-    console.error("Error creating product:", error);
-    toast.error("Error al crear el costo");
+    console.error('Error creating cost:', error.message);
+    toast.error('Error al crear el costo');
   }
 };
+
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//
