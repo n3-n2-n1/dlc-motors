@@ -29,12 +29,7 @@ export const createCosts = async (req, res) => {
       req.body;
 
     if (
-      !descripcion ||
-      !codigo ||
-      !stock ||
-      !proveedores ||
-      !rubro ||
-      !sku
+      !descripcion
     ) {
       return res.status(400).send({
         status: "error",

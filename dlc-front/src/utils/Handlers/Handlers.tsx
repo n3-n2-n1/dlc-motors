@@ -2,7 +2,7 @@ import { User } from "../../Interfaces/User";
 import * as xlsx from "xlsx";
 import { toast } from "react-toastify";
 
-const URL = import.meta.env.VITE_API_URL; // Así es como se accede en Vite.
+const URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'; // Así es como se accede en Vite.
 
 const token = localStorage.getItem("userJWT");
 
@@ -307,27 +307,41 @@ const createDelivery = async (deliveryData: any) => {
   }
 };
 
-const createCosts = async (costData: any) => {
+const createCosts = async (costData) => {
+  // Proporcionar valores por defecto para los campos faltantes
+  const defaultCostData = {
+    descripcion: costData.descripcion || '',
+    codigo: costData.codigo || '',
+    marca: costData.marca || '',
+    stock: costData.stock !== undefined ? costData.stock : 0,
+    proveedores: Array.isArray(costData.proveedores) ? costData.proveedores : [],
+    rubro: costData.rubro || '',
+    sku: costData.sku || ''
+  };
+
   try {
     const response = await fetch(`${URL}/api/v1/costs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(costData),
+      body: JSON.stringify(defaultCostData),
     });
 
     if (!response.ok) {
-      const costData = await response.json();
-      throw new Error(costData.error);
+      const errorData = await response.json();
+      throw new Error(errorData.error);
     }
 
     const responseData = await response.json();
     toast.success("Costo creado correctamente");
   } catch (error) {
-    console.error("Error creating product:");
+    console.error("Error creating cost:", error.message);
+    toast.error("Error al crear el costo");
   }
 };
+
+
 
 //---------------------------------------------------------------//
 //---------------------------------------------------------------//

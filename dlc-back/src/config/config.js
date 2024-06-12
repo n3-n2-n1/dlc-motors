@@ -1,6 +1,9 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config({ path: ".env" });
+// Cargar el archivo correcto dependiendo del entorno
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
 const config = {
   PORT: process.env.PORT || 3000,

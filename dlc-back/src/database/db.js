@@ -1,27 +1,39 @@
-import mysql from "mysql";
-import config from "../config/config.js";
+import mysql from 'mysql';
+import config from '../config/config.js';
 
-const {
-  db: { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT },
-} = config;
-
+// Configuración de la base de datos desde config.js
 const dbConfig = {
-  host: DB_HOST, // Host local debido al túnel SSHs
-  user: DB_USER, // Tu usuario de la base de datos
-  password: DB_PASSWORD, // Tu contraseña de la base de datos
-  database: DB_NAME, // El nombre de tu base de datos
-  port: DB_PORT, // El puerto local del túnel SSH
+  host: config.db.DB_HOST,
+  user: config.db.DB_USER,
+  password: config.db.DB_PASSWORD,
+  database: config.db.DB_NAME,
+  port: config.db.DB_PORT,
 };
 
-const db = mysql.createConnection(dbConfig);
+let connection;
 
-// Conectar a la base de datos
-db.connect((err) => {
-  if (err) {
-    console.error("Error al conectar a la base de datos:", err);
-  } else {
-    console.log("Conexión exitosa a la base de datos");
-  }
-});
+function handleDisconnect() {
+  connection = mysql.createConnection(dbConfig);
 
-export default db;
+  connection.connect((err) => {
+    if (err) {
+      console.error('Error al conectar a la base de datos:', err);
+      setTimeout(handleDisconnect, 2000);
+    } else {
+      console.log('Conexión exitosa a la base de datos');
+    }
+  });
+
+  connection.on('error', (err) => {
+    console.error('Error en la conexión:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
+
+export default connection;

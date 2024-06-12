@@ -767,7 +767,7 @@ export const IMPORTEDCOLUMNS = [
   },
   {
     label: "Código Interno",
-    renderCell: (item: any) => item.codInterno || "-",
+    renderCell: (item: any) => item.codigoInt || "-",
     resize,
     sort: { sortKey: "Código Interno" },
     

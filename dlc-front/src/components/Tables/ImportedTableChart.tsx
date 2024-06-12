@@ -377,50 +377,56 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   // For new cost purposes
   const [newCostItem, setNewCostItem] = React.useState(null);
 
-  const handleAddCost = (e: any, costFound: any) => {
+  const handleAddCost = async (e, costFound) => {
     e.preventDefault();
-
+  
     costFound = costFound || {};
-
+  
     const newCost = {
-      nombre: providerName,
-      origen: origin || "Nacional",
-      valor: cost,
+      nombre: providerName || '',
+      origen: origin || 'Nacional',
+      valor: cost || 0,
     };
-
+  
     let newCosts;
-
+  
     if (costFound.proveedores) {
       // Parse the string into an array
       const parsedProveedores = JSON.parse(costFound.proveedores);
-
+  
       // Scenario 1: costFound.proveedores already exists, so append newCost to it
       newCosts = {
-        id: activeItemCode,
-        ...costFound,
+        descripcion: newCostItem?.descripcion || '',
+        codigo: newCostItem?.codigoInt || '',
+        marca: newCostItem?.marca || '',
+        stock: newCostItem?.stock !== undefined ? newCostItem.stock : 0,
         proveedores: [...parsedProveedores, newCost],
+        rubro: newCostItem?.rubro || '',
+        sku: newCostItem?.SKU || '',
       };
-      modifyCosts(newCosts);
+      await createCosts(newCosts);
     } else {
       // Scenario 2: costFound.proveedores doesn't exist, so create a new array with newCost as its first element
       const itemData = {
-        descripcion: newCostItem?.descripcion,
-        codigo: newCostItem?.codigoInt,
-        marca: newCostItem?.marca,
-        stock: newCostItem?.stock,
-        rubro: newCostItem?.rubro,
-        sku: newCostItem?.SKU,
+        descripcion: newCostItem?.descripcion || '',
+        codigo: newCostItem?.codigoInt || '',
+        marca: newCostItem?.marca || '',
+        stock: newCostItem?.stock !== undefined ? newCostItem.stock : 0,
+        rubro: newCostItem?.rubro || '',
+        sku: newCostItem?.SKU || '',
       };
       newCosts = { ...itemData, proveedores: [newCost] };
-      createCosts(newCosts);
+      await createCosts(newCosts);
       setNewCostItem(null);
     }
-
+  
     // Reset form
-    setProviderName("");
-    setCost("");
-    setOrigin("");
+    setProviderName('');
+    setCost('');
+    setOrigin('');
   };
+  
+  
 
   const handleEditCost = (e: any, costFound: any) => {
     e.preventDefault();
