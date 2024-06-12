@@ -490,17 +490,22 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
         costs && Array.isArray(costs)
           ? (costs as any[]).find((cost: any) => cost.codigo === item.codigoInt)
           : undefined;
-
-      let proveedores;
-
+  
+      let proveedores = [];
+  
       const { user } = useAuth();
       const isOperator = useRoleCheck(user?.role, ["Operador de Fábrica"]);
       const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
-
-      if (costFound) {
-        proveedores = JSON.parse(costFound.proveedores);
+  
+      if (costFound && costFound.proveedores) {
+        try {
+          proveedores = JSON.parse(costFound.proveedores);
+        } catch (error) {
+          console.error("Error parsing proveedores:", error);
+          proveedores = [];
+        }
       }
-
+  
       return (
         <Collapse className="animate" in={ids.includes(item.id)}>
           <tr style={{ flex: "1", display: "flex" }}>
@@ -508,67 +513,70 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
               <ul style={{ margin: "0", padding: "0" }}>
                 {costFound ? (
                   <div>
-                    {proveedores.map((cost, index) => {
-                      return (!isOperator && cost.origen === "Fabrica") ||
-                        isAdmin ? (
-                        <div
-                          key={index}
-                          className="p-2 border-b-2 border-b-slate-600 pb-2"
-                        >
-                          <div className="flex flex-row gap-3 px-1 align-middle items-center">
-                            <h3 className="text-black dark:text-white font-extrabold py-1">
-                              • {cost.nombre}
-                            </h3>
-                            <div>|</div>
-                            <p className="text-black dark:text-white font-semibold">
-                              Valor:
-                            </p>
-                            <p className="text-black dark:text-white">
-                              {cost.valor}
-                            </p>
-                            <div>-</div>
-                            <p className="text-black dark:text-white font-semibold">
-                              Origen:
-                            </p>
-                            <p className="text-black dark:text-white">
-                              {cost.origen}
-                            </p>
-
-                            <div className="">
-                              <button
-                                className="rounded-full bg-red-700 flex px-4 py-2 hover:bg-red-500"
-                                onClick={() => {
-                                  setModalOpened(true);
-                                  setProviderName(cost.nombre);
-                                  setCostFoundToFilter(costFound);
-                                  setDeletingCost(cost);
-                                }}
-                              >
-                                <p className="text-gray-200 dark:text-white">
-                                  Borrar
-                                </p>
-                              </button>
-                            </div>
-                            <div>
-                              <button
-                                className="rounded-full bg-black flex px-4 py-2 hover:bg-gray-400"
-                                onClick={() => {
-                                  setEditingCost(cost);
-                                  setActiveItemCode(item.codigoInt);
-                                  setProviderName(cost.nombre);
-                                  setCost(cost.valor);
-                                  setOrigin(cost.origen);
-                                }}
-                              >
-                                <p className="text-gray-200 dark:text-white">
-                                  Editar
-                                </p>
-                              </button>
+                    {Array.isArray(proveedores) && proveedores.length > 0 ? (
+                      proveedores.map((cost, index) => {
+                        return (!isOperator && cost.origen === "Fabrica") || isAdmin ? (
+                          <div
+                            key={index}
+                            className="p-2 border-b-2 border-b-slate-600 pb-2"
+                          >
+                            <div className="flex flex-row gap-3 px-1 align-middle items-center">
+                              <h3 className="text-black dark:text-white font-extrabold py-1">
+                                • {cost.nombre}
+                              </h3>
+                              <div>|</div>
+                              <p className="text-black dark:text-white font-semibold">
+                                Valor:
+                              </p>
+                              <p className="text-black dark:text-white">
+                                {cost.valor}
+                              </p>
+                              <div>-</div>
+                              <p className="text-black dark:text-white font-semibold">
+                                Origen:
+                              </p>
+                              <p className="text-black dark:text-white">
+                                {cost.origen}
+                              </p>
+  
+                              <div className="">
+                                <button
+                                  className="rounded-full bg-red-700 flex px-4 py-2 hover:bg-red-500"
+                                  onClick={() => {
+                                    setModalOpened(true);
+                                    setProviderName(cost.nombre);
+                                    setCostFoundToFilter(costFound);
+                                    setDeletingCost(cost);
+                                  }}
+                                >
+                                  <p className="text-gray-200 dark:text-white">
+                                    Borrar
+                                  </p>
+                                </button>
+                              </div>
+                              <div>
+                                <button
+                                  className="rounded-full bg-black flex px-4 py-2 hover:bg-gray-400"
+                                  onClick={() => {
+                                    setEditingCost(cost);
+                                    setActiveItemCode(item.codigoInt);
+                                    setProviderName(cost.nombre);
+                                    setCost(cost.valor);
+                                    setOrigin(cost.origen);
+                                  }}
+                                >
+                                  <p className="text-gray-200 dark:text-white">
+                                    Editar
+                                  </p>
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ) : null;
-                    })}
+                        ) : null;
+                      })
+                    ) : (
+                      <div>No hay proveedores disponibles</div>
+                    )}
                     {activeItemCode !== item.codigoInt && (
                       <div className="pb-3 pt-4">
                         <button
@@ -591,9 +599,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
                         setCost={setCost}
                         origin={origin}
                         setOrigin={setOrigin}
-                        handleAddCost={
-                          editingCost ? handleEditCost : handleAddCost
-                        }
+                        handleAddCost={editingCost ? handleEditCost : handleAddCost}
                         setActiveItemCode={setActiveItemCode}
                       />
                     )}
@@ -630,6 +636,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
       );
     },
   };
+  
 
   return (
     <>
