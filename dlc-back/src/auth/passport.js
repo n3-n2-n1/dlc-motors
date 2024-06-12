@@ -8,9 +8,8 @@ import config from "../config/config.js";
 
 import { userService } from "../services/services.js";
 
-const {
-  jwt: { JWT_SECRET },
-} = config
+
+const JWT_SECRET = 'secret';
 
 const LocalStrategy = local.Strategy;
 const JwtStrategy = jwt.Strategy;
