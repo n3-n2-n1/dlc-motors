@@ -10,30 +10,19 @@ const dbConfig = {
   port: config.db.DB_PORT,
 };
 
-let connection;
+const connection = mysql.createConnection(dbConfig);
 
-function handleDisconnect() {
-  connection = mysql.createConnection(dbConfig);
+connection.connect((err) => {
+  if (err) {
+    console.error('Error al conectar a la base de datos:', err);
+    return;
+  }
+  console.log('Conexión exitosa a la base de datos');
+});
 
-  connection.connect((err) => {
-    if (err) {
-      console.error('Error al conectar a la base de datos:', err);
-      setTimeout(handleDisconnect, 2000);
-    } else {
-      console.log('Conexión exitosa a la base de datos');
-    }
-  });
-
-  connection.on('error', (err) => {
-    console.error('Error en la conexión:', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
-}
-
-handleDisconnect();
+connection.on('error', (err) => {
+  console.error('Error en la conexión:', err);
+  throw err; // Lanza el error para que sea manejado por la lógica de manejo de errores superior
+});
 
 export default connection;
