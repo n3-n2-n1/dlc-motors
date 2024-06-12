@@ -1,11 +1,12 @@
 import CryptoJS from "crypto-js";
+import dotenv from 'dotenv';
 
 export async function uploadImageToCloudinary(file) {
   if (!file) {
     throw new Error('No se proporcionó un archivo.');
   }
 
-  const apiKey = "75136931975783";
+  const apiKey = import.meta.env.CLOUDINARY_API_KEY;
   const uploadPreset = "ml_default"; // Reemplaza con tu upload preset
   const cloudName = "dripemmbb"; // Reemplaza con tu nombre de Cloudinary
 

@@ -20,7 +20,7 @@ export const AuthContext = createContext<AuthContextProps | undefined>(
   undefined
 );
 
-const URL = import.meta.env.VITE_API_URL; // Así es como se accede en Vite.
+const URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'; // Así es como se accede en Vite.
 export const AuthProvider: React.FC = ({
   children,
 }: {
