@@ -107,13 +107,13 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
   const pagination = usePagination(errorData, {
     state: {
       page: 0,
-      size: 15,
+      size: 12,
     },
     onChange: onPaginationChange,
   });
 
   function onPaginationChange(action: any, state: any) {
-    console.log(action, state);
+    // console.log(action, state);
   }
 
   //* Search *//
