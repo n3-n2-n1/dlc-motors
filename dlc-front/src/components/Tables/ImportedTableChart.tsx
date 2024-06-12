@@ -314,7 +314,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
     });
   }
 
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
       node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())

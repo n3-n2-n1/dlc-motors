@@ -290,7 +290,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
     modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
+      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
 
