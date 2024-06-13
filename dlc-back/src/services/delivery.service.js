@@ -43,6 +43,11 @@ export default class DeliveryService {
       );
 
       const prod = await this.productDAO.getProductByCodigoInt(codigoInt);
+      
+      // Verificar que prod existe antes de acceder a stockFuturo
+      if (!prod) {
+        throw new Error(`Producto con codigoInt ${codigoInt} no encontrado.`);
+      }
 
       const futureStock = prod.stockFuturo || 0;
 
@@ -58,16 +63,20 @@ export default class DeliveryService {
     try {
       const prod = await this.productDAO.getProductByCodigoInt(codigoInt);
 
+      // Verificar que prod existe antes de acceder a stockFuturo
+      if (!prod) {
+        throw new Error(`Producto con codigoInt ${codigoInt} no encontrado.`);
+      }
+
       const futureStock = prod.stockFuturo !== undefined ? prod.stockFuturo : 0;
 
       const newFutureStock = futureStock - cantidad;
 
-      if (estado === "Entregado") {
-        this.productDAO.decreaseFutureStock(newFutureStock, codigoInt);
-      } else if (estado === "Cancelado") {
-        console.log("Se cancelo la entrega del producto, stock revertido");
-        this.productDAO.decreaseFutureStock(newFutureStock, codigoInt);
+      if (estado === "Entregado" || estado === "Cancelado") {
+        console.log(`${estado === "Entregado" ? "Entrega" : "Cancelación"} de la entrega del producto, stock ajustado.`);
+        await this.productDAO.decreaseFutureStock(newFutureStock, codigoInt);
       }
+
       return await this.deliveryDAO.updateDeliveryStatus(numImpo, estado);
     } catch (error) {
       throw new Error("Error en el servicio" + error.message);

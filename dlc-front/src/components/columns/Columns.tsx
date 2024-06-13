@@ -85,7 +85,7 @@ const DeliveryEdit = ({ item }) => {
     const deliveryUpdates = {
       ...item,
       estado: newStatus,
-      stockFuturo: item.stockFuturo !== undefined ? item.stockFuturo : 0 // Proporcionar valor predeterminado
+      stockFuturo: item.stockFuturo !== undefined ? item.stockFuturo : 0 // Asegúrate de enviar stockFuturo
     };
 
     try {
@@ -116,6 +116,7 @@ const DeliveryEdit = ({ item }) => {
     </>
   );
 };
+
 
 
 const ErrorEdit = ({ item }: any) => {
