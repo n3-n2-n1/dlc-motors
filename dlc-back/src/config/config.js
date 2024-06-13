@@ -3,7 +3,7 @@ import path from 'path';
 
 // Cargar el archivo correcto dependiendo del entorno
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
-dotenv.config({ path: path.resolve(process.cwd(), envFile) });
+dotenv.config({ path: '.env' });
 
 const config = {
   PORT: process.env.PORT || 3000,
