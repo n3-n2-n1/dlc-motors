@@ -46,7 +46,9 @@ export default class DeliveryService {
       
       // Verificar que prod existe antes de acceder a stockFuturo
       if (!prod) {
-        throw new Error(`Producto con codigoInt ${codigoInt} no encontrado.`);
+        console.warn(`Producto con codigoInt ${codigoInt} no encontrado.`);
+        // Devolver un valor o mensaje adecuado para indicar que el producto no se encontró
+        return { message: `Producto con codigoInt ${codigoInt} no encontrado.`, success: false };
       }
 
       const futureStock = prod.stockFuturo || 0;
@@ -65,7 +67,9 @@ export default class DeliveryService {
 
       // Verificar que prod existe antes de acceder a stockFuturo
       if (!prod) {
-        throw new Error(`Producto con codigoInt ${codigoInt} no encontrado.`);
+        console.warn(`Producto con codigoInt ${codigoInt} no encontrado.`);
+        // Devolver un valor o mensaje adecuado para indicar que el producto no se encontró
+        return { message: `Producto con codigoInt ${codigoInt} no encontrado.`, success: false };
       }
 
       const futureStock = prod.stockFuturo !== undefined ? prod.stockFuturo : 0;
