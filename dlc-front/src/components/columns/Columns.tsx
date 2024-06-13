@@ -76,7 +76,7 @@ const DeliveryEdit = ({ item }) => {
   const isAdmin = useRoleCheck(user?.role, ["Administrador"]);
   const [isCancelled, setIsCancelled] = useState(item.estado === "Cancelado");
 
-  const handleStatusChange = (event) => {
+  const handleStatusChange = async (event) => {
     const newStatus = event.target.value;
     if (newStatus === "Cancelado") {
       setIsCancelled(true);
@@ -85,8 +85,14 @@ const DeliveryEdit = ({ item }) => {
     const deliveryUpdates = {
       ...item,
       estado: newStatus,
+      stockFuturo: item.stockFuturo !== undefined ? item.stockFuturo : 0 // Proporcionar valor predeterminado
     };
-    updateDelivery(deliveryUpdates);
+
+    try {
+      await updateDelivery(deliveryUpdates);
+    } catch (error) {
+      console.error("Error updating delivery:", error);
+    }
   };
 
   return (
@@ -110,6 +116,7 @@ const DeliveryEdit = ({ item }) => {
     </>
   );
 };
+
 
 const ErrorEdit = ({ item }: any) => {
   const { user } = useAuth();
