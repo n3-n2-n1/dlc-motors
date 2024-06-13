@@ -58,7 +58,7 @@ export default class DeliveryService {
     try {
       const prod = await this.productDAO.getProductByCodigoInt(codigoInt);
 
-      const futureStock = prod.stockFuturo;
+      const futureStock = prod.stockFuturo !== undefined ? prod.stockFuturo : 0;
 
       const newFutureStock = futureStock - cantidad;
 
