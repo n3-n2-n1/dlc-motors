@@ -331,7 +331,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.detalle.trim() === '' ? 'Predeterminado' : formik.values.detalle}
+                value={formik.values.detalle.trim() === '' ? '' : formik.values.detalle}
               />
               {formik.touched.detalle && formik.errors.detalle ? (
                 <div className="text-red-500 text-sm mt-1">
