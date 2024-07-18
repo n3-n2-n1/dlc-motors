@@ -19,7 +19,7 @@ export const useFetchNodes = () => {
     if (Array.isArray(products)) {
       const transformedNodes = products.map((product) => {
         // Asegurarse de que kit es una cadena antes de usar replace
-        const transformedKit = typeof product.kit === 'string' ? product.kit.replace('/', ',') : product.kit;
+        const transformedKit = product.kit ? String(product.kit).replace('/', ',') : product.kit;
 
         return {
           id: product.codigoInt,
