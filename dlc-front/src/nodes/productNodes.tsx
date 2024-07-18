@@ -1,5 +1,6 @@
 // hooks/useFetchNodes.js
 import { useEffect, useState } from "react";
+
 import { useSearchContext } from "../contexts/SearchContext";
 import {
   fetchMoves,
@@ -9,37 +10,41 @@ import {
   fetchCosts,
 } from "../utils/Handlers/Handlers";
 import { useNotification } from "../contexts/NotificactionsContext";
-
 export const useFetchNodes = () => {
   const { products } = useSearchContext();
   const [productNodes, setProductNodes] = useState([]);
 
-
-
   useEffect(() => {
     // Asegúrate de que 'products' sea un array antes de intentar mapearlo
     if (Array.isArray(products)) {
-      const transformedNodes = products.map((product) => ({
-        id: product.codigoInt,
-        codigoInt: product.codigoInt,
-        SKU: product.SKU,
-        descripcion: product.descripcion,
-        origen: product.origen,
-        marcasCompatibles: product.marcasCompatibles,
-        kit: product.kit,
-        contadorDevoluciones: product.contadorDevoluciones,
-        check: product.check,
-        stock: product.stock,
-        rubro: product.rubro,
-        stockFuturo: product.stockFuturo,
-        OEM: product.codOEM,
-        img: product.imagen,
-      }));
+      const transformedNodes = products.map((product) => {
+        // Transformar el valor de kit reemplazando '/' por ','
+        const transformedKit = product.kit ? product.kit.replace('/', ',') : product.kit;
+
+        return {
+          id: product.codigoInt,
+          codigoInt: product.codigoInt,
+          SKU: product.SKU,
+          descripcion: product.descripcion,
+          origen: product.origen,
+          marcasCompatibles: product.marcasCompatibles,
+          kit: transformedKit,
+          contadorDevoluciones: product.contadorDevoluciones,
+          check: product.check,
+          stock: product.stock,
+          rubro: product.rubro,
+          stockFuturo: product.stockFuturo,
+          OEM: product.codOEM,
+          img: product.imagen,
+        };
+      });
       setProductNodes(transformedNodes);
     }
   }, [products]);
   return productNodes;
 };
+
+
 
 export const NotifFetchNodes = () => {
   const { notifications } = useNotification();
