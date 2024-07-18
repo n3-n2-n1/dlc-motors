@@ -227,12 +227,15 @@ export const PRODUCTCOLUMNS = [
   {
     label: "Kit",
     renderCell: (item: any) => {
-      return Array.isArray(item.kit) ? item.kit.join(" / ") : item.kit || "-";
+      if (item.kit && typeof item.kit === 'string') {
+        return item.kit.includes('/') ? item.kit.replace('/', ',') : item.kit;
+      } else {
+        return item.kit || "-";
+      }
     },
     resize,
     hide: hiddenColumns.includes("Kit"),
-    sort: { sortKey: "Kit" }
-
+    sort: { sortKey: "Kit" },
   },
   {
     label: "Dev",
