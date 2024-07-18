@@ -228,6 +228,7 @@ export const PRODUCTCOLUMNS = [
     label: "Kit",
     renderCell: (item: any) => {
       if (item.kit && typeof item.kit === 'string') {
+        // Transformar valores del tipo x/x a x,x
         return item.kit.includes('/') ? item.kit.replace('/', ',') : item.kit;
       } else {
         return item.kit || "-";
