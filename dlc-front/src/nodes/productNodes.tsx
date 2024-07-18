@@ -18,8 +18,8 @@ export const useFetchNodes = () => {
     // Asegúrate de que 'products' sea un array antes de intentar mapearlo
     if (Array.isArray(products)) {
       const transformedNodes = products.map((product) => {
-        // Transformar el valor de kit reemplazando '/' por ','
-        const transformedKit = product.kit ? product.kit.replace('/', ',') : product.kit;
+        // Asegurarse de que kit es una cadena antes de usar replace
+        const transformedKit = typeof product.kit === 'string' ? product.kit.replace('/', ',') : product.kit;
 
         return {
           id: product.codigoInt,
@@ -41,8 +41,10 @@ export const useFetchNodes = () => {
       setProductNodes(transformedNodes);
     }
   }, [products]);
+
   return productNodes;
 };
+
 
 
 
