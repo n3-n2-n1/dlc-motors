@@ -22,30 +22,7 @@ const Products = () => {
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
   const edit = () => {}
-  const convertToNumber = (value) => {
-    if (typeof value === "string") {
-      if (value.includes("/")) {
-        // Manejo de fracciones
-        const [numerator, denominator] = value.split("/").map(Number);
-        if (!isNaN(numerator) && !isNaN(denominator)) {
-          return numerator / denominator;
-        }
-      } else if (!isNaN(Number(value))) {
-        // Manejo de números en forma de cadena
-        return Number(value);
-      }
-    }
-    // Retorna el valor original si no es un número ni una fracción válida
-    return value;
-  };
-
-  const processedNodes = nodes.map((node) => ({
-    ...node,
-    kit: convertToNumber(node.kit),
-    // Aplica la conversión a otros campos si es necesario
-  }));
-
-  
+ 
   
 
   return (
@@ -84,7 +61,7 @@ const Products = () => {
               {nodes.length > 0 ? (
                 <ProductTableChart
                   columns={PRODUCTCOLUMNS}
-                  data={processedNodes}
+                  data={nodes}
                   category={category}
                 />
               ) : (

@@ -10,6 +10,7 @@ import {
   fetchCosts,
 } from "../utils/Handlers/Handlers";
 import { useNotification } from "../contexts/NotificactionsContext";
+
 export const useFetchNodes = () => {
   const { products } = useSearchContext();
   const [productNodes, setProductNodes] = useState([]);
@@ -18,19 +19,37 @@ export const useFetchNodes = () => {
     // Asegúrate de que 'products' sea un array antes de intentar mapearlo
     if (Array.isArray(products)) {
       const transformedNodes = products.map((product) => {
+        // Verificación y log de los datos recibidos
+        console.log("Original product data:", product);
+
         // Asegurarse de que kit es una cadena antes de usar replace
         const transformedKit = product.kit
-          ? String(product.kit).replace('/', ',')
+          ? String(product.kit)
           : product.kit;
 
-        return {
+        // Conversión de fracciones a números
+        const convertToNumber = (value) => {
+          if (typeof value === "string") {
+            if (value.includes("/")) {
+              const [numerator, denominator] = value.split("/").map(Number);
+              if (!isNaN(numerator) && !isNaN(denominator)) {
+                return numerator / denominator;
+              }
+            } else if (!isNaN(Number(value))) {
+              return Number(value);
+            }
+          }
+          return value;
+        };
+
+        const transformedProduct = {
           id: product.codigoInt,
           codigoInt: product.codigoInt,
           SKU: product.SKU,
           descripcion: product.descripcion,
           origen: product.origen,
           marcasCompatibles: product.marcasCompatibles,
-          kit: transformedKit,
+          kit: convertToNumber(transformedKit),
           contadorDevoluciones: product.contadorDevoluciones,
           check: product.check,
           stock: product.stock,
@@ -39,6 +58,11 @@ export const useFetchNodes = () => {
           OEM: product.codOEM,
           img: product.imagen,
         };
+
+        // Log de los datos transformados
+        console.log("Transformed product data:", transformedProduct);
+
+        return transformedProduct;
       });
       setProductNodes(transformedNodes);
     }
@@ -46,9 +70,6 @@ export const useFetchNodes = () => {
 
   return productNodes;
 };
-
-
-
 
 
 export const NotifFetchNodes = () => {
