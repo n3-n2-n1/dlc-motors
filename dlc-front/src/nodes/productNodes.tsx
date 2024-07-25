@@ -49,7 +49,7 @@ export const useFetchNodes = () => {
           descripcion: product.descripcion,
           origen: product.origen,
           marcasCompatibles: product.marcasCompatibles,
-          kit: convertToNumber(transformedKit),
+          kit: product.kit,
           contadorDevoluciones: product.contadorDevoluciones,
           check: product.check,
           stock: product.stock,
