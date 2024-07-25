@@ -22,18 +22,27 @@ const Products = () => {
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
   const edit = () => {}
-  const convertFractionToNumber = (value) => {
-    if (typeof value === "string" && value.includes("/")) {
-      const [numerator, denominator] = value.split("/").map(Number);
-      return numerator / denominator;
+  const convertToNumber = (value) => {
+    if (typeof value === "string") {
+      if (value.includes("/")) {
+        // Manejo de fracciones
+        const [numerator, denominator] = value.split("/").map(Number);
+        if (!isNaN(numerator) && !isNaN(denominator)) {
+          return numerator / denominator;
+        }
+      } else if (!isNaN(Number(value))) {
+        // Manejo de números en forma de cadena
+        return Number(value);
+      }
     }
+    // Retorna el valor original si no es un número ni una fracción válida
     return value;
   };
 
   const processedNodes = nodes.map((node) => ({
     ...node,
-    kit: convertFractionToNumber(node.kit),
-    // Agrega otras conversiones de campos si es necesario
+    kit: convertToNumber(node.kit),
+    // Aplica la conversión a otros campos si es necesario
   }));
 
   
