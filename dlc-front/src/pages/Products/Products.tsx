@@ -22,6 +22,22 @@ const Products = () => {
   const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
   const edit = () => {}
+  const convertFractionToNumber = (value) => {
+    if (typeof value === "string" && value.includes("/")) {
+      const [numerator, denominator] = value.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return value;
+  };
+
+  const processedNodes = nodes.map((node) => ({
+    ...node,
+    kit: convertFractionToNumber(node.kit),
+    // Agrega otras conversiones de campos si es necesario
+  }));
+
+  
+  
 
   return (
     <>
@@ -59,7 +75,7 @@ const Products = () => {
               {nodes.length > 0 ? (
                 <ProductTableChart
                   columns={PRODUCTCOLUMNS}
-                  data={nodes}
+                  data={processedNodes}
                   category={category}
                 />
               ) : (
