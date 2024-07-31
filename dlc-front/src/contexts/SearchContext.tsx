@@ -41,7 +41,7 @@ export const SearchProvider: React.FC = ({
 
         data = data.map((item: any) => ({
           ...item,
-          kit: item.kit === "No" ? null : item.kit.split(",").map(Number),
+          kit:  item.kit === "0" ? null : item.kit.replace(/[\[\]]/g, '').split("/").map(s => s.trim()).map(Number),
           marcasCompatibles: item.marcasCompatibles
             .split(",")
             .map((s: any) => s.trim()),
