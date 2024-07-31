@@ -226,9 +226,8 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "Kit",
-    renderCell: (item: any) => {
-      item.kit || '-'
-    },
+    renderCell: (item: any) => item.kit || '-'
+    ,
     resize,
     hide: hiddenColumns.includes("Kit"),
     sort: { sortKey: "Kit" },
