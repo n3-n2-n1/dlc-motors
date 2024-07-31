@@ -21,27 +21,6 @@ export const useFetchNodes = () => {
       const transformedNodes = products.map((product) => {
         // Verificación y log de los datos recibidos
         console.log("Original product data:", product);
-
-        // Asegurarse de que kit es una cadena antes de usar replace
-        const transformedKit = product.kit
-          ? String(product.kit)
-          : product.kit;
-
-        // Conversión de fracciones a números
-        const convertToNumber = (value) => {
-          if (typeof value === "string") {
-            if (value.includes("/")) {
-              const [numerator, denominator] = value.split("/").map(Number);
-              if (!isNaN(numerator) && !isNaN(denominator)) {
-                return numerator / denominator;
-              }
-            } else if (!isNaN(Number(value))) {
-              return Number(value);
-            }
-          }
-          return value;
-        };
-
         const transformedProduct = {
           id: product.codigoInt,
           codigoInt: product.codigoInt,
