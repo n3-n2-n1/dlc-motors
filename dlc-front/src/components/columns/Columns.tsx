@@ -226,12 +226,16 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "Kit",
-    renderCell: (item: any) => item.kit || '-'
-    ,
-    resize,
+    renderCell: (item: any) => {
+      if (Array.isArray(item.kit) && item.kit.length > 0) {
+        return item.kit.join(', ');
+      }
+      return '-';
+    },
+    resize: true,
     hide: hiddenColumns.includes("Kit"),
     sort: { sortKey: "Kit" },
-  },
+  },  
   {
     label: "Dev",
     renderCell: (item: any) => item.contadorDevoluciones || "-",
