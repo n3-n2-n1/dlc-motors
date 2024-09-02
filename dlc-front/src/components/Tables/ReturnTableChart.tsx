@@ -25,6 +25,7 @@ import { useUser } from "../../contexts/UserContext.tsx";
 import { paths } from "../../routes/paths.ts";
 import ReloadTable from "../Reload/Reload.tsx";
 import { ProductOrigins } from "../../routes/routes.tsx";
+import { MultiSelect } from "@mantine/core";
 DEFAULT_OPTIONS.highlightOnHover = true;
 DEFAULT_OPTIONS.striped = true;
 

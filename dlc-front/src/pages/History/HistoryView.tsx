@@ -38,6 +38,7 @@ const HistoryView = () => {
 
   const { user } = useAuth();
   const { currentTable, setCurrentTable } = useFilterValues();
+  const { category } = useParams();
 
   const isSalesMan = useRoleCheck(user?.role, ["Vendedor"]);
   const isDepositOperator = useRoleCheck(user?.role, ["Operador de depósito"]);
@@ -106,9 +107,9 @@ const HistoryView = () => {
   const renderTable = () => {
     switch (currentTable) {
       case TableType.Error:
-        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} />;
+        return <ErrorTableChart columns={ERRORCOLUMNS} data={errorNodes} category={category} />;
       case TableType.Return:
-        return <ReturnTableChart columns={RETURNCOLUMNS} data={returnNodes} />;
+        return <ReturnTableChart columns={RETURNCOLUMNS} data={returnNodes}  />;
       case TableType.Inventory:
         return <MoveTableChart columns={MOVESCOLUMNS} data={movesNodes} />;
       case TableType.Delivery:
