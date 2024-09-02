@@ -139,12 +139,12 @@ const ErrorEdit = ({ item }: any) => {
             updateError(errorUpdates);
           }}
         >
-          <option value="a corregir">A corregir</option>
-          <option value="corregido">Corregido</option>
-          <option value="revision">En revisión</option>
+          <option className="text-center dark:text-white text-black" value="a corregir">A corregir</option>
+          <option className="text-center dark:text-white text-black" value="corregido">Corregido</option>
+          <option className="text-center dark:text-white text-black"value="revision">En revisión</option>
         </select>
       ) : (
-        <p className="text-center text-white">{item.estado}</p>
+        <p className="text-center dark:text-white text-black">{item.estado}</p>
       )}
     </>
   );

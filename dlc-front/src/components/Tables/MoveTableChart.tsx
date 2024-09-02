@@ -39,6 +39,7 @@ import { MovementTypes } from "../../routes/routes";
 import { DayPicker, DateFormatter, DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { MultiSelect } from "@mantine/core";
 
 const MoveTableChart = ({ columns, data, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -298,11 +299,15 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
+  const toggleColumn = (selectedLabels) => {
+    setHiddenColumns(selectedLabels);
+  };
 
   columns = columns.map((column) => ({
     ...column,
     hide: hiddenColumns.includes(column.label),
   }));
+
 
   const [selectedDetail, setSelectedDetail] = React.useState(false);
   if (detailSearch) {
@@ -496,8 +501,33 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     return `${parseInt(day) + 1}-${month}-${year}`;
   };
 
+  
+
   return (
     <>
+
+<div className="pb-4 transition-colors duration-300">
+        <MultiSelect
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          data={columns.map((column) => column.label)}
+          value={hiddenColumns}
+          onChange={toggleColumn}
+          label=""
+          placeholder="Ocultar columnas..."
+        />
+      </div>
       <div className="pt-4 transition-colors duration-300">
         <Group>
           <div className="relative">

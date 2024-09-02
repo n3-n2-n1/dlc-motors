@@ -43,7 +43,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
       marcasCompatibles: [],
       newCompatibleBrand: brands[0] || "",
       stock: null,
-      imagen: null,
+      imagen: "", // Imagen inicializada como string vacía
       contadorDevoluciones: 0,
       esKit: false,
       kit: [],
@@ -53,8 +53,18 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const imageUrl = await uploadImageToCloudinary(values.imagen);
-        toast.success("Imagen cargada con éxito");
+        let imageUrl = values.imagen;
+
+        // Si la imagen es un archivo, se sube a Cloudinary
+        if (values.imagen && typeof values.imagen !== "string") {
+          imageUrl = await uploadImageToCloudinary(values.imagen);
+          toast.success("Imagen cargada con éxito");
+        }
+
+        // Si no hay imagen seleccionada, se envía un string vacío
+        if (!values.imagen) {
+          imageUrl = "";
+        }
 
         let updatedValues = {
           ...values,
@@ -68,7 +78,7 @@ const addProduct: React.FC<AddProductFormProps> = ({ categories, brands }) => {
           };
         }
 
-        createProduct(updatedValues);
+        await createProduct(updatedValues);
 
         toast.success("Producto cargado con éxito");
         formik.resetForm();
