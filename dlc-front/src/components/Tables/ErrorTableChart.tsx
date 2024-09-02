@@ -44,6 +44,7 @@ import ReloadTable from "../Reload/Reload.tsx";
 
 const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
+  const { categories } = useSearchContext();
 
   const { users } = useUser();
   const userNames = users.map((user) => user.name);
