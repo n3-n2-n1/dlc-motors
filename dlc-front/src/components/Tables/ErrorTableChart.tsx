@@ -42,7 +42,7 @@ import { useUser } from "../../contexts/UserContext.tsx";
 import { paths } from "../../routes/paths.ts";
 import ReloadTable from "../Reload/Reload.tsx";
 
-const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
+const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
 
   const { users } = useUser();
@@ -284,10 +284,149 @@ const ErrorTableChart = ({ columns, data, tableFilters }: any) => {
     );
   }
 
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  if (selectedCategory) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
+    );
+  }
+
+  const [selectedOrigin, setSelectedOrigin] = React.useState("");
+  if (selectedOrigin) {
+    errorNodes = errorNodes.filter((node: any) =>
+      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
+    );
+  }
+
+  const [selectedBrand, setSelectedBrand] = React.useState(false);
+  if (selectedBrand) {
+    errorNodes = errorNodes.filter((node: any) => {
+      // Convierte el arreglo marcasCompatibles a una cadena
+      const compatibleBrands = Array.isArray(node.marcasCompatibles)
+        ? node.marcasCompatibles.join(" / ").toLowerCase()
+        : (node.marcasCompatibles || "").toLowerCase();
+
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
+  }
+
   return (
     <>
       <div className="pt-4">
         <Group>
+        {category ? (
+          <Select
+            value={category || null}
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
+          />
+        ) : (
+          <Select
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              options: "bg-white dark:bg-gray-700",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+            }}
+            onChange={(event) => {
+              setSelectedCategory(event);
+            }}
+            placeholder="Rubro"
+            data={categories}
+            clearable
+          />
+        )}
+        <Select
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedOrigin(event);
+          }}
+          placeholder="Origen"
+          data={ProductOrigins}
+          clearable
+        />
+
+<Select
+          // value={search}
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedBrand(event);
+          }}
+          placeholder="Marcas"
+          data={brands}
+          clearable
+        />
+        <Select
+          // value={search}
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          onChange={(event) => {
+            setSelectedBrand(event);
+          }}
+          placeholder="Marcas"
+          data={brands}
+          clearable
+        />
+
           <Select
             onChange={(event) => {
               setSelectedUser(event);
