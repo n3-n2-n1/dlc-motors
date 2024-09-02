@@ -25,11 +25,7 @@ const validationSchema = Yup.object().shape({
   codigoInt: Yup.string().required("Campo requerido"),
   kit: Yup.number().nullable(),
   stockAct: Yup.number().min(0, "El stock restante no puede ser menor a 0"),
-  // codOEM: Yup.string().test(
-  //   "invalid",
-  //   "Debe ingresar un código interno válido para continuar",
-  //   (value) => value !== undefined
-  // ),
+  // No se valida el campo `detalle` para que no sea obligatorio
 });
 
 const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
@@ -62,6 +58,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
       try {
         const updatedValues = {
           ...values,
+          detalle: values.detalle || "", // Se asegura de que `detalle` sea una cadena vacía si está vacío
           usuario: user?.name,
         };
 
@@ -333,11 +330,11 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
                 onChange={formik.handleChange}
                 value={formik.values.detalle.trim() === '' ? '' : formik.values.detalle}
               />
-              {formik.touched.detalle && formik.errors.detalle ? (
+              {/* {formik.touched.detalle && formik.errors.detalle ? (
                 <div className="text-red-500 text-sm mt-1">
                   {formik.errors.detalle}
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
 
             {/* Campo para la cantidad ingresada/egresada */}

@@ -39,12 +39,11 @@ import SortIcon from "../icon/SortIcon/SortIcon";
 import { MantineProvider, useMantineTheme } from "@mantine/core";
 import { deleteProducts } from "../../utils/Handlers/Handlers.tsx";
 import { toast } from "react-toastify";
-import {useAuth } from "../../contexts/AuthContext.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useUser } from "../../contexts/UserContext.tsx";
 import { useEffect } from "react";
 import ReloadTable from "../Reload/Reload.tsx";
 import { paths } from "../../routes/paths.ts";
-
 
 const FabricTableChart = ({ columns, data, category }: any) => {
   const [errorData, setErrorData] = React.useState({ nodes: data });
@@ -112,8 +111,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onSearchChange,
   });
 
-  function onSearchChange(action: any, state: any) {
-  }
+  function onSearchChange(action: any, state: any) {}
 
   const [detailSearch, setDetailSearch] = React.useState("");
   useCustom("det", errorData, {
@@ -121,17 +119,14 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onSearchDetail,
   });
 
-  function onSearchDetail(action: any, state: any) {
-  }
+  function onSearchDetail(action: any, state: any) {}
 
   const [codeSearch, setCodeSearch] = React.useState("");
   useCustom("codInterno", errorData, {
     state: { codeSearch },
     onChange: onSearchCode,
   });
-  function onSearchCode(action: any, state: any) {
-  }
-
+  function onSearchCode(action: any, state: any) {}
 
   const [brandSearch, setBrandSearch] = React.useState("");
   useCustom("brandSearch", errorData, {
@@ -139,8 +134,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onBrandChange,
   });
 
-  function onBrandChange(action: any, state: any) {
-  }
+  function onBrandChange(action: any, state: any) {}
 
   //* Filter *//
 
@@ -151,8 +145,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onFilterChange,
   });
 
-  function onFilterChange(action: any, state: any) {
-  }
+  function onFilterChange(action: any, state: any) {}
 
   //* Select *//
 
@@ -160,8 +153,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     onChange: onSelectChange,
   });
 
-  function onSelectChange(action: any, state: any) {
-  }
+  function onSelectChange(action: any, state: any) {}
 
   //* Tree *//
 
@@ -180,8 +172,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     }
   );
 
-  function onTreeChange(action: any, state: any) {
-  }
+  function onTreeChange(action: any, state: any) {}
 
   //* Sort *//
 
@@ -212,8 +203,7 @@ const FabricTableChart = ({ columns, data, category }: any) => {
     }
   );
 
-  function onSortChange(action: any, state: any) {
-  }
+  function onSortChange(action: any, state: any) {}
 
   //* Drawer *//
 
@@ -263,6 +253,9 @@ const FabricTableChart = ({ columns, data, category }: any) => {
 
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
+  const toggleColumn = (selectedLabels) => {
+    setHiddenColumns(selectedLabels);
+  };
 
   columns = columns.map((column) => ({
     ...column,
@@ -275,7 +268,6 @@ const FabricTableChart = ({ columns, data, category }: any) => {
       node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
-
 
   const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
@@ -299,64 +291,85 @@ const FabricTableChart = ({ columns, data, category }: any) => {
   if (search) {
     errorNodes = errorNodes.filter(
       (node: any) =>
-        node.descripcion?.toLowerCase().includes(search.toLowerCase()) 
+        node.descripcion?.toLowerCase().includes(search.toLowerCase())
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }
 
-
   return (
     <>
+      <div className="pb-4 transition-colors duration-300">
+        <MultiSelect
+          classNames={{
+            wrapper:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            input:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            section:
+              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            dropdown:
+              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+            options: "bg-white dark:bg-gray-700",
+            option:
+              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+          }}
+          data={columns.map((column) => column.label)}
+          value={hiddenColumns}
+          onChange={toggleColumn}
+          label=""
+          placeholder="Ocultar columnas..."
+        />
+      </div>
       <div className="pt-4">
         <Group>
-        {category ? (
-          <Select
-            value={category || null}
-            classNames={{
-              wrapper:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown:
-                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option:
-                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
-            onChange={(event) => {
-              setSelectedCategory(event);
-            }}
-            placeholder="Rubro"
-            data={categories}
-            clearable
-          />
-        ) : (
-          <Select
-            classNames={{
-              wrapper:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section:
-                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown:
-                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              options: "bg-white dark:bg-gray-700",
-              option:
-                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-            }}
-            onChange={(event) => {
-              setSelectedCategory(event);
-            }}
-            placeholder="Rubro"
-            data={categories}
-            clearable
-          />
-        )}
+          {category ? (
+            <Select
+              value={category || null}
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              clearable
+            />
+          ) : (
+            <Select
+              classNames={{
+                wrapper:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                input:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                section:
+                  "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+                dropdown:
+                  "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+                options: "bg-white dark:bg-gray-700",
+                option:
+                  "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              }}
+              onChange={(event) => {
+                setSelectedCategory(event);
+              }}
+              placeholder="Rubro"
+              data={categories}
+              clearable
+            />
+          )}
 
-        {/* <Select
+          {/* <Select
           classNames={{
             wrapper:
               "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
@@ -387,12 +400,17 @@ const FabricTableChart = ({ columns, data, category }: any) => {
             data={brands}
             clearable
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-              dropdown: "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              dropdown:
+                "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
               options: "bg-white dark:bg-gray-700",
-              option: "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
+              option:
+                "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
             }}
           />
 
@@ -400,38 +418,40 @@ const FabricTableChart = ({ columns, data, category }: any) => {
             placeholder="Búsqueda"
             value={search}
             classNames={{
-              wrapper: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              input: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-              section: "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
 
           <ReloadTable path={paths.costs} />
-
         </Group>
       </div>
 
-      <div className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
+      <div
+        className=" [&>table]:border-gray-200 [&>table>thead>tr>*]:bg-gray-100 [&>table>thead>tr>*]:text-gray-900 [&>table>thead>tr>*]:border-gray-200 
                 dark:[&>table]:border-gray-500 dark:[&>table>thead>tr>*]:bg-gray-700 dark:[&>table>thead>tr>*]:text-gray-100 dark:[&>table>thead>tr>*]:border-gray-500
                 even:[&>table>tbody>tr>*]:bg-gray-50 odd:[&>table>tbody>tr>*]:bg-white [&>table>tbody>tr>*]:text-gray-900 
                 dark:even:[&>table>tbody>tr>*]:bg-gray-800 dark:odd:[&>table>tbody>tr>*]:bg-gray-900 dark:[&>table>tbody>tr>*]:text-gray-100
-                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0">
-
-
-      <CompactTable
-        columns={columns}
-        data={{ ...errorData, nodes: errorNodes}}
-        theme={theme}
-        layout={{ custom: true }}
-        select={select}
-        tree={tree}
-        sort={sort}
-        pagination={pagination}
-        onChange={(event) =>
-          handleUpdate(event.target.value, errorData, "Descripción")
-        }
-      />
+                [&>table>tbody>tr>*]:border-gray-200 dark:[&>table>tbody>tr>*]:border-gray-500 first:[&>table>tbody>tr>td]:p-0"
+      >
+        <CompactTable
+          columns={columns}
+          data={{ ...errorData, nodes: errorNodes }}
+          theme={theme}
+          layout={{ custom: true }}
+          select={select}
+          tree={tree}
+          sort={sort}
+          pagination={pagination}
+          onChange={(event) =>
+            handleUpdate(event.target.value, errorData, "Descripción")
+          }
+        />
       </div>
 
       <Group position="right" mx={10}>

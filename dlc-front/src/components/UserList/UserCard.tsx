@@ -88,6 +88,12 @@ const UserCard = ({ user }: any) => {
               Guardar
             </button>
             <button
+              onClick={handleDeleteUser}
+              className="bg-black dark:bg-white py-2 dark:text-gray-700 text-gray-100  font-semibold rounded-xl px-4 hover:bg-blue-500 dark:hover:bg-slate-600 dark:hover:text-white"
+            >
+              Eliminar usuario
+            </button>
+            <button
               onClick={handleCancelEdit}
               className="bg-red-600 dark:bg-red-600 py-2 text-white font-semibold rounded-xl px-4 hover:bg-red-500 dark:hover:bg-red-500 dark:hover:text-white"
             >
@@ -148,6 +154,9 @@ const UserCard = ({ user }: any) => {
             </div>
             <div className="mt-4 text-gray-600 dark:text-gray-300 font-bold text-sm">
               Rol: {user.role}
+            </div>
+            <div className="mt-4 text-gray-600 dark:text-gray-300 font-bold text-sm">
+              Usuario: {user.username}
             </div>
           </div>
         </div>
