@@ -21,26 +21,8 @@ export const useFetchNodes = () => {
       const transformedNodes = products.map((product) => {
         // Verificación y log de los datos recibidos
         console.log("Original product data:", product);
-        const transformedProduct = {
-          codigoInt: product.codigoInt,
-          SKU: product.SKU,
-          descripcion: product.descripcion,
-          origen: product.origen,
-          marcasCompatibles: product.marcasCompatibles,
-          kit: product.kit,
-          contadorDevoluciones: product.contadorDevoluciones,
-          check: product.check,
-          stock: product.stock,
-          rubro: product.rubro,
-          stockFuturo: product.stockFuturo,
-          OEM: product.codOEM,
-          img: product.imagen,
-        };
 
-        // Log de los datos transformados
-        console.log("Transformed product data:", transformedProduct);
-
-        return transformedProduct;
+        return product;
       });
       setProductNodes(transformedNodes);
     }
