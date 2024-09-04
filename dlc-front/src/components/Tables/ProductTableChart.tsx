@@ -293,7 +293,6 @@ const ProductTableChart = ({ columns, data, category }: any) => {
       node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
-
   // // Hide columns
   const [hiddenColumns, setHiddenColumns] = React.useState([]);
   const toggleColumn = (selectedLabels) => {
@@ -313,18 +312,18 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     modifiedNodes = modifiedNodes.filter((node: any) =>
-      node.origen.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
+  
 
   const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
     modifiedNodes = modifiedNodes.filter((node: any) => {
-      // Convierte el arreglo marcasCompatibles a una cadena
       const compatibleBrands = Array.isArray(node.marcasCompatibles)
         ? node.marcasCompatibles.join(" / ").toLowerCase()
         : (node.marcasCompatibles || "").toLowerCase();
-
+  
       return compatibleBrands.includes(selectedBrand.toLowerCase());
     });
   }
@@ -334,10 +333,9 @@ const ProductTableChart = ({ columns, data, category }: any) => {
     modifiedNodes = modifiedNodes.filter(
       (node: any) =>
         node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+        node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
         node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-        node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-        node.SKU?.toLowerCase().includes(search.toLowerCase())
-      // Incluye aquí otras propiedades por las que quieras buscar
+        node.rubro?.toLowerCase().includes(search.toLowerCase())
     );
   }
 
