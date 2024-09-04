@@ -320,6 +320,17 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
     });
   }
 
+  const [observation, setObservation] = React.useState("");
+  useCustom("det", errorData, {
+    state: { observation },
+    onChange: onObsDetail,
+  });
+  function onObsDetail(action: any, state: any) {
+    console.log(action, state);
+    pagination.fns.onSetPage(0);
+  }
+
+
   return (
     <>
       <div className="pt-4">
@@ -392,28 +403,9 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
           clearable
         />
 
-<Select
-          // value={search}
-          classNames={{
-            wrapper:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            input:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            section:
-              "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
-            dropdown:
-              "!bg-white dark:!bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
-            options: "bg-white dark:bg-gray-700",
-            option:
-              "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100",
-          }}
-          onChange={(event) => {
-            setSelectedBrand(event);
-          }}
-          placeholder="Marcas"
-          data={brands}
-          clearable
-        />
+        
+
+
         <Select
           // value={search}
           classNames={{
@@ -497,6 +489,21 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
             }}
             onChange={(event) => setSearch(event.target.value)}
           />
+
+<TextInput
+            classNames={{
+              wrapper:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              input:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-500",
+              section:
+                "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 [&>button>svg]:text-current",
+            }}
+            placeholder="Observaciones"
+            value={observation}
+            onChange={(event) => setObservation(event.target.value)}
+          />
+
 
           <ReloadTable path={paths.historyView} />
 

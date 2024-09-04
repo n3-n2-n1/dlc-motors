@@ -74,8 +74,13 @@ const ProductTableChart = ({ columns, data, category }: any) => {
   
   const customTheme = {
     Table: `
-      --data-table-library_grid-template-columns: 70px 100px 100px 100px 300px repeat(9, minmax(0, 1fr));
+      --data-table-library_grid-template-columns: auto auto auto auto auto repeat(9, minmax(0, 1fr));
       margin: 16px 0px;
+      th, td {
+        resize: horizontal;
+        overflow: hidden;
+        min-width: 50px;
+      }
     `,
   };
   
