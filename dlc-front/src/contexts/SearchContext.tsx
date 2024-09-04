@@ -41,7 +41,7 @@ export const SearchProvider: React.FC = ({
 
         data = data.map((item: any) => ({
           ...item,
-          kit:  item.kit === ("0" || 0 || "No") ? null : item.kit.replace(/[\[\]]/g, '').split("/").map(s => s.trim()).map(Number),
+          kit: ["0", 0, "No"].includes(item.kit) ? null : item.kit.replace(/[\[\]]/g, '').split("/").map(s => s.trim()).map(Number),
           marcasCompatibles: item.marcasCompatibles
             .split(",")
             .map((s: any) => s.trim()),
@@ -58,25 +58,29 @@ export const SearchProvider: React.FC = ({
   }, []);
 
   useEffect(() => {
-    try {
-      const getCategoriesData = async () => {
-        const { categorias } = await getCategories();
-        setCategories(categorias.split(","));
-      };
-      getCategoriesData();
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }, [products]);
+    const getCategoriesData = async () => {
+      const { categorias } = await getCategories();
+      setCategories(categorias.split(",").map(c => c.trim())); // Asegúrate de que sea un array limpio
+    };
+    getCategoriesData();
+  }, []);
+  
+  
+
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
+  
 
   // Resetea paginación cuando se cambia el término de búsqueda
   useEffect(() => {
-    if (searchResults) {
+    if (Array.isArray(searchResults) && searchResults.length > 0) {
       setTotalPages(Math.ceil(searchResults.length / itemsPerPage));
     } else {
       setTotalPages(Math.ceil(products.length / itemsPerPage));
     }
   }, [searchResults]);
+  
 
   return (
     <SearchContext.Provider
