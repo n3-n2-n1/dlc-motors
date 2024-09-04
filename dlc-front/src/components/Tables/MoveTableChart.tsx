@@ -64,7 +64,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  120px repeat(12, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(13, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,
@@ -339,24 +339,26 @@ const MoveTableChart = ({ columns, data, category }: any) => {
 
   const [selectedBrand, setSelectedBrand] = React.useState(false);
   if (selectedBrand) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.marcasCompatibles
-        ?.toLowerCase()
-        .includes(selectedBrand.toLowerCase())
-    );
+    errorNodes = errorNodes.filter((node: any) => {
+      const compatibleBrands = Array.isArray(node.marcasCompatibles)
+        ? node.marcasCompatibles.join(" / ").toLowerCase()
+        : (node.marcasCompatibles || "").toLowerCase();
+  
+      return compatibleBrands.includes(selectedBrand.toLowerCase());
+    });
   }
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
   if (selectedOrigin) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.tipoMov.toLowerCase().includes(selectedOrigin.toLowerCase())
+      node.origen?.toLowerCase().includes(selectedOrigin.toLowerCase())
     );
   }
 
   const [selectedOEM, setSelectedOEM] = React.useState("");
   if (selectedOEM) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.OEM.toLowerCase().includes(selectedOEM.toLowerCase())
+      node.OEM?.toLowerCase().includes(selectedOEM.toLowerCase())
     );
   }
 
@@ -379,17 +381,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   }
 
 
-  if (selectedOrigin) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.tipoMov?.toLowerCase().includes(selectedDetail.toLowerCase())
-    );
-  }
 
-  if (selectedDetail) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.det?.toLowerCase().includes(selectedDetail.toLowerCase())
-    );
-  }
 
   if (observation) {
     errorNodes = errorNodes.filter((node: any) =>
@@ -397,17 +389,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
     );
   }
 
-  if (selectedCode) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.codigoInt?.toLowerCase().includes(selectedCode.toLowerCase())
-    );
-  }
 
-  if (OEMSearch) {
-    errorNodes = errorNodes.filter((node: any) =>
-      node.OEM?.toLowerCase().includes(selectedOEM.toLowerCase())
-    );
-  }
 
   if (search) {
     errorNodes = errorNodes.filter(
