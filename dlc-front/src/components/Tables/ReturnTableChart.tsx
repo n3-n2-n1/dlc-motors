@@ -309,7 +309,7 @@ const ReturnTableChart = ({ columns, data, category }: any) => {
   const [selectedCategory, setSelectedCategory] = React.useState("");
   if (selectedCategory) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.rubro.toLowerCase().includes(selectedCategory.toLowerCase())
+      node.rubro?.toLowerCase().includes(selectedCategory.toLowerCase())
     );
   }
 
@@ -319,7 +319,9 @@ const ReturnTableChart = ({ columns, data, category }: any) => {
         node.desc?.toLowerCase().includes(search.toLowerCase()) ||
         node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
         node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-        node.det?.toLowerCase().includes(search.toLowerCase())
+        node.det?.toLowerCase().includes(search.toLowerCase()) || 
+        node.rubro?.toLowerCase().includes(search.toLowerCase()) || 
+
       // Incluye aquí otras propiedades por las que quieras buscar
     );
   }

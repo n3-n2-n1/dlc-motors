@@ -358,7 +358,7 @@ const MoveTableChart = ({ columns, data, category }: any) => {
   const [selectedOEM, setSelectedOEM] = React.useState("");
   if (selectedOEM) {
     errorNodes = errorNodes.filter((node: any) =>
-      node.OEM?.toLowerCase().includes(selectedOEM.toLowerCase())
+      node.codOEM?.toLowerCase().includes(selectedOEM.toLowerCase())
     );
   }
 
