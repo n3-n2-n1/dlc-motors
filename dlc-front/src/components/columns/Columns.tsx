@@ -579,6 +579,12 @@ export const MOVESCOLUMNS = [
     sort: { sortKey: "Fecha" }
   },
   {
+    label: "Origen",
+    renderCell: (item: any) => <div className="">{item.origen}</div> || "-",
+    resize,
+    sort: { sortKey: "Origen" }
+  },
+  {
     label: "Movimiento",
     renderCell: (item: any) => item.tipoMov || "-",
     resize,
