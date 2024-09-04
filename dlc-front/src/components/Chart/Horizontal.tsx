@@ -60,36 +60,44 @@ const Horizontal = () => {
 
   const options = {
     indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         labels: {
-          color: 'gray' // Hace que el texto de la leyenda sea blanco
+          color: 'gray' 
         }
       },
       title: {
         display: true,
         text: 'Ventas por Mes',
-        color: 'gray' // Hace que el título sea blanco
+        color: 'gray'
       }
     },
     scales: {
       x: {
         ticks: {
-          color: 'gray' // Hace que las etiquetas del eje x sean blancas
+          color: 'gray'
         },
         grid: {
         }
       },
       y: {
         ticks: {
-          color: 'gray' // Hace que las etiquetas del eje y sean blancas
+          color: 'gray'
         },
         grid: {
         }
       }
     }
   };
-
+  
+  return (
+    <div style={{ width: '100%', height: '600px' }}>
+      <Bar data={chartData} options={options} />
+    </div>
+  );
+  
   return (
     <div style={{ width: '1320px', height: '600px', color: 'black'}}>
       <Bar data={chartData} options={options} />

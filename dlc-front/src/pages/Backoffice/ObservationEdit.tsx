@@ -46,6 +46,9 @@ function ObservationEdit() {
   const handleSave = (index, value) => {
     let newArray = [...arrays[selectedArray]];
     newArray[index] = value;
+    // Ordenar alfabéticamente después de guardar
+    newArray.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+    
     setArrays({
       ...arrays,
       [selectedArray]: newArray,
@@ -65,6 +68,7 @@ function ObservationEdit() {
   };
 
   const [selected, setSelected] = useState(null);
+
   return (
     <>
       <div className="p-4 md:p-6 dark:bg-gray-900  dark:text-white">
@@ -86,38 +90,41 @@ function ObservationEdit() {
           <hr />
 
           {selectedArray &&
-            arrays[selectedArray].map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-row items-center justify-between gap-4 my-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-sm"
-              >
-                {selectedIndex === index ? (
-                  <input
-                    defaultValue={item}
-                    onBlur={(e) => handleSave(index, e.target.value)}
-                    className="w-full bg-gray-400 rounded-md p-1"
-                  />
-                ) : (
-                  <div className="flex-1">
-                    <div className="font-bold">{item}</div>
+            arrays[selectedArray]
+              .slice() // Crear una copia del array para no mutarlo directamente
+              .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' })) // Ordenar alfabéticamente
+              .map((item, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row items-center justify-between gap-4 my-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-sm"
+                >
+                  {selectedIndex === index ? (
+                    <input
+                      defaultValue={item}
+                      onBlur={(e) => handleSave(index, e.target.value)}
+                      className="w-full bg-gray-400 rounded-md p-1"
+                    />
+                  ) : (
+                    <div className="flex-1">
+                      <div className="font-bold">{item}</div>
+                    </div>
+                  )}
+                  <div className="py-1 flex gap-2">
+                    <button
+                      className="px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-xl"
+                      onClick={() => handleEdit(index)}
+                    >
+                      🖋️
+                    </button>
+                    <button
+                      className="px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-xl text-white font-semibold"
+                      onClick={() => handleDelete(index)}
+                    >
+                      ❌
+                    </button>
                   </div>
-                )}
-                <div className="py-1 flex gap-2">
-                  <button
-                    className="px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-xl"
-                    onClick={() => handleEdit(index)}
-                  >
-                    🖋️
-                  </button>
-                  <button
-                    className="px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-xl text-white font-semibold"
-                    onClick={() => handleDelete(index)}
-                  >
-                    ❌
-                  </button>
                 </div>
-              </div>
-            ))}
+              ))}
         </div>
         <div className="py-3 gap-3 flex">
           <div>

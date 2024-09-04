@@ -210,7 +210,7 @@ function Home() {
                 value={data.value}
                 percentage={data.percentage}
                 icon={data.icon}
-                link={data.path}
+                link={''}
               />
             ))}
           </div>

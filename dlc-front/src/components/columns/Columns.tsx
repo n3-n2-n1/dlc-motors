@@ -355,7 +355,7 @@ export const NOTIFCOLUMNS = [
   },
   {
     label: "Codigo Interno",
-    renderCell: (item: any) => item.codigoInt || "-",
+    renderCell: (item: any) => item.codInterno || "-",
     resize,
     sort: { sortKey: "Codigo Interno" },
   },
@@ -529,7 +529,7 @@ export const ERRORCOLUMNS = [
   },
   {
     label: "Stock Real",
-    renderCell: (item: any) => item.stockReal || "-",
+    renderCell: (item: any) => item.stockFuturo|| "-",
     resize,
     sort: { sortKey: "Stock Real" }
   },
