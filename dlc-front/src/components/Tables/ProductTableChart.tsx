@@ -271,16 +271,16 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
   modifiedNodes = modifiedNodes.filter(
     (node: any) =>
-      node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
-      node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
-      node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
-      node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
-      node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
-      node.origen?.toLowerCase().includes(search.toLowerCase()) ||
-      node.user?.toLowerCase().includes(search.toLowerCase()) ||
-      node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
-      node.marcasCompatibles?.includes(brandSearch.toLowerCase())
-  );
+       node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
+       node.SKU?.toLowerCase().includes(search.toLowerCase()) ||
+       node.codigoInt?.toLowerCase().includes(search.toLowerCase()) ||
+       node.rubro?.toLowerCase().includes(search.toLowerCase()) ||
+       node.stock?.toString().toLowerCase().includes(search.toLowerCase()) ||
+       node.origen?.toLowerCase().includes(search.toLowerCase()) ||
+       node.user?.toLowerCase().includes(search.toLowerCase()) ||
+       node.detalle?.toLowerCase().includes(search.toLowerCase()) ||
+       node.marcasCompatibles?.includes(brandSearch.toLowerCase())
+ );
 
   // filter
   modifiedNodes = isHide
@@ -307,9 +307,7 @@ const ProductTableChart = ({ columns, data, category }: any) => {
 
   const [selectedCheck, setSelectedCheck] = React.useState(false);
   if (selectedCheck) {
-    modifiedNodes = modifiedNodes.filter(
-      (node: any) => node.check?.toLowerCase() === selectedCheck
-    );
+    modifiedNodes = modifiedNodes.filter((node: any) => node.check?.toLowerCase() === selectedCheck);
   }
 
   const [selectedOrigin, setSelectedOrigin] = React.useState("");
