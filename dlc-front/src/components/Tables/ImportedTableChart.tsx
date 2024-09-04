@@ -528,7 +528,7 @@ const ImportedTableChart = ({ columns, data, category }: any) => {
                   <div>
                     {Array.isArray(proveedores) && proveedores.length > 0 ? (
                       proveedores.map((cost, index) => {
-                        return (!isOperator && cost.origen === "Fabrica") || isAdmin ? (
+                        return (!isOperator && cost.origen === "Fábrica") || isAdmin ? (
                           <div
                             key={index}
                             className="p-2 border-b-2 border-b-slate-600 pb-2"

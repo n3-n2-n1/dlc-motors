@@ -55,8 +55,8 @@ const CostForm = ({
               </option>
             </>
           )}
-          <option className="text-black dark:text-white" value="Fabrica">
-            Fabrica
+          <option className="text-black dark:text-white" value="Fábrica">
+            Fábrica
           </option>
         </select>
         <div className="pb-3">

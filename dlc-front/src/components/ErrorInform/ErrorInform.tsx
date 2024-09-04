@@ -319,7 +319,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 <option value="">Seleccione...</option>
                 <option value="Importado">Importado</option>
                 <option value="Reventa">Reventa</option>
-                <option value="Fabrica">Fabrica</option>
+                <option value="Fábrica">Fábrica</option>
               </select>
               {formik.touched.origen && formik.errors.origen ? (
                 <div className="text-red-500 text-sm mt-1">
