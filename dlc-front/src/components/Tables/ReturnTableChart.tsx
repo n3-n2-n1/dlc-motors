@@ -320,7 +320,7 @@ const ReturnTableChart = ({ columns, data, category }: any) => {
         node.codInterno?.toLowerCase().includes(search.toLowerCase()) ||
         node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
         node.det?.toLowerCase().includes(search.toLowerCase()) || 
-        node.rubro?.toLowerCase().includes(search.toLowerCase()) || 
+        node.rubro?.toLowerCase().includes(search.toLowerCase()) 
 
       // Incluye aquí otras propiedades por las que quieras buscar
     );
