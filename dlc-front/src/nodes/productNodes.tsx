@@ -22,7 +22,6 @@ export const useFetchNodes = () => {
         // Verificación y log de los datos recibidos
         console.log("Original product data:", product);
         const transformedProduct = {
-          id: product.codigoInt,
           codigoInt: product.codigoInt,
           SKU: product.SKU,
           descripcion: product.descripcion,

@@ -70,6 +70,7 @@ const IncomesOutcomesForm: React.FC<IncomesOutcomesFormProps> = ({
           formik.resetForm();
           await createMovement(updatedValues);
           toast.success(`${formik.values.tipoMov} creado`);
+          window.location.reload();
         }
       } catch (error) {
         toast.error("Error al crear el movimiento");
