@@ -49,6 +49,14 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
   const { users } = useUser();
   const userNames = users.map((user) => user.name);
 
+  const {
+    brands,
+    handleDeleteModal,
+    modalOpened,
+    setModalOpened,
+    selectedCodigoInt,
+  } = useBrandsObservations();
+
   const mantineTheme = getTheme({
     ...DEFAULT_OPTIONS,
     striped: true,
@@ -244,7 +252,8 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
       node.estado.toLowerCase().includes(detailSearch.toLowerCase()) ||
       node.descripcion?.toLowerCase().includes(search.toLowerCase()) ||
       node.codOEM?.toLowerCase().includes(search.toLowerCase()) ||
-      node.desc?.toLowerCase().includes(search.toLowerCase())
+      node.desc?.toLowerCase().includes(search.toLowerCase()) ||
+      node.brands?.toLowerCase().includes(search.toLowerCase())
   );
 
   // // Hide columns

@@ -72,6 +72,7 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
       try {
         await createReturns(updatedValues);
         formik.resetForm();
+        location.reload();
       } catch (error) {
         console.error(error);
         // Handle error case here
