@@ -1,75 +1,63 @@
-import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
-import { Notification } from '../pages/Notifications/Notifications';
-import { useSearchContext } from './SearchContext';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { addNotification as saveNotificationToDB, getNotifications, deleteNotifications } from '../utils/indexedDButils'; // Funciones de IndexedDB
 
-interface NotificactionProps {
-    notifications: Notification[]
-}
-
-export const NotificationsContext = createContext<NotificactionProps | undefined>(undefined);
-
-export const NotificationsProvider: React.FC = ({ children }: { children?: React.ReactNode }) => {
-    const [loadIndex, setLoadIndex] = useState(0);
-    const [notif, setNotif] = useState<Notification[]>([]);
-    const [loading, setLoading] = useState(true);
-    const { products } = useSearchContext();
-    const [previousStock, setPreviousStock] = useState<Map<string, number>>(
-        new Map()
-    );
-    const loader = useRef(null);
-    const displayValue = (value: string | undefined) => value || "-";
-
-    useEffect(() => {
-        const newNotifications = products
-            .slice(loadIndex, loadIndex + 100)
-            .map((product) => {
-                const prevStock = previousStock.get(product.descripcion) || product.stock;
-                let message = "";
-
-                if (product.Stock === 0) {
-                    message = `No hay stock`;
-                } else if (product.stock <= 10) {
-                    message = `Stock bajo`;
-                } else if (product.stock > prevStock) {
-                    message = `Reposición`;
-                }
-
-                previousStock.set(product.descripcion, product.stock);
-                return message
-                    ? {
-                        name: product.descripcion,
-                        message,
-                        origen: product.origen,
-                        rubro: product.rubro,
-                        oem: product.codOEM,
-                        marca: product.marcasCompatibles,
-                        stock: product.stock,
-                        image: product.imagen,
-                        codInterno: product.codigoInt,
-                    }
-                    : null;
-            })
-            .filter(Boolean);
-
-        setNotif((prevNotifications) => [
-            ...prevNotifications,
-            ...newNotifications,
-        ]);
-    }, [products, loadIndex, previousStock]);
-
-    const value = {
-        notif,
-        loading
-
-    };
-
-    return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>
+// Tipo de notificación
+type Notification = {
+  id?: number;  // ID opcional (porque al principio puede no existir)
+  message: string;
+  isRead: boolean;
 };
 
-export const useNotification = () => {
-    const context = useContext(NotificationsContext);
-    if (!context) {
-        throw new Error('useNotif debe ser utilizado dentro de un NotificationsProvider')
-    }
-    return context;
-}
+// Contexto de notificaciones
+const NotificationContext = createContext<any>(null);
+
+// Proveedor del contexto
+export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Cargar notificaciones desde IndexedDB cuando se monta el componente
+  useEffect(() => {
+    const loadNotifications = async () => {
+      const storedNotifications = await getNotifications();
+      setNotifications(storedNotifications);
+      setUnreadCount(storedNotifications.filter((notif: Notification) => !notif.isRead).length);
+    };
+    loadNotifications();
+  }, []);
+
+  // Función para agregar una nueva notificación
+  const addNotification = async (message: string) => {
+    const newNotification: Notification = {
+      message,
+      isRead: false,
+    };
+
+    // Guardar en IndexedDB y obtener el ID generado
+    const id = await saveNotificationToDB(newNotification);
+
+    // Añadir la notificación con el ID generado al estado
+    setNotifications((prev) => [{ ...newNotification, id }, ...prev]);
+    setUnreadCount((prev) => prev + 1);
+  };
+
+  // Función para marcar una notificación como leída
+  const markAsRead = async (id: number) => {
+    // Actualizar solo el estado (puedes también actualizar el estado en IndexedDB si lo necesitas)
+    setNotifications((prev) =>
+      prev.map((notif) => (notif.id === id ? { ...notif, isRead: true } : notif))
+    );
+    setUnreadCount((prev) => prev - 1);
+  };
+
+  return (
+    <NotificationContext.Provider value={{ notifications, addNotification, markAsRead, unreadCount }}>
+      {children}
+    </NotificationContext.Provider>
+  );
+};
+
+// Hook para usar el contexto
+export const useNotificationContext = () => {
+  return useContext(NotificationContext);
+};

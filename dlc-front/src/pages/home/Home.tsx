@@ -4,6 +4,7 @@ import Horizontal from "../../components/Chart/Horizontal";
 import { useAuth } from "../../contexts/AuthContext";
 import ScrollNot from "../../components/Chart/ScrollNot";
 import Stats from "../../components/Chart/Stats";
+import useRoleCheck from "../../hooks/useRoleCheck";
 import { useState, useEffect } from "react";
 import {
   fetchDelivery,
@@ -23,6 +24,7 @@ function Home() {
   const [deliveryStats, setDeliveryStats] = useState([]);
   const handle = () => {};
   const { user } = useAuth();
+  const isClient = useRoleCheck(user?.role, ["Cliente"]);
 
   useEffect(() => {
     // Función asíncrona para obtener los datos
@@ -201,22 +203,30 @@ function Home() {
 
           <span>Bienvenido, {user?.name}</span>
         </div>
+        {!isClient && (
+          <div>
+
         <section>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {baseStats.map((data, index) => (
               <Stats
-                key={index}
-                title={data.title}
-                value={data.value}
-                percentage={data.percentage}
-                icon={data.icon}
-                link={''}
+              key={index}
+              title={data.title}
+              value={data.value}
+              percentage={data.percentage}
+              icon={data.icon}
+              link={''}
               />
             ))}
           </div>
         </section>
+        
+        <section>
 
             <Horizontal />
+        </section>
+            </div>
+      )}
         {/* <Footer /> */}
       </main>
     </>

@@ -528,6 +528,12 @@ export const ERRORCOLUMNS = [
     sort: { sortKey: "Stock Actual" }
   },
   {
+    label: "Kit",
+    renderCell: (item: any) => item.kit || "-",
+    resize,
+    sort: { sortKey: "Kit" }
+  },
+  {
     label: "Stock Real",
     renderCell: (item: any) => item.stockFuturo|| "-",
     resize,
