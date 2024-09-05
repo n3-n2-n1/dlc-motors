@@ -1,6 +1,6 @@
 // hooks/useFetchNodes.js
 import { useEffect, useState } from "react";
-
+import { useNotificationContext } from "../contexts/NotificactionsContext";
 import { useSearchContext } from "../contexts/SearchContext";
 import {
   fetchMoves,
@@ -9,7 +9,6 @@ import {
   fetchDelivery,
   fetchCosts,
 } from "../utils/Handlers/Handlers";
-import { useNotification } from "../contexts/NotificactionsContext";
 
 export const useFetchNodes = () => {
   const { products } = useSearchContext();
@@ -33,7 +32,7 @@ export const useFetchNodes = () => {
 
 
 export const NotifFetchNodes = () => {
-  const { notifications } = useNotification();
+  const { notifications } = useNotificationContext();
   const [notiNodes, setNotiNodes] = useState([]);
 
   useEffect(() => {

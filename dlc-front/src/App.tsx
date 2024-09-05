@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { UserProvider } from "./contexts/UserContext";
 import { SearchProvider } from "./contexts/SearchContext";
 import { FilterValuesProvider } from "./contexts/FilterContext";
+import { NotificationProvider } from "./contexts/NotificactionsContext";
 import { BrandsObservationsProvider } from "./contexts/BrandsObservationsContext";
 import { MantineProvider } from '@mantine/core';
 import Loader from "./components/Loader/Loader";
@@ -23,6 +24,7 @@ const App = () => {
       <UserProvider {...(props as any)}>
         <BrandsObservationsProvider {...(props as any)}>
           <SearchProvider {...(props as any)}>
+            <NotificationProvider {...(props as any)}>
               <FilterValuesProvider>
                 <Suspense fallback={<Loader />}>
                   <ToastContainer />
@@ -31,6 +33,7 @@ const App = () => {
                 </MantineProvider>
                 </Suspense>
               </FilterValuesProvider>
+            </NotificationProvider>
           </SearchProvider>
         </BrandsObservationsProvider>
       </UserProvider>
