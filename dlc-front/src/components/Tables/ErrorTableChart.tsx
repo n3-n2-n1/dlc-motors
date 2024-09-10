@@ -65,7 +65,7 @@ const ErrorTableChart = ({ columns, data, tableFilters, category }: any) => {
 
   const customTheme = {
     Table: `
-    --data-table-library_grid-template-columns:  120px repeat(14, minmax(0, 1fr));
+    --data-table-library_grid-template-columns:  120px repeat(15, minmax(0, 1fr));
 
     margin: 16px 0px;
   `,

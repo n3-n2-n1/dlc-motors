@@ -828,6 +828,20 @@ export const IMPORTEDCOLUMNS = [
     resize,
     sort: { sortKey: "Rubro" },
   },
+    {
+    label: "Devoluciones/Rotas",
+    renderCell: (item: any) => item.devoluciones || "-",
+    resize,
+    sort: { sortKey: "Devoluciones/Rotas" },
+  },
+      {
+    label: "Imagen",
+    renderCell: (item: any) => item.img || "-",
+    resize,
+    sort: { sortKey: "Imagen" },
+  },
+  
+
 ];
 
 export const RESALECOLUMNS = [

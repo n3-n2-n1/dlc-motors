@@ -292,14 +292,12 @@ const Returns: React.FC<ReturnFormProps> = ({ products }) => {
               <select
                 id="origen"
                 name="origen"
+                disabled
                 className="mt-1 block w-full p-2 border border-gray-100 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="">Seleccione...</option>
-                <option value="Importado">Importado</option>
-                <option value="Reventa">Reventa</option>
-                <option value="Fábrica">Fábrica</option>
+                <option value={selectedProduct?.origen || ""}></option>
               </select>
               {formik.touched.origen && formik.errors.origen ? (
                 <div className="text-red-500 text-sm mt-1">

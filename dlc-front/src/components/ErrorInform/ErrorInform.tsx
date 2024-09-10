@@ -316,10 +316,7 @@ const ErrorForm: React.FC<ErrorFormProps> = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="">Seleccione...</option>
-                <option value="Importado">Importado</option>
-                <option value="Reventa">Reventa</option>
-                <option value="Fábrica">Fábrica</option>
+                <option value={selectedProduct?.rubro || ''}></option>
               </select>
               {formik.touched.origen && formik.errors.origen ? (
                 <div className="text-red-500 text-sm mt-1">

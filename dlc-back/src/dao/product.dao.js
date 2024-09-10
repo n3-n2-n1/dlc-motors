@@ -124,18 +124,49 @@ export class ProductDAO {
     }
   }
 
-  async getProducts() {
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM productos", (error, results) => {
-        if (error) {
-          console.error("An error occurred while executing the query", error);
-          reject(new Error("Error al obtener los productos."));
-        } else {
-          resolve(results);
-        }
+  async addProduct(product, usuario) {
+    try {
+      const { codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles } = product;
+  
+      // Insertar el producto en la base de datos
+      const results = await new Promise((resolve, reject) => {
+        db.query(
+          "INSERT INTO productos (codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles) VALUES (?, ?, ?, ?, ?, ?)",
+          [codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles],
+          (error, results) => {
+            if (error) {
+              console.error("An error occurred while inserting the product", error);
+              return reject(new Error("Error al agregar el producto."));
+            }
+            resolve(results);
+          }
+        );
       });
-    });
+  
+      // Instancia de MovementDAO para registrar el movimiento
+      const movementDAO = new MovementDAO(db);
+  
+      // Creación del movimiento de tipo "Agregar Producto"
+      await movementDAO.createMovementInventory(
+        new Date(), // Fecha del movimiento
+        codigoInt,
+        codOEM,
+        descripcion, // Descripción del producto
+        0, // Stock inicial antes del movimiento (0 porque se está agregando)
+        stock, // Stock actual después del agregado
+        "Producto agregado", // Detalle del movimiento
+        usuario, // Usuario que realizó el agregado
+        "Agregar Producto", // Tipo de movimiento
+        rubro, // Rubro del producto
+        marcasCompatibles // Marcas compatibles
+      );
+  
+      return results;
+    } catch (error) {
+      throw error;
+    }
   }
+  
   async getProductsBySearchTerm(searchTerm) {
     return new Promise((resolve, reject) => {
       db.query(
@@ -229,31 +260,59 @@ export class ProductDAO {
     }
   }
 
-  async deleteProduct(productId) {
+  async deleteProduct(productId, usuario) {
     try {
-      db.query(
-        "DELETE FROM productos WHERE codigoInt = ?",
-        [productId],
-        (error, results) => {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            throw new Error("Error al abrir la base de datos.");
+      const results = await new Promise((resolve, reject) => {
+        db.query(
+          "DELETE FROM productos WHERE codigoInt = ?",
+          [productId],
+          (error, results) => {
+            if (error) {
+              console.error("An error occurred while executing the query", error);
+              return reject(new Error("Error al abrir la base de datos."));
+            }
+  
+            if (results.affectedRows === 0) {
+              return reject(new Error("Producto no encontrado."));
+            }
+  
+            resolve(results);
           }
-
-          if (results.affectedRows === 0) {
-            throw new Error("Producto no encontrado.");
-          } else {
-            const costDAO = new CostDAO();
-            costDAO.deleteCosts(productId);
-          }
-
-          return results;
-        }
+        );
+      });
+  
+      // Instancia de CostDAO y eliminación de costos asociados al producto
+      const costDAO = new CostDAO();
+      await costDAO.deleteCosts(productId);
+  
+      // Obtener información del producto eliminado para crear el movimiento
+      const productDAO = new ProductDAO(db);
+      const deletedProduct = await productDAO.getProductById(productId); // Asegúrate de tener este método para obtener los datos del producto
+  
+      // Instancia de MovementDAO para registrar el movimiento de eliminación
+      const movementDAO = new MovementDAO(db);
+  
+      // Creación de un movimiento de tipo "Eliminación"
+      await movementDAO.createMovementInventory(
+        new Date(), // Fecha del movimiento
+        deletedProduct.codigoInt,
+        deletedProduct.codOEM,
+        deletedProduct.descripcion, // Descripción del producto
+        deletedProduct.stock, // Stock actual del producto
+        0, // Stock tras la eliminación
+        "Producto eliminado", // Detalle del movimiento o arreglo
+        usuario, // Usuario que realizó la eliminación
+        "Eliminación", // Tipo de movimiento (diferente de Egreso)
+        deletedProduct.rubro, // Rubro del producto
+        deletedProduct.marcasCompatibles // Marcas compatibles
       );
+  
+      return results;
     } catch (error) {
       throw error;
     }
   }
+  
 
   async modifyStock(newStock, codigoInt) {
     if (isNaN(newStock)) {
