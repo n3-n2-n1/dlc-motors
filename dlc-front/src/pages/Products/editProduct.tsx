@@ -72,14 +72,14 @@ const EditProduct: React.FC<EditProductFormProps> = ({ categories, brands }) => 
     validationSchema,
     onSubmit: async (values) => {
       try {
-        // Subir la imagen si fue modificada
+        console.log('Enviando el formulario con estos valores:', values); // Verifica que el evento onSubmit se dispare
+        
         let imageUrl = values.imagen;
         if (isNewImageUploaded) {
           imageUrl = await uploadImageToCloudinary(values.imagen);
           toast.success("Imagen cargada con éxito");
         }
-
-        // Modificar el producto con los valores actualizados
+    
         const updatedValues = {
           ...values,
           imagen: imageUrl,
@@ -90,7 +90,8 @@ const EditProduct: React.FC<EditProductFormProps> = ({ categories, brands }) => 
         console.error("Error en el formulario:", error);
         toast.error("Error al editar el producto: " + error);
       }
-    },
+    }
+    ,
   });
 
   // Actualizar el campo newCompatibleBrand según las marcas disponibles
@@ -258,7 +259,6 @@ const EditProduct: React.FC<EditProductFormProps> = ({ categories, brands }) => 
             <button
               type="submit"
               className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-              disabled={!formik.isValid || formik.isSubmitting}
             >
               Editar Producto
             </button>
