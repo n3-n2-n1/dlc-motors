@@ -258,7 +258,7 @@ export const PRODUCTCOLUMNS = [
   },
   {
     label: "OEM",
-    renderCell: (item: any) => item.OEM || "-",
+    renderCell: (item: any) => item.codOEM || "-",
     resize,
     sort: { sortKey: "OEM" },
   },
