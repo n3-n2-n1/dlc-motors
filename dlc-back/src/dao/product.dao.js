@@ -1,89 +1,116 @@
 import db from "../database/db.js";
 import { CostDAO } from "./costs.dao.js";
+import { MovementDAO } from "./movements.dao.js";
 
 export class ProductDAO {
   constructor(db) {
     this.db = db;
   }
 
-  async createProduct(
-    codigoInt,
-    codOEM,
-    SKU,
-    descripcion,
-    rubro,
-    origen,
-    marcasCompatibles,
-    stock,
-    imagen,
-    contadorDevoluciones,
-    kit
-  ) {
-    try {
-      const marcasCompatiblesString = marcasCompatibles.join(", ");
-
-      let kitString = kit;
-      if (Array.isArray(kit)) {
-        kitString = kit.join(", ");
-      }
-
-      db.query(
-        "INSERT INTO productos (codigoInt, codOEM, SKU, descripcion, rubro, origen, marcasCompatibles, stock, imagen, contadorDevoluciones, kit) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          codigoInt,
-          codOEM,
-          SKU,
-          descripcion,
-          rubro,
-          origen,
-          marcasCompatiblesString,
-          stock,
-          imagen,
-          contadorDevoluciones,
-          kitString,
-        ],
-
-        function (error) {
-          if (error) {
-            console.error("An error occurred while executing the query", error);
-            throw new Error("Error al insertar el producto.");
-          } else {
-            const costDAO = new CostDAO();
-            const codigo = codigoInt;
-            const proveedores = "";
-            costDAO.createCosts(
-              descripcion,
-              codigo,
-              marcasCompatibles,
-              stock,
-              proveedores,
-              rubro,
+ 
+    async createProduct(
+      codigoInt,
+      codOEM,
+      SKU,
+      descripcion,
+      rubro,
+      origen,
+      marcasCompatibles,
+      stock,
+      imagen,
+      contadorDevoluciones,
+      kit
+    ) {
+      try {
+        const marcasCompatiblesString = marcasCompatibles.join(", ");
+        const kitString = Array.isArray(kit) ? kit.join(", ") : kit;
+  
+        // Insertar el producto en la base de datos
+        const insertProductQuery = `
+          INSERT INTO productos (
+            codigoInt, codOEM, SKU, descripcion, rubro, origen, marcasCompatibles, stock, imagen, contadorDevoluciones, kit
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+  
+        // Usar una promesa para la consulta de inserción
+        const insertedProduct = await new Promise((resolve, reject) => {
+          db.query(
+            insertProductQuery,
+            [
+              codigoInt,
+              codOEM,
               SKU,
-              origen
-            );
-          }
-
+              descripcion,
+              rubro,
+              origen,
+              marcasCompatiblesString,
+              stock,
+              imagen,
+              contadorDevoluciones,
+              kitString,
+            ],
+            (error, results) => {
+              if (error) {
+                console.error("An error occurred while inserting the product", error);
+                return reject(new Error("Error al insertar el producto."));
+              }
+              resolve(results);
+            }
+          );
+        });
+  
+        // Crear costos asociados al producto usando el CostDAO
+        const costDAO = new CostDAO();
+        await costDAO.createCosts(
+          descripcion,
+          codigoInt,
+          marcasCompatibles,
+          stock,
+          "", // Proveedores vacío por el momento
+          rubro,
+          SKU,
+          origen
+        );
+  
+        // Crear un movimiento de "Ingreso" para el producto
+        const movementDAO = new MovementDAO(db);
+        await movementDAO.createMovementInventory(
+          new Date(), // Fecha del movimiento
+          codigoInt, // Código del producto agregado
+          codOEM,
+          descripcion, // Descripción del producto
+          0, // Stock inicial antes del movimiento (0 porque es una adición)
+          stock, // Stock actual después de la adición
+          "Producto agregado", // Detalle del movimiento
+          "Usuario que agregó", // Aquí puedes poner el usuario real si está disponible
+          "Agregar Producto", // Tipo de movimiento
+          rubro, // Rubro del producto
+          marcasCompatiblesString // Marcas compatibles
+        );
+  
+        // Obtener el producto insertado para devolver como resultado
+        const product = await new Promise((resolve, reject) => {
           db.query(
             "SELECT * FROM productos WHERE codigoInt = ?",
             [codigoInt],
-            function (error, results) {
+            (error, results) => {
               if (error) {
-                console.error(
-                  "An error occurred while executing the query",
-                  error
-                );
-                throw new Error("Error al obtener el producto insertado.");
+                console.error("An error occurred while fetching the product", error);
+                return reject(new Error("Error al obtener el producto insertado."));
               }
-
-              return results;
+              resolve(results[0]);
             }
           );
-        }
-      );
-    } catch (error) {
-      throw error;
+        });
+  
+        return product; // Retornamos el producto insertado
+      } catch (error) {
+        console.error("Error en createProduct:", error);
+        throw error; // Relanzamos el error para manejarlo en el controlador
+      }
     }
-  }
+  
+  
 
   async createMultipleProducts(productList) {
     try {
@@ -124,49 +151,7 @@ export class ProductDAO {
     }
   }
 
-  async addProduct(product, usuario) {
-    try {
-      const { codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles } = product;
-  
-      // Insertar el producto en la base de datos
-      const results = await new Promise((resolve, reject) => {
-        db.query(
-          "INSERT INTO productos (codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles) VALUES (?, ?, ?, ?, ?, ?)",
-          [codigoInt, codOEM, descripcion, stock, rubro, marcasCompatibles],
-          (error, results) => {
-            if (error) {
-              console.error("An error occurred while inserting the product", error);
-              return reject(new Error("Error al agregar el producto."));
-            }
-            resolve(results);
-          }
-        );
-      });
-  
-      // Instancia de MovementDAO para registrar el movimiento
-      const movementDAO = new MovementDAO(db);
-  
-      // Creación del movimiento de tipo "Agregar Producto"
-      await movementDAO.createMovementInventory(
-        new Date(), // Fecha del movimiento
-        codigoInt,
-        codOEM,
-        descripcion, // Descripción del producto
-        0, // Stock inicial antes del movimiento (0 porque se está agregando)
-        stock, // Stock actual después del agregado
-        "Producto agregado", // Detalle del movimiento
-        usuario, // Usuario que realizó el agregado
-        "Agregar Producto", // Tipo de movimiento
-        rubro, // Rubro del producto
-        marcasCompatibles // Marcas compatibles
-      );
-  
-      return results;
-    } catch (error) {
-      throw error;
-    }
-  }
-  
+ 
   async getProductsBySearchTerm(searchTerm) {
     return new Promise((resolve, reject) => {
       db.query(
@@ -197,6 +182,19 @@ export class ProductDAO {
           }
         }
       );
+    });
+  }
+
+  async getProducts() {
+    return new Promise((resolve, reject) => {
+      db.query("SELECT * FROM productos", (error, results) => {
+            if (error) {
+          console.error("An error occurred while executing the query", error);
+          reject(new Error("Error al obtener los productos."));
+        } else {
+            resolve(results);
+          }
+      });
     });
   }
 
@@ -260,7 +258,7 @@ export class ProductDAO {
     }
   }
 
-  async deleteProduct(productId, usuario) {
+  async deleteProduct(productId) {
     try {
       const results = await new Promise((resolve, reject) => {
         db.query(
@@ -301,7 +299,7 @@ export class ProductDAO {
         deletedProduct.stock, // Stock actual del producto
         0, // Stock tras la eliminación
         "Producto eliminado", // Detalle del movimiento o arreglo
-        usuario, // Usuario que realizó la eliminación
+        "", // Usuario que realizó la eliminación
         "Eliminación", // Tipo de movimiento (diferente de Egreso)
         deletedProduct.rubro, // Rubro del producto
         deletedProduct.marcasCompatibles // Marcas compatibles
