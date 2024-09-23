@@ -17,7 +17,7 @@ import {
   DEFAULT_OPTIONS,
   getTheme,
 } from "@table-library/react-table-library/mantine";
-import { Group, TextInput, Select, Pagination } from "@mantine/core";
+import { Group, TextInput, Select, Pagination, MultiSelect } from "@mantine/core";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useBrandsObservations } from "../../contexts/BrandsObservationsContext";
 import SortIcon from "../icon/SortIcon/SortIcon";
